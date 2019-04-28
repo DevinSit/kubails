@@ -1,0 +1,12 @@
+{
+    "project_title": "REQUIRED",
+    "project_name": "{{cookiecutter.project_title.lower().replace(' ', '-')}}",
+    "description": "A short description of the project",
+    "domain": "The domain name for this project",
+    "domain_owner_email": "The email of the owner of the domain name",
+    "gcp_project": "ID of the GCP project to host on",
+    "gcp_region": "us-east1",
+    "gcp_zone": "us-east1-d",
+    "remote_repo_host": ["github", "bitbucket"],
+    "remote_repo_owner": "The owner of the remote repo that will be used for Cloud Build (e.g. your Bitbucket username or Github organization)"
+}

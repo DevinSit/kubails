@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+"flake8" = "==3.5.0"
+mypy = "==0.590"
+pytest = "==3.5.1"
+pytest-cov = "==2.5.1"
+parameterized = "==0.6.1"
+
+[packages]
+click = "==7.0"
+cookiecutter = "==1.6.0"
+pyyaml = "==4.2b4"
+python-dotenv = "==0.10.1"
+requests = "==2.21.0"
+
+[requires]
+python_version = "3.6"

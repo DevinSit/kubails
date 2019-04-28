@@ -1,0 +1,21 @@
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: {{cookiecutter.project_name}}
+  namespace: cert-manager
+spec:
+  acme:
+    config:
+    - dns01:
+        provider: clouddns
+      domains:
+      - {{cookiecutter.domain}}
+      - "*.{{cookiecutter.domain}}"
+  dnsNames:
+  - {{cookiecutter.domain}}
+  - "*.{{cookiecutter.domain}}"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  secretName: {{cookiecutter.project_name}}-tls

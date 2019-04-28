@@ -1,0 +1,42 @@
+{
+    "name": "{{cookiecutter.name}}",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "start": "DEBUG={{cookiecutter.name}}:* NODE_PATH=src nodemon src/index.js",
+        "start:prod": "NODE_PATH=src node src/index.js",
+        "sequelize:init": "sequelize init",
+        "sequelize:generate:model": "sequelize model:create",
+        "sequelize:generate:migration": "sequelize migration:create",
+        "sequelize:generate:seed": "sequelize seed:create",
+        "db:create": "sequelize db:create",
+        "db:seed": "NODE_PATH=src sequelize db:seed:all",
+        "db:migrate": "NODE_PATH=src sequelize db:migrate",
+        "db:retryable-migrate": "sh ./scripts/retryable-db-migrate.sh",
+        "lint": "eslint 'src/**/*.js'"
+    },
+    "dependencies": {
+        "auth0": "^2.14.0",
+        "body-parser": "^1.18.3",
+        "cookie-parser": "~1.4.3",
+        "cors": "^2.8.5",
+        "debug": "~2.6.9",
+        "dotenv": "^6.1.0",
+        "express": "~4.16.0",
+        "express-jwt": "^5.3.1",
+        "express-jwt-authz": "^1.0.0",
+        "jwks-rsa": "^1.3.0",
+        "morgan": "~1.9.0",
+        "pg": "^7.6.1",
+        "pg-hstore": "^2.3.2",
+        "sequelize": "^4.41.2",
+        "sequelize-cli": "^5.3.0",
+        "statuses": "^1.5.0",
+        "umzug": "^2.2.0"
+    },
+    "devDependencies": {
+        "babel-eslint": "^10.0.1",
+        "eslint": "^5.9.0",
+        "nodemon": "^1.18.6"
+    }
+}

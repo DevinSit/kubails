@@ -1,0 +1,9 @@
+steps:
+    - id: "Install dependencies, test, and lint"
+      name: "kennethreitz/pipenv"
+      waitFor: ["-"]
+      entrypoint: "bash"
+      args:
+          - -c
+          - |
+            make install-deps-all ci

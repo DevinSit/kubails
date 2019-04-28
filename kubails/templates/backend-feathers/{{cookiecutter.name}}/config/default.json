@@ -1,0 +1,30 @@
+{
+    "host": "localhost",
+    "port": 5000,
+    "paginate": {
+    },
+    "authentication": {
+        "secret": "aecaf4d85b9fc4b7c8989f9e433e79b42f24680f8904143f039d8858e06777b0fd6bd21022f08031ef44430c7ed3ef92011dec60926f48819cabef8ba8f5744ab11481f6bd5a356a84f6ad3339a4e484502a1e073d01f2ed7a54da1cd2764d5abe826415cd72b71d8ffa85ee078f4b1a8965f52a637acd386b4fd78dbb21539dfcba7e60ec5dacc9d6b3fd23c3271ef5465354adc12fd3a97ee08185325467eb86ab0d9eb1ddb213a46dd6005323543611df0a5914fe279f08efa2a0515508447fb64c604298c0cedac67a520b364985f53b580b180db0339543f5a061ba0ec5ab907b6a8faae25b4c124b9bac4104747b2e0c2b50f4795f8671953edd4e94b7",
+        "strategies": [
+            "jwt",
+            "local"
+        ],
+        "path": "/authentication",
+        "service": "users",
+        "jwt": {
+            "header": {
+                "typ": "access"
+            },
+            "audience": "https://ufincs.com",
+            "subject": "anonymous",
+            "issuer": "feathers",
+            "algorithm": "HS256",
+            "expiresIn": "1d"
+        },
+        "local": {
+            "entity": "user",
+            "usernameField": "email",
+            "passwordField": "password"
+        }
+    }
+}

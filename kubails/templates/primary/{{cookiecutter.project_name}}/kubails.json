@@ -1,0 +1,17 @@
+{
+    "__domain": "{{cookiecutter.domain}}",
+    "__gcp_project_id": "{{cookiecutter.gcp_project}}",
+    "__gcp_project_region": "{{cookiecutter.gcp_region}}",
+    "__gcp_project_zone": "{{cookiecutter.gcp_zone}}",
+    "__nfs_mount_path": "/var/nfs-mount",
+    "__nfs_server_name": "nfs-server",
+    "__nfs_storage_bucket": "{{cookiecutter.project_name}}-nfs-storage",
+    "__production_namespace": "master",
+    "__project_name": "{{cookiecutter.project_name}}",
+    "__project_title": "{{cookiecutter.project_title}}",
+    "__remote_repo_host": "{{cookiecutter.remote_repo_host}}",
+    "__remote_repo_owner": "{{cookiecutter.remote_repo_owner}}",
+    "__services": {
+    },
+    "__wildcard_certificate_secret": "{{cookiecutter.project_name}}-tls"
+}

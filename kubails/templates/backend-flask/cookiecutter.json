@@ -1,0 +1,4 @@
+{
+    "title": "Backend Flask",
+    "name": "{{cookiecutter.title.lower().replace(' ', '-')}}"
+}
