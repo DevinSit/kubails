@@ -30,9 +30,17 @@ class Infra:
 
         # Enable the Cloud Build service account to be able to administer GKE and generate service account keys
         cloud_build_service_account = self.gcloud.get_cloud_build_service_account()
-        self.gcloud.add_role_to_entity("serviceAccount", cloud_build_service_account, self.config.container_admin_role)
+
+        self.gcloud.add_role_to_entity(
+            "serviceAccount", cloud_build_service_account, self.config.container_admin_role
+        )
+
         self.gcloud.add_role_to_entity(
             "serviceAccount", cloud_build_service_account, self.config.service_account_key_admin_role
+        )
+
+        self.gcloud.add_role_to_entity(
+            "serviceAccount", cloud_build_service_account, self.config.crypto_key_decrypter_role
         )
 
         # Create the Terraform state bucket and initialize Terraform to use it

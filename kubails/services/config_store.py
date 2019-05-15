@@ -170,6 +170,7 @@ class ConfigStore:
         self.container_admin_role = "roles/container.admin"
         self.service_account_token_creator_role = "roles/iam.serviceAccountTokenCreator"
         self.service_account_key_admin_role = "roles/iam.serviceAccountKeyAdmin"
+        self.crypto_key_decrypter_role = "roles/cloudkms.cryptoKeyDecrypter"
 
         self.values_folder = "helm/values"
 
