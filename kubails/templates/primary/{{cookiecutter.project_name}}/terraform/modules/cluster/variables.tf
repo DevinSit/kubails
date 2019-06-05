@@ -38,7 +38,7 @@ variable "node_disk_size" {
 
 variable "node_machine_type" {
     type = "string"
-    default = "custom-1-2048"
+    default = "n1-standard-1"
 }
 
 variable "network_link" {
