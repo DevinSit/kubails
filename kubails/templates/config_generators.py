@@ -160,6 +160,9 @@ class FlaskConfigGenerator(ConfigGenerator):
         return {
             name: {
                 "build": "./{}".format(name),
+                "environment": {
+                    "PYTHONUNBUFFERED": "0"
+                },
                 "image": "{}".format(name),
                 "ports": ["5000:5000"],
                 "command": "python src/main.py",
