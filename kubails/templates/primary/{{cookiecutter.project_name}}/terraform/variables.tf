@@ -36,6 +36,11 @@ variable "cluster_machine_type" {
     default = "custom-1-2048"
 }
 
+variable "cluster_disk_size" {
+    type = "string"
+    default = "30"
+}
+
 variable "cluster_preemptible" {
     type = "string"
     default = "true"
