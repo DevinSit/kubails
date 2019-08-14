@@ -145,7 +145,8 @@ class Service:
         return True
 
     def _get_service_path(self, service: str) -> str:
-        return self.config.get_project_path(os.path.join(SERVICES_FOLDER, service))
+        folder = self.config.services.get(service, {}).get("folder", service)
+        return self.config.get_project_path(os.path.join(SERVICES_FOLDER, folder))
 
     def _get_fixed_tag(self, service: str) -> str:
         return self.config.services.get(service, {}).get("fixed_tag", None)
