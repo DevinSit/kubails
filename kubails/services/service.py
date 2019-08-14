@@ -115,10 +115,12 @@ class Service:
 
     def _run_services_make_command(self, command: str, services: List[str] = [], tag: str = "") -> bool:
         def function(service: str) -> bool:
+            base_image = self._get_base_image_name(service) 
+
             cache_option = "" if not tag else "--cache-from=gcr.io/{}/{}-{}:{}".format(
                 self.config.gcp_project_id,
                 self.config.project_name,
-                service,
+                base_image,
                 tag
             )
 
