@@ -64,7 +64,9 @@ class Service:
         def build_function(service: str) -> bool:
             service_path = self._get_service_path(service)
             fixed_tag = self._get_fixed_tag(service)
-            images = self._generate_tagged_images(service, branch_tag, commit_tag, fixed_tag=fixed_tag)
+            base_image = self._get_base_image_name(service)
+
+            images = self._generate_tagged_images(base_image, branch_tag, commit_tag, fixed_tag=fixed_tag)
 
             if not branch_tag and not commit_tag:  # Local dev use case
                 return self.docker.build(service_path, [images["latest"]])
@@ -77,7 +79,9 @@ class Service:
     def push(self, services: List[str], branch_tag: str = None, commit_tag: str = None) -> bool:
         def push_function(service: str) -> bool:
             fixed_tag = self._get_fixed_tag(service)
-            images = self._generate_tagged_images(service, branch_tag, commit_tag, fixed_tag=fixed_tag)
+            base_image = self._get_base_image_name(service)
+
+            images = self._generate_tagged_images(base_image, branch_tag, commit_tag, fixed_tag=fixed_tag)
 
             if not branch_tag and not commit_tag:  # Local dev use case
                 return self.docker.push(images["latest"])
@@ -148,12 +152,15 @@ class Service:
         folder = self.config.services.get(service, {}).get("folder", service)
         return self.config.get_project_path(os.path.join(SERVICES_FOLDER, folder))
 
+    def _get_base_image_name(self, service: str) -> str:
+        return self.config.services.get(service, {}).get("image", service)
+
     def _get_fixed_tag(self, service: str) -> str:
         return self.config.services.get(service, {}).get("fixed_tag", None)
 
     def _generate_tagged_images(
         self,
-        service: str,
+        base_image: str,
         branch_tag: str = "",
         commit_tag: str = "",
         fixed_tag: str = None
@@ -163,7 +170,7 @@ class Service:
         images["base"] = "gcr.io/{}/{}-{}".format(
             self.config.gcp_project_id,
             self.config.project_name,
-            service
+            base_image
         )
 
         images["latest"] = "{}:latest".format(images["base"])
