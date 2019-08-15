@@ -163,9 +163,10 @@ class Cluster:
 
         for service, config in services_dict.items():
             secrets_config = config.get("secrets", {})
+            folder = config.get("folder", service)
             secret_name = secrets_config["name"]
 
-            secrets_file = self.config.get_project_path(os.path.join("services", service, secrets_config["file"]))
+            secrets_file = self.config.get_project_path(os.path.join("services", folder, secrets_config["file"]))
             decrypted_secrets_file = "decrypted_secrets"
 
             result = result and self.gcloud.kms_decrypt(
