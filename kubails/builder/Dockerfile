@@ -5,7 +5,7 @@ FROM ubuntu:16.04
 
 ENV KUBECTL_VERSION="v1.11.2"
 ENV HELM_VERSION="v2.10.0"
-ENV TERRAFORM_VERSION="0.11.11"
+ENV TERRAFORM_VERSION="0.11.14"
 ENV PATH="/builder/google-cloud-sdk/bin:${PATH}"
 
 # These env variables are needed to prevent Click from complaining
