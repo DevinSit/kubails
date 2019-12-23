@@ -4,13 +4,13 @@ url = "https://pypi.python.org/simple"
 verify_ssl = true
 
 [packages]
-flask = "==1.0.2"
-flask-cors = "==3.0.6"
-gunicorn = "==19.8.1"
+flask = "==1.1.1"
+flask-cors = "==3.0.8"
+gunicorn = "==20.0.4"
 python-dotenv = "==0.8.2"
-redis = "==2.10.6"
-rq = "==0.11.0"
-requests = "==2.19.1"
+redis = "==3.3.11"
+rq = "==1.1.0"
+requests = "==2.20.0"
 
 [requires]
 python_version = "3.6"
