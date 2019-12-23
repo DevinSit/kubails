@@ -1,6 +1,6 @@
 import {routerMiddleware} from "connected-react-router";
 import {createBrowserHistory} from "history";
-import {configureStore} from "redux-starter-kit";
+import {configureStore} from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import thunkMiddleware from "redux-thunk";
 
