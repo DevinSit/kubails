@@ -20,7 +20,10 @@ resource "google_container_cluster" "primary" {
     }
 
     lifecycle {
-        ignore_changes = ["node_pool"]
+        # Terraform always wants to update the network/subnetwork values with a fuller URL, but it doesn't matter.
+        # Can just ignore it.
+        # As for the node pool, want to ignore it so that changes happen on dedicated resource below.
+        ignore_changes = ["node_pool", "network", "subnetwork"]
     }
 
     node_pool {
@@ -34,6 +37,7 @@ resource "google_container_node_pool" "primary" {
     cluster = "${google_container_cluster.primary.name}"
     location = "${var.zone}"
     initial_node_count = "${var.initial_node_count}"
+    version = "${var.cluster_version}"
 
     autoscaling {
         min_node_count = "${var.min_node_count}"
@@ -50,3 +54,18 @@ resource "google_container_node_pool" "primary" {
     }
 }
 
+# A firewall rule that enables the Kubernetes master nodes to access the cert-manager 'webhook' service.
+# This 'webhook' service offloads the validation of manifests for cert-manager.
+# For reference: https://www.revsys.com/tidbits/jetstackcert-manager-gke-private-clusters/
+resource "google_compute_firewall" "allow_cert_manager_webhook_to_cluster" {
+    name = "allow-cert-manager-webhook-to-cluster"
+    network = "${var.network_link}"
+
+    source_ranges = ["${var.cluster_secondary_range_cidr}", "${var.services_secondary_range_cidr}"]
+    target_tags = ["${var.cluster_name}"]
+
+    allow {
+        protocol = "tcp"
+        ports = ["6443"]
+    }
+}

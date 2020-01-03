@@ -41,7 +41,10 @@ class GoogleCloud:
         shutil.copytree(root_folder, root_kubails_folder)
         shutil.move(os.path.join(root_folder, "kubails"), builder_folder)
 
-        command = self.base_command + ["builds", "submit", builder_folder, "--config={}".format(cloudbuild_config), "--timeout=20m"]
+        command = self.base_command + [
+            "builds", "submit", builder_folder, "--config={}".format(cloudbuild_config), "--timeout=20m"
+        ]
+
         result = False
 
         try:

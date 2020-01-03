@@ -115,7 +115,7 @@ class Service:
 
     def _run_services_make_command(self, command: str, services: List[str] = [], tag: str = "") -> bool:
         def function(service: str) -> bool:
-            base_image = self._get_base_image_name(service) 
+            base_image = self._get_base_image_name(service)
 
             cache_option = "" if not tag else "--cache-from=gcr.io/{}/{}-{}:{}".format(
                 self.config.gcp_project_id,
@@ -242,7 +242,6 @@ class Service:
         certificate_manifest = self.manifest_manager.load_static_manifest(certificate_manifest_location)
 
         certificate_manifest["spec"]["dnsNames"] = domains
-        certificate_manifest["spec"]["acme"]["config"][0]["domains"] = domains
         self.manifest_manager.write_static_manifest(certificate_manifest, certificate_manifest_location)
 
         logger.info(

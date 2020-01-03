@@ -1,4 +1,4 @@
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
     name: letsencrypt-staging
@@ -8,11 +8,11 @@ spec:
         email: {{cookiecutter.domain_owner_email}}
         privateKeySecretRef:
             name: letsencrypt-staging
-        dns01:
-            providers:
-            - name: clouddns
-              clouddns:
-                  serviceAccountSecretRef:
-                      name: clouddns-service-account
-                      key: service-account.json
-                  project: {{cookiecutter.gcp_project}}
+        solvers:
+        - dns01:
+            clouddns:
+                serviceAccountSecretRef:
+                    name: clouddns-service-account
+                    key: service-account.json
+                project: {{cookiecutter.gcp_project}}
+          selector: {}  # Match all domains
