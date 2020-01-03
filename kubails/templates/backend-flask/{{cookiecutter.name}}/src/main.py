@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from typing import Tuple
 
