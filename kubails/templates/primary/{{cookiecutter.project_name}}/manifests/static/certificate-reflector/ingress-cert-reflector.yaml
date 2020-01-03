@@ -87,7 +87,7 @@ spec:
                     # Update the namespace directive to the target namespace
                     sed -e "s/namespace: cert-manager/namespace: $ns/g" | \
                     # Remove any unique identifiers so that kubectl can properly apply the change as an update
-                    # Otherwise, kubectl will complain that the opeartion cannot be fulfilled. For reference:
+                    # Otherwise, kubectl will complain that the operation cannot be fulfilled. For reference:
                     # https://stackoverflow.com/questions/51297136/kubectl-error-the-object-has-been-modified-please-apply-your-changes-to-the-la
                     sed -e "s/creationTimestamp:.*//g" | sed -e "s/resourceVersion:.*//g" | sed -e "s/uid:.*//g" \
                 )
@@ -122,7 +122,7 @@ spec:
                       # Update the namespace directive to the target namespace
                       sed -e "s/namespace: cert-manager/namespace: $ns/g" | \
                       # Remove any unique identifiers so that kubectl can properly apply the change as an update
-                      # Otherwise, kubectl will complain that the opeartion cannot be fulfilled. For reference:
+                      # Otherwise, kubectl will complain that the operation cannot be fulfilled. For reference:
                       # https://stackoverflow.com/questions/51297136/kubectl-error-the-object-has-been-modified-please-apply-your-changes-to-the-la
                       sed -e "s/creationTimestamp:.*//g" | sed -e "s/resourceVersion:.*//g" | sed -e "s/uid:.*//g" \
                   )

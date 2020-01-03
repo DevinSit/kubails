@@ -8,7 +8,7 @@ variable "cluster_name" {
 
 variable "cluster_version" {
     type = "string"
-    default = "1.11.8"
+    default = "1.15.4"
 }
 
 variable "initial_node_count" {
@@ -54,5 +54,13 @@ variable "cluster_secondary_range_name" {
 }
 
 variable "services_secondary_range_name" {
+    type = "string"
+}
+
+variable "cluster_secondary_range_cidr" {
+    type = "string"
+}
+
+variable "services_secondary_range_cidr" {
     type = "string"
 }
