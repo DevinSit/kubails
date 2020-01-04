@@ -193,7 +193,7 @@ class ConfigStore:
 
         self.production_namespace = config.get("__production_namespace")
 
-        self.terraform_state_bucket = "{}-terraform".format(self.project_name)
+        self.terraform_state_bucket = config.get("__terraform_bucket", "{}-terraform".format(self.project_name))
 
     def _flatten_config_recursive(self, config: Union[Dict[str, Any], List[Any]], parent_key: str) -> Dict[str, Any]:
         flattened_config = {}
