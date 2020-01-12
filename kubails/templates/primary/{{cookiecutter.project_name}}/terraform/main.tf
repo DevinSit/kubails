@@ -79,3 +79,11 @@ module "cluster" {
     services_secondary_range_name = "${module.networking.subnetwork_secondary_range_2_name}"
     services_secondary_range_cidr = "${module.networking.subnetwork_secondary_range_2_cidr}"
 }
+
+module "logging" {
+    source = "./modules/logging"
+
+    region = "${var.__gcp_project_region}"
+    cluster_name = "${module.cluster.cluster_name}"
+    logging_base_name = "${var.__gcp_project_id}"
+}
