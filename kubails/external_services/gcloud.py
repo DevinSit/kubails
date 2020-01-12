@@ -142,7 +142,7 @@ class GoogleCloud:
         logger.info("Enabling APIs...")
 
         commands = list(map(lambda api: self.base_command + ["services", "enable", api], apis_to_enable))
-        return reduce(lambda acc, command: call_command(command) and acc, commands)
+        return reduce(lambda acc, command: call_command(command) and acc, commands, True)
 
     def create_bucket(self, bucket_name: str) -> bool:
         logger.info("Creating bucket {}...".format(bucket_name))
