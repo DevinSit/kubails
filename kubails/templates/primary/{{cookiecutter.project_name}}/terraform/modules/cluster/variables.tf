@@ -1,8 +1,16 @@
+variable "gcp_project" {
+    type = "string"
+}
+
+variable "region" {
+    type = "string"
+}
+
 variable "zone" {
     type = "string"
 }
 
-variable "cluster_name" {
+variable "cluster_base_name" {
     type = "string"
 }
 

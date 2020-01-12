@@ -33,8 +33,8 @@ module "kms" {
     source = "./modules/kms"
 
     region = "${var.__gcp_project_region}"
-    key_name = "${var.__project_name}-key"
-    key_ring_name = "${var.__project_name}-key-ring"
+    key_name = "${var.__gcp_project_id}-key"
+    key_ring_name = "${var.__gcp_project_id}-key-ring"
 }
 
 module "dns" {
@@ -43,14 +43,6 @@ module "dns" {
     dns_zone_name = "${var.__project_name}"
     domain = "${var.__domain}" 
     ip_name = "${var.__project_name}-ip"
-}
-
-module "storage" {
-    source = "./modules/storage"
-
-    region = "${var.__gcp_project_region}"
-    zone = "${var.__gcp_project_zone}"
-    bucket_name = "${var.__project_name}-model-storage"
 }
 
 module "networking" {
@@ -64,8 +56,11 @@ module "networking" {
 module "cluster" {
     source = "./modules/cluster"
 
+    gcp_project = "${var.__gcp_project_id}"
+    region = "${var.__gcp_project_region}"
     zone = "${var.__gcp_project_zone}"
-    cluster_name = "${var.__project_name}-cluster"
+
+    cluster_base_name = "${var.__project_name}-cluster"
     initial_node_count = "${var.cluster_initial_node_count}"
     node_machine_type = "${var.cluster_machine_type}"
     node_disk_size = "${var.cluster_disk_size}"

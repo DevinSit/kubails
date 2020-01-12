@@ -40,7 +40,6 @@ class Cluster:
         self.deploy_ingress_controller()
         self.deploy_cert_manager()
         self.deploy_certificate_reflector()
-        # TODO: Add option to deploy the NFS server
 
     def destroy(self) -> None:
         self.destroy_ingress()
