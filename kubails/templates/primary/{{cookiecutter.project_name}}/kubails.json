@@ -1,5 +1,6 @@
 {
     "__domain": "{{cookiecutter.domain}}",
+    "__domain_owner_email": "{{cookiecutter.domain_owner_email}}",
     "__gcp_project_id": "{{cookiecutter.gcp_project}}",
     "__gcp_project_region": "{{cookiecutter.gcp_region}}",
     "__gcp_project_zone": "{{cookiecutter.gcp_zone}}",
