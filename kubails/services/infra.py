@@ -24,8 +24,12 @@ class Infra:
 
         # Create the service account that will be used for Terraform and whatnot
         self.gcloud.create_service_account(self.config.service_account, self.config.project_title)
+
         self.gcloud.add_role_to_service_account(self.config.service_account, self.config.service_account_role)
         self.gcloud.add_role_to_service_account(self.config.service_account, self.config.repo_admin_role)
+        self.gcloud.add_role_to_service_account(self.config.service_account, self.config.logs_configuration_writer_role)
+        self.gcloud.add_role_to_service_account(self.config.service_account, self.config.project_iam_admin_role)
+
         self.gcloud.create_key_for_service_account(self.config.service_account)
 
         # Enable the Cloud Build service account to be able to administer GKE and generate service account keys
