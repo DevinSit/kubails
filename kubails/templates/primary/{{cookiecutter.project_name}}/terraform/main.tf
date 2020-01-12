@@ -60,7 +60,7 @@ module "cluster" {
     region = "${var.__gcp_project_region}"
     zone = "${var.__gcp_project_zone}"
 
-    cluster_base_name = "${var.__project_name}-cluster"
+    cluster_base_name = "${var.__project_name}"
     initial_node_count = "${var.cluster_initial_node_count}"
     node_machine_type = "${var.cluster_machine_type}"
     node_disk_size = "${var.cluster_disk_size}"
@@ -73,6 +73,16 @@ module "cluster" {
     cluster_secondary_range_cidr = "${module.networking.subnetwork_secondary_range_1_cidr}"
     services_secondary_range_name = "${module.networking.subnetwork_secondary_range_2_name}"
     services_secondary_range_cidr = "${module.networking.subnetwork_secondary_range_2_cidr}"
+}
+
+module "monitoring" {
+    source = "./modules/monitoring"
+
+    gcp_project = "${var.__gcp_project_id}"
+
+    domain = "${var.__domain}"
+    uptime_check_base_name = "${var.__project_name}"
+    alerts_email = "${var.__domain_owner_email}"
 }
 
 module "logging" {

@@ -18,6 +18,10 @@ variable "__domain" {
     type = "string"
 }
 
+variable "__domain_owner_email" {
+    type = "string"
+}
+
 variable "__remote_repo_host" {
     type = "string"
 }
