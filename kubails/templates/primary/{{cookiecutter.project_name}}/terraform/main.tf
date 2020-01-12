@@ -45,14 +45,6 @@ module "dns" {
     ip_name = "${var.__project_name}-ip"
 }
 
-module "storage" {
-    source = "./modules/storage"
-
-    region = "${var.__gcp_project_region}"
-    zone = "${var.__gcp_project_zone}"
-    bucket_name = "${var.__project_name}-model-storage"
-}
-
 module "networking" {
     source = "./modules/networking"
 
