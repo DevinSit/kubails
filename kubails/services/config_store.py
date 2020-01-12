@@ -156,6 +156,7 @@ class ConfigStore:
         self.apis_to_enable = [
             "cloudkms.googleapis.com",
             "cloudbuild.googleapis.com",
+            "cloudresourcemanager.googleapis.com",
             "compute.googleapis.com",
             "container.googleapis.com",
             "containerregistry.googleapis.com",
@@ -184,6 +185,8 @@ class ConfigStore:
         self.service_account = "{}-account".format(self.project_name)
         self.service_account_role = "roles/editor"
         self.repo_admin_role = "roles/source.admin"
+        self.logs_configuration_writer_role = "roles/logging.configWriter"
+        self.project_iam_admin_role = "roles/resourcemanager.projectIamAdmin"
 
         self.services = config.get("__services", {})  # type: Dict[str, Dict[str, Any]]
         self.services_with_code = self._parse_services_with_code(self.services)
