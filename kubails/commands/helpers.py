@@ -20,17 +20,6 @@ SERVICE_GENERATION_PROMPTS = {
 }
 
 
-def build_extra_service_generation_options(service_type: str) -> Dict[str, str]:
-    extra_config_options = SERVICES_CONFIG[service_type].extra_config_options
-    config_options = {}
-
-    for option in extra_config_options:
-        option_value = click.prompt(option["prompt"])
-        config_options[option["option_name"]] = option_value
-
-    return config_options
-
-
 def generate_service(
     service_service: Service,
     # Used when generating a new project (see commands/root.py)
@@ -63,5 +52,16 @@ def generate_service(
         default=title.lower().replace(" ", "-")
     )
 
-    extra_config = build_extra_service_generation_options(service_type)
+    extra_config = _build_extra_service_generation_options(service_type)
     service_service.generate(service_type, title, name, subdomain, extra_config)
+
+
+def _build_extra_service_generation_options(service_type: str) -> Dict[str, str]:
+    extra_config_options = SERVICES_CONFIG[service_type].extra_config_options
+    config_options = {}
+
+    for option in extra_config_options:
+        option_value = click.prompt(option["prompt"])
+        config_options[option["option_name"]] = option_value
+
+    return config_options
