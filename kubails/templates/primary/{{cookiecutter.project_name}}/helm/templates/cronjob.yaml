@@ -1,3 +1,4 @@
+{% raw %}
 {{- if .Values.__services}}
 {{- $namespace := .Values.namespace | lower}}
 {{- $isProduction := eq $namespace .Values.__production_namespace}}
@@ -82,3 +83,4 @@ spec:
                         claimName: {{$pvClaimName}}
                 {{- end}}
 {{- end}}
+{% endraw %}
