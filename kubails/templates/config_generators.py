@@ -1,15 +1,29 @@
 from typing import Any, Dict
+from kubails.services.config_store import ConfigStore
 
+ExtraConfigType = Dict[str, str]
 
+"""
+Base class from which service-dependent config generators are extended from.
+Really more of an interface than anything.
+"""
 class ConfigGenerator:
     def __init__(
-        self, name: str,
+        self,
+        name: str,
+        config_store: ConfigStore,
+        extra_config: ExtraConfigType,
         has_database_volume: bool = False,
-        has_deps_volume: bool = False
+        has_deps_volume: bool = False,
+        is_service: bool = True
     ) -> None:
         self.name = name
+        self.config_store = config_store
+        self.extra_config = extra_config
+
         self.has_database_volume = has_database_volume
         self.has_deps_volume = has_deps_volume
+        self.is_service = is_service
 
     def generate_kubails_config(self) -> Dict[str, Any]:
         return {}
@@ -23,14 +37,81 @@ class ConfigGenerator:
     def has_compose_deps_volume(self) -> bool:
         return self.has_deps_volume
 
+    def is_external_service(self) -> bool:
+        return self.is_service
 
-class ExpressConfigGenerator(ConfigGenerator):
-    def __init__(self, name: str) -> None:
+
+class DatabaseBackupGenerator(ConfigGenerator):
+    extra_config_options = [
+        {
+            "option_name": "database_service",
+            "prompt": "Enter the name of the database service to backup"
+        }
+    ]
+
+    def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
         ConfigGenerator.__init__(
             self,
             name,
+            config_store,
+            extra_config,
+            has_database_volume=False,
+            has_deps_volume=False,
+            is_service=False
+        )
+
+    def generate_kubails_config(self) -> Dict[str, Any]:
+        name = self.name
+        database_service = self.extra_config["database_service"]
+        backup_bucket = "{}-cluster-database-backups".format(self.config_store.gcp_project_id)
+
+        return {
+            name: {
+                "env": [
+                    {
+                        "name": "PGHOST",
+                        "value": database_service
+                    },
+                    {
+                        "name": "PGDATABASE",
+                        "value": "app-database"
+                    },
+                    {
+                        "name": "PGUSER",
+                        "value": "app-database-user"
+                    },
+                    {
+                        "name": "BACKUP_BUCKET",
+                        "value": backup_bucket
+                    }
+                ],
+                "fixed_tag": "latest",
+                "host": None,
+                "production_replicas": None,
+                "replicas": None,
+                "schedule": "0 3 * * *",
+                "templates": [
+                    "cronjob"
+                ]
+            }
+        }
+
+    def generate_compose_config(self) -> Dict[str, Any]:
+        return None
+
+
+class ExpressConfigGenerator(ConfigGenerator):
+    extra_config_options = []
+
+    def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
+        ConfigGenerator.__init__(
+            self,
+            name,
+            config_store,
+            extra_config,
             has_database_volume=True,
-            has_deps_volume=True
+            has_deps_volume=True,
+            is_service=True
         )
 
     def generate_kubails_config(self) -> Dict[str, Any]:
@@ -130,12 +211,17 @@ class ExpressConfigGenerator(ConfigGenerator):
 
 
 class FlaskConfigGenerator(ConfigGenerator):
-    def __init__(self, name: str) -> None:
+    extra_config_options = []
+
+    def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
         ConfigGenerator.__init__(
             self,
             name,
+            config_store,
+            extra_config,
             has_database_volume=False,
-            has_deps_volume=False
+            has_deps_volume=False,
+            is_service=True
         )
 
     def generate_kubails_config(self) -> Dict[str, Any]:
@@ -174,12 +260,17 @@ class FlaskConfigGenerator(ConfigGenerator):
 
 
 class ReactConfigGenerator(ConfigGenerator):
-    def __init__(self, name: str) -> None:
+    extra_config_options = []
+
+    def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
         ConfigGenerator.__init__(
             self,
             name,
+            config_store,
+            extra_config,
             has_database_volume=False,
-            has_deps_volume=True
+            has_deps_volume=True,
+            is_service=True
         )
 
     def generate_kubails_config(self) -> Dict[str, Any]:

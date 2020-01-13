@@ -101,17 +101,26 @@ class Service:
 
         return self._apply_to_services(push_function, services)
 
-    def generate(self, service_type: str, title: str, name: str, subdomain: str) -> None:
+    def generate(
+        self,
+        service_type: str,
+        title: str,
+        name: str,
+        subdomain: str,
+        extra_config: Dict[str, str]
+    ) -> None:
         name = name.lower().replace(" ", "-")
         subdomain = subdomain.lower().replace(" ", "-")
-        config_generator = SERVICES_CONFIG[service_type](name)
+        config_generator = SERVICES_CONFIG[service_type](name, self.config, extra_config)
 
         print("")  # Just a new line for user output
 
         self._template_service(service_type, title, name)
         self._add_service_to_kubails_config(config_generator, name, subdomain)
         self._add_service_to_compose_config(config_generator, name)
-        self._update_wildcard_certificate()
+
+        if config_generator.is_external_service():
+            self._update_wildcard_certificate()
 
     def _run_services_make_command(self, command: str, services: List[str] = [], tag: str = "") -> bool:
         def function(service: str) -> bool:
@@ -224,9 +233,11 @@ class Service:
             self.docker_compose.add_volume_config({deps_volume: None})
 
         generated_compose_config = config_generator.generate_compose_config()
-        self.docker_compose.add_service_config(generated_compose_config)
 
-        logger.info("Updated {} with new service config".format(os.path.join(SERVICES_FOLDER, "docker-compose.yaml")))
+        if generated_compose_config is not None:
+            self.docker_compose.add_service_config(generated_compose_config)
+
+            logger.info("Updated {} with new service config".format(os.path.join(SERVICES_FOLDER, "docker-compose.yaml")))
 
     def _update_wildcard_certificate(self) -> None:
         config = self.config.get_config()
