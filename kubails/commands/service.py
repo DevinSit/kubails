@@ -1,9 +1,10 @@
 import click
 import logging
 import sys
-from typing import Dict, Tuple
+from typing import Tuple
+from kubails.commands import helpers
 from kubails.services.service import Service
-from kubails.templates import SERVICES_CONFIG, SERVICE_TEMPLATES
+from kubails.templates import SERVICE_TEMPLATES
 from kubails.utils.command_helpers import log_command_args_factory
 
 
@@ -11,27 +12,6 @@ logger = logging.getLogger(__name__)
 log_command_args = log_command_args_factory(logger, "Service '{}' args")
 
 service_service = None
-
-
-############################################################
-# Helper Functions
-############################################################
-
-
-def build_extra_service_generation_options(service_type: str) -> Dict[str, str]:
-    extra_config_options = SERVICES_CONFIG[service_type].extra_config_options
-    config_options = {}
-
-    for option in extra_config_options:
-        option_value = click.prompt(option["prompt"])
-        config_options[option["option_name"]] = option_value
-
-    return config_options
-
-
-############################################################
-# Main Click Group
-############################################################
 
 
 @click.group()
@@ -92,19 +72,24 @@ def make(command: str) -> None:
 @service.command()
 @click.option(
     "--type", "service_type",
-    prompt="Choose a service template",
+    prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["service_type"],
     type=click.Choice(SERVICE_TEMPLATES),
     default=SERVICE_TEMPLATES[0]
 )
-@click.option("--subdomain", prompt="Enter a subdomain for the service", default="")
-@click.option("--title", prompt="Enter a title for the service")
+@click.option(
+    "--subdomain",
+    prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["subdomain"],
+    default=""
+)
+@click.option("--title", prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["subdomain"])
 @log_command_args
 def generate(service_type: str, subdomain: str, title: str) -> None:
-    # Since 'name' needs to modify 'title' for the default, it can't be a @click.option
-    name = click.prompt("Enter a name for the service", default=title.lower().replace(" ", "-"))
-
-    extra_config = build_extra_service_generation_options(service_type)
-    service_service.generate(service_type, title, name, subdomain, extra_config)
+    helpers.generate_service(
+        service_service,
+        service_type=service_type,
+        subdomain=subdomain,
+        title=title,
+    )
 
 
 ############################################################

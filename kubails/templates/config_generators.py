@@ -1,13 +1,18 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 from kubails.services.config_store import ConfigStore
 
 ExtraConfigType = Dict[str, str]
+ExtraConfigOptionsType = List[ExtraConfigType]
 
-"""
-Base class from which service-dependent config generators are extended from.
-Really more of an interface than anything.
-"""
+
 class ConfigGenerator:
+    """
+    Base class from which service-dependent config generators are extended from.
+    Really more of an interface than anything.
+    """
+
+    extra_config_options = []  # type: ExtraConfigOptionsType
+
     def __init__(
         self,
         name: str,
@@ -47,7 +52,7 @@ class DatabaseBackupGenerator(ConfigGenerator):
             "option_name": "database_service",
             "prompt": "Enter the name of the database service to backup"
         }
-    ]
+        ]  # type: ExtraConfigOptionsType
 
     def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
         ConfigGenerator.__init__(
@@ -101,8 +106,6 @@ class DatabaseBackupGenerator(ConfigGenerator):
 
 
 class ExpressConfigGenerator(ConfigGenerator):
-    extra_config_options = []
-
     def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
         ConfigGenerator.__init__(
             self,
@@ -211,8 +214,6 @@ class ExpressConfigGenerator(ConfigGenerator):
 
 
 class FlaskConfigGenerator(ConfigGenerator):
-    extra_config_options = []
-
     def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
         ConfigGenerator.__init__(
             self,
@@ -260,8 +261,6 @@ class FlaskConfigGenerator(ConfigGenerator):
 
 
 class ReactConfigGenerator(ConfigGenerator):
-    extra_config_options = []
-
     def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
         ConfigGenerator.__init__(
             self,

@@ -237,7 +237,9 @@ class Service:
         if generated_compose_config is not None:
             self.docker_compose.add_service_config(generated_compose_config)
 
-            logger.info("Updated {} with new service config".format(os.path.join(SERVICES_FOLDER, "docker-compose.yaml")))
+            logger.info(
+                "Updated {} with new service config".format(os.path.join(SERVICES_FOLDER, "docker-compose.yaml"))
+            )
 
     def _update_wildcard_certificate(self) -> None:
         config = self.config.get_config()
