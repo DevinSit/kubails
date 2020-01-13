@@ -45,17 +45,17 @@ def generate_service(
         else SERVICE_GENERATION_PROMPTS["with_index"]
     )
 
-    if not service_type:
+    if service_type is None:
         service_type = click.prompt(
             prompts["service_type"].format(service_index),
             type=click.Choice(SERVICE_TEMPLATES),
             default=SERVICE_TEMPLATES[0]
         )
 
-    if not subdomain:
+    if subdomain is None:
         subdomain = click.prompt(prompts["subdomain"].format(service_index), default="")
 
-    if not title:
+    if title is None:
         title = click.prompt(prompts["title"].format(service_index))
 
     name = click.prompt(

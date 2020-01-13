@@ -81,7 +81,7 @@ def make(command: str) -> None:
     prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["subdomain"],
     default=""
 )
-@click.option("--title", prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["subdomain"])
+@click.option("--title", prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["title"])
 @log_command_args
 def generate(service_type: str, subdomain: str, title: str) -> None:
     helpers.generate_service(
