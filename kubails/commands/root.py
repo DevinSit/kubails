@@ -2,9 +2,9 @@ import click
 import logging
 import os
 from typing import List
+from kubails.commands import helpers
 from kubails.services.service import Service
 from kubails.services.templater import Templater
-from kubails.templates import SERVICE_TEMPLATES
 from kubails.utils.command_helpers import log_command_args_factory
 
 
@@ -47,23 +47,7 @@ def _generate_new_project() -> None:
         return
 
     for i in range(number_of_services):
-        service_index = i + 1
-
-        service_type = click.prompt(
-            "Choose a template for service {}".format(service_index),
-            type=click.Choice(SERVICE_TEMPLATES),
-            default=SERVICE_TEMPLATES[0]
-        )
-
-        subdomain = click.prompt("Enter a subdomain for service {}".format(service_index), default="")
-        title = click.prompt("Enter a title for service {}".format(service_index))
-
-        name = click.prompt(
-            "Enter a name for service {}".format(service_index),
-            default=title.lower().replace(" ", "-")
-        )
-
-        service_service.generate(service_type, title, name, subdomain)
+        helpers.generate_service(service_service, service_index=i+1)
         print("")
 
 

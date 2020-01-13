@@ -2,6 +2,7 @@ import click
 import logging
 import sys
 from typing import Tuple
+from kubails.commands import helpers
 from kubails.services.service import Service
 from kubails.templates import SERVICE_TEMPLATES
 from kubails.utils.command_helpers import log_command_args_factory
@@ -71,16 +72,24 @@ def make(command: str) -> None:
 @service.command()
 @click.option(
     "--type", "service_type",
-    prompt="Choose a service template",
+    prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["service_type"],
     type=click.Choice(SERVICE_TEMPLATES),
     default=SERVICE_TEMPLATES[0]
 )
-@click.option("--subdomain", prompt="Enter a subdomain for the service", default="")
-@click.option("--title", prompt="Enter a title for the service")
+@click.option(
+    "--subdomain",
+    prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["subdomain"],
+    default=""
+)
+@click.option("--title", prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["title"])
 @log_command_args
 def generate(service_type: str, subdomain: str, title: str) -> None:
-    name = click.prompt("Enter a name for the service", default=title.lower().replace(" ", "-"))
-    service_service.generate(service_type, title, name, subdomain)
+    helpers.generate_service(
+        service_service,
+        service_type=service_type,
+        subdomain=subdomain,
+        title=title,
+    )
 
 
 ############################################################
