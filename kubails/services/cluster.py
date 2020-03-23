@@ -5,7 +5,7 @@ from dotenv import dotenv_values
 from typing import List
 from kubails.external_services import gcloud, helm, kubectl, terraform
 from kubails.services import config_store, manifest_manager
-from kubails.utils.service_helpers import call_command
+from kubails.utils.service_helpers import call_command, sanitize_name
 
 
 logger = logging.getLogger(__name__)
@@ -86,7 +86,7 @@ class Cluster:
 
     def generate_manifests(self, services: List[str], tag: str = "", namespace: str = "") -> bool:
         result = True
-        namespace = namespace.lower()
+        namespace = sanitize_name(namespace)
 
         is_production = namespace == self.config.production_namespace
         subdomain = "" if is_production else "{}.".format(namespace)
@@ -128,7 +128,7 @@ class Cluster:
 
     def deploy_manifests(self, services: List[str], namespace: str = "") -> bool:
         result = True
-        namespace = namespace.lower()
+        namespace = sanitize_name(namespace)
 
         services_dict = {s: self.config.services[s] for s in services} if services else self.config.services
 
@@ -154,7 +154,7 @@ class Cluster:
 
     def deploy_secrets(self, services: List[str], namespace: str) -> bool:
         result = True
-        namespace = namespace.lower()
+        namespace = sanitize_name(namespace)
 
         services_dict = {
             s: self.config.services_with_secrets[s] for s in services

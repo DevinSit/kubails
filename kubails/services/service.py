@@ -4,7 +4,7 @@ from typing import Callable, Dict, List
 from kubails.external_services import docker, docker_compose
 from kubails.services import config_store, manifest_manager, templater
 from kubails.templates import ConfigGenerator, SERVICES_CONFIG
-from kubails.utils.service_helpers import call_command
+from kubails.utils.service_helpers import call_command, sanitize_name
 
 
 logger = logging.getLogger(__name__)
@@ -61,6 +61,8 @@ class Service:
         return self._run_services_make_command(command)
 
     def build(self, services: List[str], branch_tag: str = None, commit_tag: str = None) -> bool:
+        branch_tag = sanitize_name(branch_tag)
+
         def build_function(service: str) -> bool:
             service_path = self._get_service_path(service)
             fixed_tag = self._get_fixed_tag(service)
@@ -77,6 +79,8 @@ class Service:
         return self._apply_to_services(build_function, services)
 
     def push(self, services: List[str], branch_tag: str = None, commit_tag: str = None) -> bool:
+        branch_tag = sanitize_name(branch_tag)
+
         def push_function(service: str) -> bool:
             fixed_tag = self._get_fixed_tag(service)
             base_image = self._get_base_image_name(service)
@@ -123,6 +127,8 @@ class Service:
             self._update_wildcard_certificate()
 
     def _run_services_make_command(self, command: str, services: List[str] = [], tag: str = "") -> bool:
+        tag = sanitize_name(tag)
+
         def function(service: str) -> bool:
             base_image = self._get_base_image_name(service)
 
