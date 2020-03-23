@@ -2,6 +2,7 @@ import logging
 from functools import reduce
 from typing import List
 from kubails.external_services import git, kubectl
+from kubails.utils.service_helpers import sanitize_name
 
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,10 @@ class KubeGitSyncer:
         self.git.fetch("origin", prune=True)
         self.git.fetch("origin", prune=True, unshallow=True)
 
-        unused_namespaces = self._get_unused_namespaces()
+        remote_branches = self.git.get_remote_branches()
+        existing_namespaces = self.kubectl.get_namespaces(["kube-git-syncer=true"])
+
+        unused_namespaces = _get_unused_namespaces(remote_branches, existing_namespaces)
 
         return reduce(
             lambda acc, namespace: acc and self.kubectl.delete_namespace(namespace),
@@ -26,18 +30,22 @@ class KubeGitSyncer:
             True
         )
 
-    def _get_unused_namespaces(self) -> List[str]:
-        remote_branches = self.git.get_remote_branches()
-        existing_namespaces = self.kubectl.get_namespaces(["kube-git-syncer=true"])
-        unused_namespaces = [n for n in existing_namespaces if n not in remote_branches]
 
-        logger.info("Remote Branches")
-        logger.info(str(remote_branches))
+# Given the list of existing namespaces, this function determines which
+# namespaces still exist for branches that have been deleted.
+def _get_unused_namespaces(remote_branches: List[str], existing_namespaces: List[str]) -> List[str]:
+    # Need to convert branch names to sanitized namespace names,
+    # otherwise they'll always get cleaned up because they don't match.
+    remote_branches = list(map(sanitize_name, remote_branches))
+    unused_namespaces = [n for n in existing_namespaces if n not in remote_branches]
 
-        logger.info("Existing Namespaces")
-        logger.info(str(existing_namespaces))
+    logger.info("Remote Branches")
+    logger.info(str(remote_branches))
 
-        logger.info("Unused Namespaces")
-        logger.info(str(unused_namespaces))
+    logger.info("Existing Namespaces")
+    logger.info(str(existing_namespaces))
 
-        return unused_namespaces
+    logger.info("Unused Namespaces")
+    logger.info(str(unused_namespaces))
+
+    return unused_namespaces

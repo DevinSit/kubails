@@ -1,3 +1,4 @@
+import re
 import inspect
 import logging
 import os
@@ -100,6 +101,14 @@ def escape_value(value: OptionValueType) -> OptionValueType:
         return [shlex.quote(v) for v in value]
     else:
         return value
+
+
+# Since branch names are used for Docker image names, Kubernetes namespaces, domains, etc,
+# they must be sanitized to not contain any special characters.
+# As such, all non-alphanumeric should be converted to hyphens.
+def sanitize_name(branch_name: str) -> str:
+    # Regex taken from https://stackoverflow.com/a/12985459.
+    return re.sub("[^0-9a-zA-Z]+", "-", branch_name.lower())
 
 
 def get_codebase_subfolder(folder: str) -> str:

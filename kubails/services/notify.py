@@ -2,6 +2,7 @@ import click
 import logging
 from kubails.external_services import slack
 from kubails.services import config_store
+from kubails.utils.service_helpers import sanitize_name
 
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,7 @@ class Notify:
             raise click.Abort()
 
         domain = self.config.domain
+        namespace = sanitize_name(namespace)
 
         if namespace and namespace == self.config.production_namespace:
             fields = [
