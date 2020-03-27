@@ -8,7 +8,7 @@ When creating a new Kubails project, you get an entire folder structure bootstra
 
 Once the project has been created, you can deploy all of the necessary infrastructure to your GCP project of choice using the `kubails` CLI. Among other things, this will create a Kubernetes (GKE) cluster where all your code will be deployed as Docker services. Learn more about [Infrastructure](#TODO).
 
-Finally, during development, a **Cloud Build** pipeline will automatically deploy code from _every_ commit from _every_ branch to a live environment on the Kubernetes cluster. Each branch gets its own dedicated URL and cluster namespace, so that all branches are functionally equivalent (including your master/production branch). Learn more about [Per Branch Deployments](#TODO) and [CI/CD](#TODO).
+Finally, during development, a **Cloud Build** pipeline will automatically deploy code from _every_ commit from _every_ branch to a live environment on the Kubernetes cluster. Each branch gets its own dedicated URL (with SSL/TLS) and cluster namespace, so that all branches are functionally equivalent (including your master/production branch). Learn more about [Per Branch Deployments](#TODO) and [CI/CD](#TODO).
 
 ### Wait, you said _a_ Kubernetes cluster? Like one? For everything?
 
@@ -36,10 +36,11 @@ Here's a quick rundown:
 - Infrastructure management: [Terraform](https://www.terraform.io/)
 - Cloud hosting: [Google Cloud Platform](https://cloud.google.com/) (GCP)
 - Service containerization: [Docker](https://www.docker.com/)
-- Conatainer orchestration: [Kubernetes](https://cloud.google.com/kubernetes-engine) (GKE)
+- Container orchestration: [Kubernetes](https://cloud.google.com/kubernetes-engine) (GKE)
 - Kubernetes manifests: Templated using [Helm](https://helm.sh/) (Tiller is not used)
 - CI/CD: [Cloud Build](https://cloud.google.com/cloud-build)
 - DNS: [Cloud DNS](https://cloud.google.com/dns)
+- SSL/TLS: [Let's Encrypt](https://letsencrypt.org/) through [cert-manager](https://github.com/jetstack/cert-manager)
 - Secrets Management: [Cloud Key Management Service](https://cloud.google.com/kms)
 - Monitoring: [Stackdriver](https://cloud.google.com/products/operations)
 - Git hosting: Supports repositories hosted on [GitHub](https://github.com/) and [Bitbucket](https://bitbucket.org/)
