@@ -18,12 +18,12 @@ resource "google_compute_subnetwork" "primary" {
 
     ip_cidr_range = "${var.subnetwork_primary_range}"
 
-    secondary_ip_range = {
+    secondary_ip_range {
         range_name = "${var.subnetwork_name}-secondary-1"
         ip_cidr_range = "${var.subnetwork_secondary_range_1}"
     }
 
-    secondary_ip_range = {
+    secondary_ip_range {
         range_name = "${var.subnetwork_name}-secondary-2"
         ip_cidr_range = "${var.subnetwork_secondary_range_2}"
     }
