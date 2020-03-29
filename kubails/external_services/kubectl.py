@@ -74,3 +74,14 @@ class Kubectl:
     def delete_secret(self, name: str, namespace: str) -> bool:
         command = self.base_command + ["delete", "secret", name, "--namespace", namespace]
         return call_command(command)
+
+    def is_deployment_ready(self, deployment: str, namespace: str = "default") -> bool:
+        command = self.base_command + [
+            "-n", namespace, "get", "deployment", deployment, "-o", "jsonpath={.status.availableReplicas}"
+        ]
+
+        result = get_command_output(command, shell=True)
+
+        # If the deployment or namespace doesn't exist, then the command will output a blank string.
+        # And int("") throws an error, so we have to handle that case separately.
+        return bool(int(result)) if result else False
