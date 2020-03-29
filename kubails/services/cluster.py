@@ -68,7 +68,10 @@ class Cluster:
         cert_manager_manifests = self.manifest_manager.static_manifest_location("cert-manager")
         self.kubectl.deploy(cert_manager_manifests, recursive=True)
 
-        service_account_file = "service-account.json=./{}.json".format(self.config.service_account)
+        service_account_file = "service-account.json={}.json".format(
+            self.config.get_project_path(self.config.service_account)
+        )
+
         self.kubectl.create_secret_from_file("clouddns-service-account", service_account_file, "cert-manager")
 
     def deploy_certificate_reflector(self) -> None:

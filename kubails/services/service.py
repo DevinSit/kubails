@@ -198,7 +198,7 @@ class Service:
         return images
 
     def _template_service(self, service_type: str, title: str, name: str) -> None:
-        output_dir = self.config.get_project_path("services")
+        output_dir = self.config.get_project_path(SERVICES_FOLDER)
         templater.Templater.template_service(service_type, title, name, output_dir)
 
         logger.info("Created {}".format(os.path.join(SERVICES_FOLDER, name)))
