@@ -1,6 +1,7 @@
 import click
 import logging
 import os
+import time
 from dotenv import dotenv_values
 from typing import List
 from kubails.external_services import gcloud, helm, kubectl, terraform
@@ -66,12 +67,40 @@ class Cluster:
 
     def deploy_cert_manager(self) -> None:
         cert_manager_manifests = self.manifest_manager.static_manifest_location("cert-manager")
-        self.kubectl.deploy(cert_manager_manifests, recursive=True)
+        core_manifest = os.path.join(cert_manager_manifests, "cert-manager.yaml")
+
+        other_manifests = [
+            "letsencrypt-clusterissuer-production.yaml",
+            "letsencrypt-clusterissuer-staging.yaml",
+            "wildcard-certificate.yaml"
+        ]
 
         service_account_file = "service-account.json={}.json".format(
             self.config.get_project_path(self.config.service_account)
         )
 
+        # Deploy the core cert-manager manifest first, because we need to wait for its webhook
+        # service to come online before we can deploy the cluster issuers and certificate.
+        self.kubectl.deploy(core_manifest)
+
+        # Wait for the webhook deployment to come online before continuing.
+        logger.info(
+            "\nWaiting for cert-manager webhook deployment to be ready before continuing. "
+            "Could take several minutes...\n"
+        )
+
+        while not self.kubectl.is_deployment_ready("cert-manager-webhook", namespace="cert-manager"):
+            time.sleep(10)
+            logger.info("Still waiting for cert-manager webhook deployment...")
+
+        logger.info("\ncert-manager webhook deployment is ready! Continuing with cluster deployment...\n")
+
+        # Deploy the other manifests.
+        for manifest in other_manifests:
+            self.kubectl.deploy(os.path.join(cert_manager_manifests, manifest))
+
+        # The Cloud DNS secert has to come after the core manifest, since the core manifest creates
+        # the 'cert-manager' namespace, and the secret needs to be in the 'cert-manager' namespace.
         self.kubectl.create_secret_from_file("clouddns-service-account", service_account_file, "cert-manager")
 
     def deploy_certificate_reflector(self) -> None:
