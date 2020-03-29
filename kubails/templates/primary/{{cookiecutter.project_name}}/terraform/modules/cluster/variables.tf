@@ -16,7 +16,7 @@ variable "cluster_base_name" {
 
 variable "cluster_version" {
     type = "string"
-    default = "1.15.4"
+    default = "1.15"
 }
 
 variable "initial_node_count" {
