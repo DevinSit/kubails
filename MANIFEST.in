@@ -1,0 +1,2 @@
+recursive-include kubails/builder *
+recursive-include kubails/templates *
