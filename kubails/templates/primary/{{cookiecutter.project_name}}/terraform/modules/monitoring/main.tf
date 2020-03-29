@@ -18,7 +18,7 @@ resource "google_monitoring_uptime_check_config" "frontend_check" {
     monitored_resource {
         type = "uptime_url"
         
-        labels {
+        labels = {
             project_id = "${var.gcp_project}"
             host = "${var.domain}"
         }
@@ -30,7 +30,7 @@ resource "google_monitoring_notification_channel" "email" {
     display_name = "Email Alerts"
     type = "email"
 
-    labels {
+    labels = {
         email_address = "${var.alerts_email}"
     }
 }
