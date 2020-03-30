@@ -29,7 +29,8 @@ STDERR_OPTIONS = {
 def get_command_output(
     command: List[str],
     shell: bool = False,
-    stderr_redirect: str = STDERR_SUPPRESS
+    stderr_redirect: str = STDERR_SUPPRESS,
+    **kwargs
 ) -> str:
     """
     Runs a command and cleans the result for use elsewhere.
@@ -44,7 +45,7 @@ def get_command_output(
 
     try:
         stderr_option = STDERR_OPTIONS.get(stderr_redirect, subprocess.STDOUT)
-        out = subprocess.check_output(_format_command(command, shell), stderr=stderr_option, shell=shell)
+        out = subprocess.check_output(_format_command(command, shell), stderr=stderr_option, shell=shell, **kwargs)
 
         # out is a utf-8 encoded byte string that must be converted to a literal string for use
         # rstrip() takes off the seemingly always present \n that's at the end of the result

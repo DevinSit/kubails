@@ -77,18 +77,16 @@ class Terraform:
         return result
 
     def run_command(self, subcommand: str, arguments: List[str] = [], with_vars=True) -> bool:
-        command = self.base_command + [subcommand]
+        command = self.base_command + [subcommand] + arguments
+        var_options = self._convert_config_to_var_options(self.variables) if self.variables and with_vars else {}
 
-        if self.variables and with_vars:
-            command.extend(self._convert_config_to_var_options(self.variables))
-
-        command.extend(arguments)
-        return self._run_terraform_command(command)
+        return self._run_terraform_command(command, env_vars=var_options)
 
     def _run_terraform_command(
         self,
         command: List[str],
-        call_function: Callable[..., Any] = call_command
+        call_function: Callable[..., Any] = call_command,
+        env_vars: Dict[str, str] = {}
     ) -> Any:
         """
         Since some Terraform commands don't take a folder as an argument, we have to
@@ -97,17 +95,27 @@ class Terraform:
         current_dir = os.getcwd()
         os.chdir(os.path.join(self.root_folder, TERRAFORM_FOLDER))
 
-        result = call_function(command, shell=True)
+        result = call_function(command, shell=True, env=env_vars)
         os.chdir(current_dir)
 
         return result
 
-    def _convert_config_to_var_options(self, config: Dict[str, Any]) -> List[str]:
-        var_options = []
+    def _convert_config_to_var_options(self, config: Dict[str, Any]) -> Dict[str, str]:
+        var_options = {}
 
         for key, value in config.items():
-            var_options.append("-var")
-            var_options.append("'{}={}'".format(key, self._stringify_value(value)))
+            # We originally used '-var' options and just appended them to the Terraform command.
+            #
+            # However, Terraform 0.12 changed so that it would throw an error whenever it received
+            # a '-var' option for an undeclared variable (i.e. it didn't exist in variables.tf).
+            #
+            # This is quite problematic for us since Kubails depends on being able to just dump
+            # kubails.json to Terraform without worrying about what has been declared or not.
+            #
+            # As a result, we have switched to passing values using the "TF_VAR" env var method.
+            #
+            # This problem, and solution, are documented here: https://github.com/hashicorp/terraform/issues/22004.
+            var_options["TF_VAR_{}".format(key)] = self._stringify_value(value)
 
         return var_options
 
@@ -116,15 +124,16 @@ class Terraform:
         #
         # 'top_level' is a flag that indicates whether _stringify_value has been called recursively or not.
         #
-        # The reason we need this is because Terraform 0.12 seems to have changed how '-var' args are passed.
+        # The reason we need this is because Terraform 0.12 changed how '-var' and 'TF_VAR' args are passed.
         # Now, when it receives an arg like `-var '_project_name="name"'`, it interprets the double quotes literally.
+        # This is noted here: https://www.terraform.io/docs/configuration/variables.html#complex-typed-values.
         #
         # That is, when interpolating the variable like `"${_project_name}-bucket"`, it literally outputs
         # `""name"-bucket"`, with the double quotes included. Obviously, this then breaks the parsing
         # of the whole string, since it will seem (to Terraform) to be multiple strings.
         #
         # However, this literal quoting only happens with non-map, non-list values. Because the values
-        # in a list or map still need to be quoted properly, but it won't take those as literal quotes.
+        # in a list or map still need to be quoted properly... but it won't take those as literal quotes.
         #
         # See here for some valid Terraform 0.12 examples:
         # https://www.terraform.io/docs/configuration/variables.html#variables-on-the-command-line
