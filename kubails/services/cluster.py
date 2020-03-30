@@ -32,15 +32,30 @@ class Cluster:
 
     def authenticate(self) -> None:
         cluster_name = self.terraform.get_cluster_name()
+
+        print()
+        logger.info("Authenticating to cluster {}...".format(cluster_name))
+        print()
+
         self.gcloud.authenticate_cluster(cluster_name)
 
     def deploy(self) -> None:
+        cluster_name = self.terraform.get_cluster_name()
+
+        print()
+        logger.info("Deploying static manifests to cluster {}...".format(cluster_name))
+        print()
+
         self.authenticate()
 
         self.deploy_storage_classes()
         self.deploy_ingress_controller()
         self.deploy_cert_manager()
         self.deploy_certificate_reflector()
+
+        print()
+        logger.info("Cluster deployment complete!")
+        print()
 
     def destroy(self) -> None:
         self.destroy_ingress()

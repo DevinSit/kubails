@@ -77,6 +77,10 @@ def deploy(component: str) -> None:
             print()
 
             cluster_service.deploy()
+
+            print()
+            logger.info("Infrastructure deployment completed!")
+            print()
     elif component == "builder":
         infra_service.deploy_builder()
     else:
@@ -84,10 +88,15 @@ def deploy(component: str) -> None:
 
 
 @infra.command()
-@click.confirmation_option(prompt="This will delete all of the project's infrastructure. Are you sure?")
 @log_command_args
 def destroy() -> None:
-    infra_service.destroy()
+    message = (
+        "This will delete all of the infrastructure for project '{}'. Are you sure?"
+    ).format(infra_service.config.project_name)
+
+    if click.confirm(message):
+        if click.confirm("Are you really sure? You want to destroy EVERYTHING?"):
+            infra_service.destroy()
 
 
 @infra.command()
