@@ -26,6 +26,8 @@ def new() -> None:
 def _generate_new_project() -> None:
     # Need to get a listing of the current folders to find out what the
     # project folder is called after creating it.
+    # Need to do it this way because we have no way to programmatically
+    # get the name of the created project from Cookiecutter.
     current_folders = _get_immediate_subdirs()
 
     Templater.template_primary()

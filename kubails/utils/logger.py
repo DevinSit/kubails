@@ -20,7 +20,7 @@ def create_logger() -> logging.Logger:
     logger = logging.getLogger("")  # Put the logger at the root so that all sub modules can access it
     logger.setLevel(logging.DEBUG)
 
-    console_formatter = logging.Formatter("%(message)s")
+    console_formatter = logging.Formatter("[KUBAILS] %(message)s")
 
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)

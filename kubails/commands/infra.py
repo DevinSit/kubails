@@ -64,13 +64,18 @@ def deploy(component: str) -> None:
 
         name_servers = infra_service.get_name_servers()
 
+        print()
         logger.info(
-            "\nYou should now point the name servers of your domain "
-            "to the following before continuing:\n\n{}\n".format(name_servers)
+            "You should now point the name servers of your domain "
+            "to the following before continuing:\n\n{}".format(name_servers)
         )
+        print()
 
         if click.confirm("Have you changed the name servers?"):
-            logger.info("\nContinuing with cluster deployment...\n")
+            print()
+            logger.info("Continuing with cluster deployment...")
+            print()
+
             cluster_service.deploy()
     elif component == "builder":
         infra_service.deploy_builder()

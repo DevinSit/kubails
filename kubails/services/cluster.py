@@ -84,16 +84,20 @@ class Cluster:
         self.kubectl.deploy(core_manifest)
 
         # Wait for the webhook deployment to come online before continuing.
+        print()
         logger.info(
-            "\nWaiting for cert-manager webhook deployment to be ready before continuing. "
-            "Could take several minutes...\n"
+            "Waiting for cert-manager webhook deployment to be ready before continuing. "
+            "Could take several minutes..."
         )
+        print()
 
         while not self.kubectl.is_deployment_ready("cert-manager-webhook", namespace="cert-manager"):
             time.sleep(10)
             logger.info("Still waiting for cert-manager webhook deployment...")
 
-        logger.info("\ncert-manager webhook deployment is ready! Continuing with cluster deployment...\n")
+        print()
+        logger.info("cert-manager webhook deployment is ready! Continuing with cluster deployment...")
+        print()
 
         # Deploy the other manifests.
         for manifest in other_manifests:
