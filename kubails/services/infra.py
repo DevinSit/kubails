@@ -1,5 +1,5 @@
 from typing import List
-from kubails.external_services import gcloud, terraform
+from kubails.external_services import dependency_checker, gcloud, terraform
 from kubails.services import config_store, cluster
 
 
@@ -13,9 +13,11 @@ class Infra:
             self.config.gcp_project_zone
         )
 
-        self.cluster = cluster.Cluster()
         self.terraform = terraform.Terraform(self.config.get_flattened_config(), root_folder=self.config.config_dir)
 
+        self.cluster = cluster.Cluster()
+
+    @dependency_checker.check_dependencies("gcloud", "terraform")
     def setup(self) -> None:
         # Enable the APIs first before anything else so that subsequent commands can use those resources
         self.gcloud.enable_apis(self.config.apis_to_enable)
@@ -51,6 +53,7 @@ class Infra:
         self.gcloud.create_bucket(self.config.terraform_state_bucket)
         self.terraform.init()
 
+    @dependency_checker.check_dependencies("gcloud")
     def cleanup(self) -> None:
         self.gcloud.delete_builder_image()
 
@@ -59,6 +62,7 @@ class Infra:
 
         self.gcloud.delete_bucket(self.config.terraform_state_bucket)
 
+    @dependency_checker.check_dependencies("gcloud", "terraform")
     def authenticate(self) -> bool:
         result = self.gcloud.create_key_for_service_account(
             self.config.service_account,
@@ -70,12 +74,14 @@ class Infra:
 
         return result
 
+    @dependency_checker.check_dependencies("gcloud")
     def unauthenticate(self) -> bool:
         return self.gcloud.delete_key_for_service_account(
             self.config.service_account,
             key_folder=self.config.config_dir
         )
 
+    @dependency_checker.check_dependencies("terraform")
     def deploy(self) -> bool:
         result = self.terraform.deploy()
 
@@ -84,15 +90,19 @@ class Infra:
 
         return result
 
+    @dependency_checker.check_dependencies("gcloud")
     def deploy_builder(self):
         self.gcloud.deploy_builder_image()
 
+    @dependency_checker.check_dependencies("terraform")
     def destroy(self) -> None:
         self.cluster.destroy_ingress()
         self.terraform.destroy()
 
+    @dependency_checker.check_dependencies("terraform")
     def terraform_command(self, command: str, arguments: List[str], with_vars=False) -> None:
         self.terraform.run_command(command, arguments, with_vars=with_vars)
 
+    @dependency_checker.check_dependencies("terraform")
     def get_name_servers(self) -> str:
         return self.terraform.get_name_servers()

@@ -1,7 +1,7 @@
 import logging
 import os
 from typing import Callable, Dict, List
-from kubails.external_services import docker, docker_compose
+from kubails.external_services import dependency_checker, docker, docker_compose
 from kubails.services import config_store, manifest_manager, templater
 from kubails.templates import ConfigGenerator, SERVICES_CONFIG
 from kubails.utils.service_helpers import call_command, sanitize_name
@@ -45,6 +45,7 @@ class Service:
             manifests_folder=self.config.get_project_path("manifests")
         )
 
+    @dependency_checker.check_dependencies("docker-compose")
     def start(self, services: List[str]) -> None:
         print()
         logger.info("Starting services locally...")
@@ -52,6 +53,7 @@ class Service:
 
         self.docker_compose.up(services)
 
+    @dependency_checker.check_dependencies("docker-compose")
     def destroy(self) -> None:
         print()
         logger.info("Destroying service containers, networks, and volumes...")
@@ -59,19 +61,24 @@ class Service:
 
         self.docker_compose.down()
 
+    @dependency_checker.check_dependencies("docker", "make")
     def lint(self, services: List[str], tag: str) -> bool:
         return self._run_services_make_command("lint", services, tag)
 
+    @dependency_checker.check_dependencies("docker", "make")
     def test(self, services: List[str], tag: str) -> bool:
         return self._run_services_make_command("test", services, tag)
 
+    @dependency_checker.check_dependencies("docker", "make")
     def ci(self, services: List[str], tag: str) -> bool:
         return self._run_services_make_command("ci", services, tag)
 
+    @dependency_checker.check_dependencies("make")
     def make(self, command: str) -> bool:
         """Run a make command across all of the services."""
         return self._run_services_make_command(command)
 
+    @dependency_checker.check_dependencies("docker")
     def build(self, services: List[str], branch_tag: str = None, commit_tag: str = None) -> bool:
         branch_tag = sanitize_name(branch_tag)
 
@@ -90,6 +97,7 @@ class Service:
 
         return self._apply_to_services(build_function, services)
 
+    @dependency_checker.check_dependencies("docker")
     def push(self, services: List[str], branch_tag: str = None, commit_tag: str = None) -> bool:
         branch_tag = sanitize_name(branch_tag)
 
@@ -117,6 +125,7 @@ class Service:
 
         return self._apply_to_services(push_function, services)
 
+    @dependency_checker.check_dependencies("docker-compose")
     def generate(
         self,
         service_type: str,

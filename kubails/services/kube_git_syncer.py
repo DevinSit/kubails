@@ -1,7 +1,7 @@
 import logging
 from functools import reduce
 from typing import List
-from kubails.external_services import git, kubectl
+from kubails.external_services import dependency_checker, git, kubectl
 from kubails.utils.service_helpers import sanitize_name
 
 
@@ -13,6 +13,7 @@ class KubeGitSyncer:
         self.git = git.Git()
         self.kubectl = kubectl.Kubectl()
 
+    @dependency_checker.check_dependencies("git", "kubectl")
     def cleanup_namespaces(self) -> bool:
         # Fetch and prune the branches so that the current repo copy is in
         # sync with the branches on origin
