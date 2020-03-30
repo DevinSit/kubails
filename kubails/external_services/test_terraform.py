@@ -10,13 +10,13 @@ class TestCli(TestCase):
 
     @parameterized.expand([
         # Case 1: Boolean
-        (True, "\"true\""),
+        (True, "true"),
 
         # Case 2: String
-        ("value", "\"value\""),
+        ("value", "value"),
 
         # Case 3: Number
-        (3, "\"3\""),
+        (3, "3"),
 
         # Case 4: Simple dict with string value
         ({"key": "value"}, "{key=\"value\"}"),
