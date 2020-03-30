@@ -35,7 +35,11 @@ class Service:
         self.config = config_store.ConfigStore()
 
         self.docker = docker.Docker()
-        self.docker_compose = docker_compose.DockerCompose(self.config.get_project_path("services"))
+
+        self.docker_compose = docker_compose.DockerCompose(
+            self.config.project_name,
+            self.config.get_project_path("services")
+        )
 
         self.manifest_manager = manifest_manager.ManifestManager(
             manifests_folder=self.config.get_project_path("manifests")
