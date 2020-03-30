@@ -78,7 +78,7 @@ class Terraform:
 
     def run_command(self, subcommand: str, arguments: List[str] = [], with_vars=True) -> bool:
         command = self.base_command + [subcommand] + arguments
-        var_options = self._convert_config_to_var_options(self.variables) if self.variables and with_vars else {}
+        var_options = self._convert_config_to_var_options(self.variables) if self.variables and with_vars else None
 
         return self._run_terraform_command(command, env_vars=var_options)
 
@@ -86,11 +86,31 @@ class Terraform:
         self,
         command: List[str],
         call_function: Callable[..., Any] = call_command,
-        env_vars: Dict[str, str] = {}
+        env_vars: Dict[str, str] = None
     ) -> Any:
         """
+        Runs a Terraform command.
+
         Since some Terraform commands don't take a folder as an argument, we have to
         make sure that all commands are run inside the 'terraform' folder.
+
+        Note for @param env_vars:
+
+            The default/empty value _must_ None. If the default/empty value is just an empty dict
+            (or otherwise), then this can cause problems with commands expected normal environment
+            variables.
+
+            This is noted here: https://docs.python.org/2/library/subprocess.html#popen-constructor
+            "If specified, env must provide any variables required for the program to execute."
+
+            This first came up when trying to run `terraform init` with an empty dict.
+            When installing the google provider, it would throw this error:
+            "Error installing provider "google": exec: "getent": executable file not found in $PATH."
+
+            This error is a direct result of providing an empty env dict and triggering a loss
+            of other environment variables for commands.
+
+            Whether or not this will affect other commands that need TF_VAR env variables is unknown at the moment.
         """
         current_dir = os.getcwd()
         os.chdir(os.path.join(self.root_folder, TERRAFORM_FOLDER))
