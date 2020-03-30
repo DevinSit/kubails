@@ -27,7 +27,9 @@ class GoogleCloud:
         return call_command(command)
 
     def deploy_builder_image(self) -> bool:
+        print()
         logger.info("Deploying the Kubails Builder image...")
+        print()
 
         root_folder = get_codebase_folder()
         root_kubails_folder = os.path.join(root_folder, "kubails")
@@ -55,7 +57,9 @@ class GoogleCloud:
         return result
 
     def delete_builder_image(self) -> bool:
+        print()
         logger.info("Destroying the Kubails Builder image...")
+        print()
 
         command = self.base_command + [
             "container", "images", "delete", "-q",
@@ -66,7 +70,9 @@ class GoogleCloud:
         return call_command(command)
 
     def create_service_account(self, service_account: str, project_title: str) -> bool:
+        print()
         logger.info("Creating service account {}...".format(service_account))
+        print()
 
         command = self.base_command + [
             "iam", "service-accounts",
@@ -77,14 +83,18 @@ class GoogleCloud:
         return call_command(command)
 
     def delete_service_account(self, service_account: str) -> bool:
+        print()
         logger.info("Deleting service account {}...".format(service_account))
+        print()
 
         full_service_account = self._format_full_service_account(service_account)
         command = self.base_command + ["iam", "service-accounts", "delete", "-q", full_service_account]
         return call_command(command)
 
     def create_key_for_service_account(self, service_account: str, key_folder: str = ".") -> bool:
+        print()
         logger.info("Creating key for service account {}...".format(service_account))
+        print()
 
         key_file = self._format_service_account_key(service_account, key_folder)
 
@@ -139,37 +149,55 @@ class GoogleCloud:
         return call_command(command)
 
     def enable_apis(self, apis_to_enable: List[str]) -> bool:
+        print()
         logger.info("Enabling APIs...")
+        print()
+
+        def log_and_call_api_command(acc: bool, command: List[str]) -> bool:
+            # The API to enable is the last element of the command list.
+            logger.info("Enabling {}...".format(command[-1]))
+
+            return call_command(command) and acc
 
         commands = list(map(lambda api: self.base_command + ["services", "enable", api], apis_to_enable))
-        return reduce(lambda acc, command: call_command(command) and acc, commands, True)
+        return reduce(log_and_call_api_command, commands, True)
 
     def create_bucket(self, bucket_name: str) -> bool:
+        print()
         logger.info("Creating bucket {}...".format(bucket_name))
+        print()
 
         command = ["gsutil", "mb", "gs://{}".format(bucket_name)]
         return call_command(command)
 
     def delete_bucket(self, bucket_name: str) -> bool:
+        print()
         logger.info("Deleting bucket {}...".format(bucket_name))
+        print()
 
         command = ["gsutil", "rm", "-r", "gs://{}".format(bucket_name)]
         return call_command(command)
 
     def add_role_to_service_account(self, service_account: str, role: str) -> bool:
+        print()
         logger.info("Binding service account {} to role {}...".format(service_account, role))
+        print()
 
         full_service_account = self._format_full_service_account(service_account)
         return self.add_role_to_entity("serviceAccount", full_service_account, role)
 
     def add_role_to_current_user(self, role) -> bool:
         user = self.get_current_user_email()
+        print()
         logger.info("Binding user {} to role {}...".format(user, role))
+        print()
 
         return self.add_role_to_entity("user", user, role)
 
     def delete_role_from_service_account(self, service_account: str, role: str) -> bool:
+        print()
         logger.info("Removing role binding {} on service account {}...".format(role, service_account))
+        print()
 
         full_service_account = self._format_full_service_account(service_account)
         return self.delete_role_from_entity("serviceAccount", full_service_account, role)

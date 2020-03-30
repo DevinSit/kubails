@@ -31,10 +31,14 @@ def authenticate() -> None:
 
 
 @cluster.command()
-@click.confirmation_option(prompt="This will delete your project's cluster. Are you sure?")
 @log_command_args
 def destroy() -> None:
-    cluster_service.destroy()
+    message = (
+        "This will delete the cluster for project '{}'. Are you sure?"
+    ).format(cluster_service.config.project_name)
+
+    if click.confirm(message):
+        cluster_service.destroy()
 
 
 @cluster.command()

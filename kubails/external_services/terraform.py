@@ -19,9 +19,17 @@ class Terraform:
         self.base_command = ["terraform"]
 
     def init(self) -> bool:
+        print()
+        logger.info("Initializing Terraform...")
+        print()
+
         return self.run_command("init")
 
     def deploy(self) -> bool:
+        print()
+        logger.info("Deploying Terraform infrastructure...")
+        print()
+
         return self.run_command("apply")
 
     def destroy(self) -> bool:

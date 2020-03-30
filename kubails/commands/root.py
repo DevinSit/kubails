@@ -26,6 +26,8 @@ def new() -> None:
 def _generate_new_project() -> None:
     # Need to get a listing of the current folders to find out what the
     # project folder is called after creating it.
+    # Need to do it this way because we have no way to programmatically
+    # get the name of the created project from Cookiecutter.
     current_folders = _get_immediate_subdirs()
 
     Templater.template_primary()
@@ -37,10 +39,9 @@ def _generate_new_project() -> None:
     os.chdir(project_folder)
     service_service = Service()
 
-    print("")  # New line for output
-
+    print()
     number_of_services = click.prompt("How many services does this project need?", type=int)
-    print("")
+    print()
 
     if number_of_services <= 0:
         logger.info("Well then, no services for you. Enjoy your service-less project! Exiting.")
@@ -48,7 +49,7 @@ def _generate_new_project() -> None:
 
     for i in range(number_of_services):
         helpers.generate_service(service_service, service_index=i+1)
-        print("")
+        print()
 
 
 def _get_immediate_subdirs() -> List[str]:

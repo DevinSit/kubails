@@ -42,9 +42,17 @@ class Service:
         )
 
     def start(self, services: List[str]) -> None:
+        print()
+        logger.info("Starting services locally...")
+        print()
+
         self.docker_compose.up(services)
 
     def destroy(self) -> None:
+        print()
+        logger.info("Destroying service containers, networks, and volumes...")
+        print()
+
         self.docker_compose.down()
 
     def lint(self, services: List[str], tag: str) -> bool:

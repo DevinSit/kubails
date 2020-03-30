@@ -64,14 +64,23 @@ def deploy(component: str) -> None:
 
         name_servers = infra_service.get_name_servers()
 
+        print()
         logger.info(
-            "\nYou should now point the name servers of your domain "
-            "to the following before continuing:\n\n{}\n".format(name_servers)
+            "You should now point the name servers of your domain "
+            "to the following before continuing:\n\n{}".format(name_servers)
         )
+        print()
 
         if click.confirm("Have you changed the name servers?"):
-            logger.info("\nContinuing with cluster deployment...\n")
+            print()
+            logger.info("Continuing with cluster deployment...")
+            print()
+
             cluster_service.deploy()
+
+            print()
+            logger.info("Infrastructure deployment completed!")
+            print()
     elif component == "builder":
         infra_service.deploy_builder()
     else:
@@ -79,10 +88,15 @@ def deploy(component: str) -> None:
 
 
 @infra.command()
-@click.confirmation_option(prompt="This will delete all of the project's infrastructure. Are you sure?")
 @log_command_args
 def destroy() -> None:
-    infra_service.destroy()
+    message = (
+        "This will delete all of the infrastructure for project '{}'. Are you sure?"
+    ).format(infra_service.config.project_name)
+
+    if click.confirm(message):
+        if click.confirm("Are you really sure? You want to destroy EVERYTHING?"):
+            infra_service.destroy()
 
 
 @infra.command()
