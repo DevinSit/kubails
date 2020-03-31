@@ -20,7 +20,7 @@ yaml.add_representer(type(None), yaml_represent_none)
 
 
 class DockerCompose:
-    def __init__(self, project_name: str, compose_folder: str) -> None:
+    def __init__(self, project_name: str = "", compose_folder: str = "") -> None:
         self.compose_file_location = os.path.join(compose_folder, COMPOSE_FILE)
         self.base_command = ["docker-compose", "-p", project_name, "--file", self.compose_file_location]
 
