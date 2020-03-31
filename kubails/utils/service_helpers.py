@@ -35,9 +35,9 @@ def get_command_output(
     """
     Runs a command and cleans the result for use elsewhere.
 
-    :param command: The command to run
-    :param shell: Whether or not to run the command with an actual shell interpreter
-    :param stderr_redirect: How to redirect stderr; one of STDERR_OPTIONS
+    :param command: The command to run.
+    :param shell: Whether or not to run the command with an actual shell interpreter.
+    :param stderr_redirect: How to redirect stderr; one of STDERR_OPTIONS.
 
     :return: The resulting output from the command being run.
     """
@@ -58,13 +58,15 @@ def get_command_output(
         else:
             return cleaned_out
     except subprocess.CalledProcessError as e:  # Return code was 1 or some other error code
+        out = e.output.decode("utf8").rstrip()
+
         logger.debug(
             "Exception occured while trying to get command output: {}"
-            "\nCommand output: {}".format(str(e), e.output.decode("utf8").rstrip())
+            "\nCommand output: {}".format(str(e), out)
         )
         logger.debug("Stacktrace: ", exc_info=True)
 
-        return ""
+        return out if stderr_redirect == STDERR_INTO_OUTPUT else ""
     except Exception as e:  # Who knows what else went wrong
         logger.debug("Exception occured while trying to get command output: {}".format(str(e)))
         logger.debug("Stacktrace: ", exc_info=True)
