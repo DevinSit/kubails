@@ -12,6 +12,7 @@ from kubails.utils.service_helpers import call_command, sanitize_name
 logger = logging.getLogger(__name__)
 
 
+@dependency_checker.check_dependencies()
 class Cluster:
     def __init__(self):
         self.config = config_store.ConfigStore()
@@ -30,7 +31,6 @@ class Cluster:
             manifests_folder=self.config.get_project_path("manifests")
         )
 
-    @dependency_checker.check_dependencies("gcloud")
     def authenticate(self) -> None:
         cluster_name = self.terraform.get_cluster_name()
 
@@ -40,7 +40,6 @@ class Cluster:
 
         self.gcloud.authenticate_cluster(cluster_name)
 
-    @dependency_checker.check_dependencies("gcloud", "kubectl", "terraform")
     def deploy(self) -> None:
         cluster_name = self.terraform.get_cluster_name()
 
@@ -59,12 +58,10 @@ class Cluster:
         logger.info("Cluster deployment complete!")
         print()
 
-    @dependency_checker.check_dependencies("kubectl", "terraform")
     def destroy(self) -> None:
         self.destroy_ingress()
         self.terraform.destroy_cluster()
 
-    @dependency_checker.check_dependencies("kubectl", "terraform")
     def destroy_ingress(self) -> None:
         # Need to delete the ingress so that GKE properly deletes the load balancer resource.
         # Otherwise, if only Terraform goes and deletes the cluster, the load balancer will stick around.
@@ -72,7 +69,6 @@ class Cluster:
             logger.info("Destroying ingress load balancer...")
             self.kubectl.delete_namespace("ingress-nginx")
 
-    @dependency_checker.check_dependencies("terraform")
     def update_manifests_from_terraform(self) -> None:
         ingress_manifest_location = "nginx-ingress-controller/2-cloud-generic.yaml"
 
@@ -82,7 +78,6 @@ class Cluster:
         ingress_manifest["spec"]["loadBalancerIP"] = public_ip
         self.manifest_manager.write_static_manifest(ingress_manifest, ingress_manifest_location)
 
-    @dependency_checker.check_dependencies("helm")
     def generate_manifests(self, services: List[str], tag: str = "", namespace: str = "") -> bool:
         result = True
         namespace = sanitize_name(namespace)
@@ -125,7 +120,6 @@ class Cluster:
         logger.info("Finished generating manifests.")
         return result
 
-    @dependency_checker.check_dependencies("kubectl")
     def deploy_manifests(self, services: List[str], namespace: str = "") -> bool:
         result = True
         namespace = sanitize_name(namespace)
@@ -141,7 +135,6 @@ class Cluster:
 
         return result
 
-    @dependency_checker.check_dependencies("gcloud", "kubectl", "terraform")
     def deploy_secrets(self, services: List[str], namespace: str) -> bool:
         result = True
         namespace = sanitize_name(namespace)
@@ -181,7 +174,6 @@ class Cluster:
 
         return result
 
-    @dependency_checker.check_dependencies("gcloud", "terraform")
     def create_secret(self, file_name: str, service: str, secret_name: str) -> None:
         encrypted_file = "{}.encrypted".format(os.path.basename(file_name))
         env_variables = dotenv_values(stream=file_name)
