@@ -71,9 +71,9 @@ def _get_missing_dependencies(*dependencies) -> List[str]:
     return [dep for dep in dependencies if which(dep) is None]
 
 
-def _get_method_dependencies(cls: Type[T], func: Callable, dependencies_filter) -> List[str]:
+def _get_method_dependencies(cls: Type[T], func: Callable, dependencies_whitelist) -> List[str]:
     """
-    Determines all of a given method's dependencies that fall within the dependencies_filter.
+    Determines all of a given method's dependencies that fall within the dependencies_whitelist.
 
     Directly examines the source code for the method (and that of others on the class) to
     determine the dependencies.
@@ -83,7 +83,7 @@ def _get_method_dependencies(cls: Type[T], func: Callable, dependencies_filter) 
 
     @param cls      The class that the func originates from.
     @param func     The method to determine the dependencies for.
-    @param dependencies_filter  The whitelist of valid dependencies.
+    @param dependencies_whitelist  The whitelist of valid dependencies.
     """
     source = inspect.getsource(func)
 
@@ -110,13 +110,13 @@ def _get_method_dependencies(cls: Type[T], func: Callable, dependencies_filter) 
     # But we take those risks!
     for call in private_calls:
         private_method = getattr(cls, call)
-        service_calls.extend(_get_method_dependencies(cls, private_method, dependencies_filter))
+        service_calls.extend(_get_method_dependencies(cls, private_method, dependencies_whitelist))
 
     # Remove duplicates.
     service_calls = list(set(service_calls))
 
-    # Ensure only dependencies from the dependencies_filter are kept.
-    service_calls = list(filter(lambda x: x in dependencies_filter, service_calls))
+    # Ensure only dependencies from the dependencies_whitelist are kept.
+    service_calls = list(filter(lambda x: x in dependencies_whitelist, service_calls))
 
     # Sort the dependencies for the user's benefit.
     return sorted(service_calls)

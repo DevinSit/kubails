@@ -3,7 +3,7 @@ from unittest import TestCase
 from . import terraform
 
 
-class TestCli(TestCase):
+class TestTerraform(TestCase):
     def setUp(self):
         self.terraform = terraform.Terraform()
         self.maxDiff = None
