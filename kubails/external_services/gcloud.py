@@ -4,7 +4,9 @@ import os
 import shutil
 from functools import reduce
 from typing import List
-from kubails.utils.service_helpers import call_command, get_command_output, get_codebase_folder, get_codebase_subfolder
+from kubails.utils.service_helpers import (
+    call_command, get_command_output, get_codebase_folder, get_codebase_subfolder, STDERR_INTO_OUTPUT
+)
 
 
 logger = logging.getLogger(__name__)
@@ -177,6 +179,21 @@ class GoogleCloud:
 
         command = ["gsutil", "rm", "-r", "gs://{}".format(bucket_name)]
         return call_command(command)
+
+    def does_bucket_exist_in_project(self, bucket_name: str) -> bool:
+        command = ["gsutil", "ls"]
+        result = get_command_output(command).split("\n")
+
+        # Strip out the "gs://" and trailing slash to get just the bucket names.
+        bucket_names = list(map(lambda x: x.replace("gs://", "").replace("/", ""), result))
+
+        return bucket_name in bucket_names
+
+    def does_bucket_exist_in_another_project(self, bucket_name: str) -> bool:
+        command = ["gsutil", "ls", "gs://{}".format(bucket_name)]
+        result = get_command_output(command, stderr_redirect=STDERR_INTO_OUTPUT)
+
+        return "AccessDeniedException" in result
 
     def add_role_to_service_account(self, service_account: str, role: str) -> bool:
         print()

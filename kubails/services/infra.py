@@ -1,6 +1,11 @@
+import logging
+import sys
 from typing import List
 from kubails.external_services import dependency_checker, gcloud, terraform
 from kubails.services import config_store, cluster
+
+
+logger = logging.getLogger(__name__)
 
 
 @dependency_checker.check_dependencies()
@@ -19,12 +24,12 @@ class Infra:
         self.cluster = cluster.Cluster()
 
     def setup(self) -> None:
-        # Enable the APIs first before anything else so that subsequent commands can use those resources
+        # Enable the APIs first before anything else so that subsequent commands can use those resources.
         self.gcloud.enable_apis(self.config.apis_to_enable)
 
         self.gcloud.deploy_builder_image()
 
-        # Create the service account that will be used for Terraform and whatnot
+        # Create the service account that will be used for Terraform and whatnot.
         self.gcloud.create_service_account(self.config.service_account, self.config.project_title)
 
         self.gcloud.add_role_to_service_account(self.config.service_account, self.config.service_account_role)
@@ -34,7 +39,7 @@ class Infra:
 
         self.gcloud.create_key_for_service_account(self.config.service_account)
 
-        # Enable the Cloud Build service account to be able to administer GKE and generate service account keys
+        # Enable the Cloud Build service account to be able to administer GKE and generate service account keys.
         cloud_build_service_account = self.gcloud.get_cloud_build_service_account()
 
         self.gcloud.add_role_to_entity(
@@ -49,8 +54,24 @@ class Infra:
             "serviceAccount", cloud_build_service_account, self.config.crypto_key_decrypter_role
         )
 
-        # Create the Terraform state bucket and initialize Terraform to use it
-        self.gcloud.create_bucket(self.config.terraform_state_bucket)
+        # Create the Terraform state bucket (if it doesn't already exist) and initialize Terraform to use it.
+        terraform_bucket = self.config.terraform_state_bucket
+
+        if self.gcloud.does_bucket_exist_in_another_project(terraform_bucket):
+            print()
+            logger.info(
+                "Sorry, bucket '{}' already exists in another project. "
+                "Please add/change the '__terraform_bucket' value in 'kubails.json' "
+                "to a different bucket name.".format(terraform_bucket)
+            )
+
+            sys.exit(1)
+        elif not self.gcloud.does_bucket_exist_in_project(terraform_bucket):
+            self.gcloud.create_bucket(terraform_bucket)
+        else:
+            print()
+            logger.info("Terraform bucket '{}' already exists in project.".format(terraform_bucket))
+
         self.terraform.init()
 
     def cleanup(self) -> None:
