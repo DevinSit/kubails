@@ -1,13 +1,14 @@
 import logging
 from functools import reduce
 from typing import List
-from kubails.external_services import git, kubectl
+from kubails.external_services import dependency_checker, git, kubectl
 from kubails.utils.service_helpers import sanitize_name
 
 
 logger = logging.getLogger(__name__)
 
 
+@dependency_checker.check_dependencies()
 class KubeGitSyncer:
     def __init__(self):
         self.git = git.Git()

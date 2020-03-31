@@ -1,8 +1,9 @@
 from typing import List
-from kubails.external_services import gcloud, terraform
+from kubails.external_services import dependency_checker, gcloud, terraform
 from kubails.services import config_store, cluster
 
 
+@dependency_checker.check_dependencies()
 class Infra:
     def __init__(self):
         self.config = config_store.ConfigStore()
@@ -13,8 +14,9 @@ class Infra:
             self.config.gcp_project_zone
         )
 
-        self.cluster = cluster.Cluster()
         self.terraform = terraform.Terraform(self.config.get_flattened_config(), root_folder=self.config.config_dir)
+
+        self.cluster = cluster.Cluster()
 
     def setup(self) -> None:
         # Enable the APIs first before anything else so that subsequent commands can use those resources

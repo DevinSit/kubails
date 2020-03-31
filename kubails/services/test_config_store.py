@@ -3,7 +3,7 @@ from unittest import TestCase
 from . import config_store
 
 
-class TestCli(TestCase):
+class TestConfigStore(TestCase):
     def setUp(self):
         self.maxDiff = None
 

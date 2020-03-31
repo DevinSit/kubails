@@ -4,7 +4,7 @@ import os
 import time
 from dotenv import dotenv_values
 from typing import List
-from kubails.external_services import gcloud, helm, kubectl, terraform
+from kubails.external_services import dependency_checker, gcloud, helm, kubectl, terraform
 from kubails.services import config_store, manifest_manager
 from kubails.utils.service_helpers import call_command, sanitize_name
 
@@ -12,6 +12,7 @@ from kubails.utils.service_helpers import call_command, sanitize_name
 logger = logging.getLogger(__name__)
 
 
+@dependency_checker.check_dependencies()
 class Cluster:
     def __init__(self):
         self.config = config_store.ConfigStore()
@@ -48,10 +49,10 @@ class Cluster:
 
         self.authenticate()
 
-        self.deploy_storage_classes()
-        self.deploy_ingress_controller()
-        self.deploy_cert_manager()
-        self.deploy_certificate_reflector()
+        self._deploy_storage_classes()
+        self._deploy_ingress_controller()
+        self._deploy_cert_manager()
+        self._deploy_certificate_reflector()
 
         print()
         logger.info("Cluster deployment complete!")
@@ -67,64 +68,6 @@ class Cluster:
         if self.terraform.cluster_deployed():
             logger.info("Destroying ingress load balancer...")
             self.kubectl.delete_namespace("ingress-nginx")
-
-    def deploy_storage_classes(self) -> None:
-        storage_class_manifests = self.manifest_manager.static_manifest_location("storage-classes")
-        self.kubectl.deploy(storage_class_manifests, recursive=True)
-
-    def deploy_ingress_controller(self) -> None:
-        ingress_manifests = self.manifest_manager.static_manifest_location("nginx-ingress-controller")
-        user_email = self.gcloud.get_current_user_email()
-        bind_name = "{}-cluster-admin-binding".format(user_email)
-
-        self.kubectl.create_cluster_role_binding(bind_name, "cluster-admin", user_email)
-        self.kubectl.deploy(ingress_manifests, recursive=True)
-
-    def deploy_cert_manager(self) -> None:
-        cert_manager_manifests = self.manifest_manager.static_manifest_location("cert-manager")
-        core_manifest = os.path.join(cert_manager_manifests, "cert-manager.yaml")
-
-        other_manifests = [
-            "letsencrypt-clusterissuer-production.yaml",
-            "letsencrypt-clusterissuer-staging.yaml",
-            "wildcard-certificate.yaml"
-        ]
-
-        service_account_file = "service-account.json={}.json".format(
-            self.config.get_project_path(self.config.service_account)
-        )
-
-        # Deploy the core cert-manager manifest first, because we need to wait for its webhook
-        # service to come online before we can deploy the cluster issuers and certificate.
-        self.kubectl.deploy(core_manifest)
-
-        # Wait for the webhook deployment to come online before continuing.
-        print()
-        logger.info(
-            "Waiting for cert-manager webhook deployment to be ready before continuing. "
-            "Could take several minutes..."
-        )
-        print()
-
-        while not self.kubectl.is_deployment_ready("cert-manager-webhook", namespace="cert-manager"):
-            time.sleep(10)
-            logger.info("Still waiting for cert-manager webhook deployment...")
-
-        print()
-        logger.info("cert-manager webhook deployment is ready! Continuing with cluster deployment...")
-        print()
-
-        # Deploy the other manifests.
-        for manifest in other_manifests:
-            self.kubectl.deploy(os.path.join(cert_manager_manifests, manifest))
-
-        # The Cloud DNS secert has to come after the core manifest, since the core manifest creates
-        # the 'cert-manager' namespace, and the secret needs to be in the 'cert-manager' namespace.
-        self.kubectl.create_secret_from_file("clouddns-service-account", service_account_file, "cert-manager")
-
-    def deploy_certificate_reflector(self) -> None:
-        certificate_reflector_manifests = self.manifest_manager.static_manifest_location("certificate-reflector")
-        self.kubectl.deploy(certificate_reflector_manifests)
 
     def update_manifests_from_terraform(self) -> None:
         ingress_manifest_location = "nginx-ingress-controller/2-cloud-generic.yaml"
@@ -143,7 +86,7 @@ class Cluster:
         subdomain = "" if is_production else "{}.".format(namespace)
         tag = tag if tag else "latest"
 
-        result = result and self.cleanup_manifests()
+        result = result and self._cleanup_manifests()
         logger.info("Generating new manifests...")
 
         services_dict = {s: self.config.services[s] for s in services} if services else self.config.services
@@ -190,17 +133,6 @@ class Cluster:
             service_manifests = self.manifest_manager.generated_manifest_location(service)
             result = result and self.kubectl.deploy(service_manifests, recursive=True)
 
-        return result
-
-    def cleanup_manifests(self) -> bool:
-        result = call_command([
-            "find", self.manifest_manager.generated_manifest_location(""),
-            "-type", "f",
-            "-name", "'*.yaml'",
-            "-delete"
-        ], shell=True)
-
-        logger.info("Removed old manifests.")
         return result
 
     def deploy_secrets(self, services: List[str], namespace: str) -> bool:
@@ -261,3 +193,72 @@ class Cluster:
         self.config.set_value("__services.{}.secrets".format(service), secrets_config)
 
         logger.info("Created {} and updated kubails.json with secrets info.".format(encrypted_file))
+
+    def _deploy_storage_classes(self) -> None:
+        storage_class_manifests = self.manifest_manager.static_manifest_location("storage-classes")
+        self.kubectl.deploy(storage_class_manifests, recursive=True)
+
+    def _deploy_ingress_controller(self) -> None:
+        ingress_manifests = self.manifest_manager.static_manifest_location("nginx-ingress-controller")
+        user_email = self.gcloud.get_current_user_email()
+        bind_name = "{}-cluster-admin-binding".format(user_email)
+
+        self.kubectl.create_cluster_role_binding(bind_name, "cluster-admin", user_email)
+        self.kubectl.deploy(ingress_manifests, recursive=True)
+
+    def _deploy_cert_manager(self) -> None:
+        cert_manager_manifests = self.manifest_manager.static_manifest_location("cert-manager")
+        core_manifest = os.path.join(cert_manager_manifests, "cert-manager.yaml")
+
+        other_manifests = [
+            "letsencrypt-clusterissuer-production.yaml",
+            "letsencrypt-clusterissuer-staging.yaml",
+            "wildcard-certificate.yaml"
+        ]
+
+        service_account_file = "service-account.json={}.json".format(
+            self.config.get_project_path(self.config.service_account)
+        )
+
+        # Deploy the core cert-manager manifest first, because we need to wait for its webhook
+        # service to come online before we can deploy the cluster issuers and certificate.
+        self.kubectl.deploy(core_manifest)
+
+        # Wait for the webhook deployment to come online before continuing.
+        print()
+        logger.info(
+            "Waiting for cert-manager webhook deployment to be ready before continuing. "
+            "Could take several minutes..."
+        )
+        print()
+
+        while not self.kubectl.is_deployment_ready("cert-manager-webhook", namespace="cert-manager"):
+            time.sleep(10)
+            logger.info("Still waiting for cert-manager webhook deployment...")
+
+        print()
+        logger.info("cert-manager webhook deployment is ready! Continuing with cluster deployment...")
+        print()
+
+        # Deploy the other manifests.
+        for manifest in other_manifests:
+            self.kubectl.deploy(os.path.join(cert_manager_manifests, manifest))
+
+        # The Cloud DNS secert has to come after the core manifest, since the core manifest creates
+        # the 'cert-manager' namespace, and the secret needs to be in the 'cert-manager' namespace.
+        self.kubectl.create_secret_from_file("clouddns-service-account", service_account_file, "cert-manager")
+
+    def _deploy_certificate_reflector(self) -> None:
+        certificate_reflector_manifests = self.manifest_manager.static_manifest_location("certificate-reflector")
+        self.kubectl.deploy(certificate_reflector_manifests)
+
+    def _cleanup_manifests(self) -> bool:
+        result = call_command([
+            "find", self.manifest_manager.generated_manifest_location(""),
+            "-type", "f",
+            "-name", "'*.yaml'",
+            "-delete"
+        ], shell=True)
+
+        logger.info("Removed old manifests.")
+        return result
