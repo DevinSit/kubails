@@ -130,7 +130,7 @@ class Service:
         subdomain = subdomain.lower().replace(" ", "-")
         config_generator = SERVICES_CONFIG[service_type](name, self.config, extra_config)
 
-        print("")  # Just a new line for user output
+        print()  # Just a new line for user output
 
         self._template_service(service_type, title, name)
         self._add_service_to_kubails_config(config_generator, name, subdomain)
