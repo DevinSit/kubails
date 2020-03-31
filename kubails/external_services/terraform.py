@@ -49,7 +49,11 @@ class Terraform:
         return self.run_command("destroy", ["-target", "google_container_cluster.primary"])
 
     def cluster_deployed(self) -> bool:
-        return reduce(lambda acc, state: acc or "module.cluster" in state, self.get_state(), False)
+        return reduce(
+            lambda acc, state: acc or "module.cluster.google_container_cluster" in state,
+            self.get_state(),
+            False
+        )
 
     def get_cluster_name(self) -> str:
         return self.get_output("cluster_name")
