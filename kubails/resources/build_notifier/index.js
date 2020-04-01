@@ -7,11 +7,6 @@ const PROVIDER_BITBUCKET = "bitbucket";
 const PROVIDER_GITHUB = "github";
 const SUPPORTED_PROVIDERS = [PROVIDER_BITBUCKET, PROVIDER_GITHUB];
 
-const PROVIDER_NOTIFIER_MAP = {
-    [PROVIDER_BITBUCKET]: BitbucketNotifier,
-    [PROVIDER_GITHUB]: GithubNotifier
-};
-
 // (theoretically) All of the Cloud Build statuses.
 const ACTIONABLE_STATUSES = [
     "QUEUED", "WORKING", "SUCCESS", "FAILURE",
@@ -23,18 +18,38 @@ const FAILURE_STATUSES = [
 ];
 
 /* A Cloud Function that gets called whenever a message is pushed to the 'cloud-builds' topic.
- * Handles Bitbucket/Github notifications.
+ * Handles Github notifications.
  */
-exports.gitHostNotifier = async (data, context) => {
+exports.githubNotifier = async (data, context) => {
     const notifierData = extractNotifierData(data, context, ACTIONABLE_STATUSES);
 
     if (!notifierData) {
         return;
     }
 
-    const Notifier = PROVIDER_NOTIFIER_MAP[notifierData.provider];
-    const notifier = new Notifier(notifierData);
+    if (notifierData.provider !== PROVIDER_GITHUB) {
+        return;
+    }
 
+    const notifier = new GithubNotifier(notifierData);
+    return notifier.updateStatus();
+};
+
+/* A Cloud Function that gets called whenever a message is pushed to the 'cloud-builds' topic.
+ * Handles Bitbucket notifications.
+ */
+exports.bitbucketNotifier = async (data, context) => {
+    const notifierData = extractNotifierData(data, context, ACTIONABLE_STATUSES);
+
+    if (!notifierData) {
+        return;
+    }
+
+    if (notifierData.provider !== PROVIDER_BITBUCKET) {
+        return;
+    }
+
+    const notifier = new BitbucketNotifier(notifierData);
     return notifier.updateStatus();
 };
 
@@ -58,20 +73,18 @@ const extractNotifierData = (data, context, statuses = ACTIONABLE_STATUSES) => {
     // See the end of this file for a sample 'build' object.
     const {id, status, logUrl} = build;
 
-    if (!build.sourceProvenance) {
+    if (
+        !build
+        || !build.sourceProvenance
+        || !build.sourceProvenance.resolvedRepoSource
+        || !build.sourceProvenance.resolvedRepoSource.commitSha
+    ) {
         // This build doesn't come from a repo; no need to notify anything.
         // For example, App Engine can create builds for itself when deploying.
         return null;
     }
 
     const sha = build.sourceProvenance.resolvedRepoSource.commitSha;
-
-    if (!sha) {
-        // This build doesn't come from a repo; no need to notify anything.
-        // For example, App Engine can create builds for itself when deploying.
-        return null;
-    }
-
     const {provider, owner, repo} = parseRepoInfo(build);
     const branch = build.source.repoSource.branchName;
 
