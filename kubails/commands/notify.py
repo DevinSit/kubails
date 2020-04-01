@@ -34,3 +34,11 @@ def slack():
 @log_command_args
 def success(webhook: str, namespace: str, commit: str) -> None:
     notify_service.send_slack_success_message(webhook, namespace=namespace, commit=commit)
+
+
+@slack.command()
+@click.argument("webhook")
+@click.option("--repo")
+@log_command_args
+def deploy_failure_notifier(webhook: str, repo: str) -> None:
+    notify_service.deploy_slack_failure_notifier(webhook, repo_name=repo)
