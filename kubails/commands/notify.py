@@ -42,3 +42,30 @@ def success(webhook: str, namespace: str, commit: str) -> None:
 @log_command_args
 def deploy_failure_notifier(webhook: str, repo: str) -> None:
     notify_service.deploy_slack_failure_notifier(webhook, repo_name=repo)
+
+
+############################################################
+# Git sub-group
+############################################################
+
+
+@notify.group()
+def git():
+    pass
+
+
+@git.command()
+@click.argument("access_token")
+@click.option("--repo")
+@log_command_args
+def deploy_github_notifier(access_token: str, repo: str) -> None:
+    notify_service.deploy_github_notifier(access_token, repo_name=repo)
+
+
+@git.command()
+@click.argument("access_token")
+@click.argument("user")
+@click.option("--repo")
+@log_command_args
+def deploy_bitbucket_notifier(access_token: str, user: str, repo: str) -> None:
+    notify_service.deploy_bitbucket_notifier(access_token, user, repo_name=repo)
