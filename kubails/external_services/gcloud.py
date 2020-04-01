@@ -3,7 +3,7 @@ import logging
 import os
 import shutil
 from functools import reduce
-from typing import List
+from typing import Dict, List
 from kubails.utils.service_helpers import (
     call_command, get_command_output, get_codebase_folder, get_codebase_subfolder, STDERR_INTO_OUTPUT
 )
@@ -268,6 +268,35 @@ class GoogleCloud:
         ]
 
         return call_command(command, shell=True)
+
+    def deploy_function(
+        self,
+        name: str,
+        source: str,
+        entrypoint: str = None,
+        trigger: str = "http",
+        env_vars: Dict[str, str] = None
+    ) -> bool:
+        command = self.base_command + [
+            "functions", "deploy", name,
+            "--source", source,
+            "--runtime", "nodejs10"
+        ]
+
+        if entrypoint:
+            command.extend(["--entry-point", entrypoint])
+
+        if trigger == "htpp":
+            command.append("--trigger-http")
+        else:
+            # Because we default to a topic trigger, we don't support bucket triggers.
+            command.extend(["--trigger-topic", trigger, "--no-allow-unauthenticated"])
+
+        if env_vars:
+            stringified_env_vars = ",".join(["{}={}".format(k, v) for k, v in env_vars.items()])
+            command.extend(["--set-env-vars", stringified_env_vars])
+
+        return call_command(command)
 
     def get_current_user_email(self) -> str:
         command = self.base_command + ["config", "get-value", "account"]

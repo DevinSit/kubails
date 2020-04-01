@@ -156,6 +156,7 @@ class ConfigStore:
         self.apis_to_enable = [
             "cloudkms.googleapis.com",
             "cloudbuild.googleapis.com",
+            "cloudfunctions.googleapis.com",
             "cloudresourcemanager.googleapis.com",
             "compute.googleapis.com",
             "container.googleapis.com",
