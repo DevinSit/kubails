@@ -23,7 +23,9 @@ class Terraform:
         logger.info("Initializing Terraform...")
         print()
 
-        return self.run_command("init")
+        # `init` needs to be run without vars, otherwise the google provider will throw:
+        # `Error installing provider "google": exec: "getent": executable file not found in $PATH.`
+        return self.run_command("init", with_vars=False)
 
     def deploy(self) -> bool:
         print()
