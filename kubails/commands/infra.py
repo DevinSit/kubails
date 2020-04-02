@@ -37,7 +37,7 @@ def setup() -> None:
 )
 @log_command_args
 def cleanup() -> None:
-    """Cleanup the resources created by 'setup'."""
+    """Cleanup the resources created by 'kubails infra setup'."""
     infra_service.cleanup()
 
 
@@ -58,7 +58,7 @@ def unauthenticate() -> None:
 
 
 @infra.command()
-@click.option("--component", type=click.Choice(["all", "builder"]), default="all")
+@click.option("--component", type=click.Choice(["all", "builder"]), default="all", help="The component to deploy.")
 @log_command_args
 def deploy(component: str) -> None:
     """Deploy the infrastructure needed for your Kubails project."""
@@ -109,8 +109,16 @@ def destroy() -> None:
 @infra.command()
 @click.argument("command")
 @click.argument("arguments", nargs=-1)
-@click.option("--with-vars", default=False, is_flag=True)
+@click.option("--with-vars", default=False, is_flag=True, help="Inject the kubails.json values as Terraform variables.")
 @log_command_args
 def terraform(command: str, arguments: Tuple[str], with_vars: bool) -> None:
-    """Run a Terraform command directly."""
+    """
+    Run a Terraform COMMAND directly with ARGUMENTS.
+
+    Examples:
+
+    \b
+    - kubails infra terraform init
+    - kubails infra terraform --with-vars apply
+    """
     infra_service.terraform_command(command, list(arguments), with_vars=with_vars)

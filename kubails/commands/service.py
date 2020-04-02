@@ -26,7 +26,11 @@ def service():
 @click.argument("service", nargs=-1)
 @log_command_args
 def start(service: Tuple[str]) -> None:
-    """Start up your services locally."""
+    """
+    Start up SERVICE locally.
+
+    If SERVICE is not specified, start all services.
+    """
     service_service.start(list(service))
 
 
@@ -42,7 +46,11 @@ def destroy() -> None:
 @click.option("--tag")
 @log_command_args
 def lint(service: Tuple[str], tag: str) -> None:
-    """Lint your services."""
+    """
+    Lint SERVICE.
+
+    If SERVICE is not specified, lint all services.
+    """
     if not service_service.lint(list(service), tag):
         sys.exit(1)
 
@@ -52,7 +60,11 @@ def lint(service: Tuple[str], tag: str) -> None:
 @click.option("--tag")
 @log_command_args
 def test(service: Tuple[str], tag) -> None:
-    """Test your services."""
+    """
+    Test SERVICE.
+
+    If SERVICE is not specified, test all services.
+    """
     if not service_service.test(list(service), tag):
         sys.exit(1)
 
@@ -62,7 +74,11 @@ def test(service: Tuple[str], tag) -> None:
 @click.option("--tag")
 @log_command_args
 def ci(service: Tuple[str], tag: str) -> None:
-    """Run CI on your services."""
+    """
+    Run CI on SERVICE.
+
+    If SERVICE is not specified, run CI on all services.
+    """
     if not service_service.ci(list(service), tag):
         sys.exit(1)
 
@@ -71,7 +87,7 @@ def ci(service: Tuple[str], tag: str) -> None:
 @click.argument("command", required=True)
 @log_command_args
 def make(command: str) -> None:
-    """Execute a Make command on your services."""
+    """Execute a Make COMMAND on all your services."""
     if not service_service.make(command):
         sys.exit(1)
 
@@ -81,14 +97,20 @@ def make(command: str) -> None:
     "--type", "service_type",
     prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["service_type"],
     type=click.Choice(SERVICE_TEMPLATES),
-    default=SERVICE_TEMPLATES[0]
+    default=SERVICE_TEMPLATES[0],
+    help="The template to base the service off of."
 )
 @click.option(
     "--subdomain",
     prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["subdomain"],
-    default=""
+    default="",
+    help="The subdomain the service will have when deployed."
 )
-@click.option("--title", prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["title"])
+@click.option(
+    "--title",
+    prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["title"],
+    help="The title of the service."
+)
 @log_command_args
 def generate(service_type: str, subdomain: str, title: str) -> None:
     """Generate a new service."""
@@ -113,21 +135,29 @@ def images():
 
 @images.command()
 @click.argument("service", nargs=-1)
-@click.option("--branch")
-@click.option("--commit")
+@click.option("--branch", help="The branch to tag the image with.")
+@click.option("--commit", help="The commit to tag the image with.")
 @log_command_args
 def build(service: Tuple[str], branch: str, commit: str) -> None:
-    """Build the Docker image for a service."""
+    """
+    Build the Docker image for SERVICE.
+
+    If SERVICE is not specified, build all services' Docker images.
+    """
     if not service_service.build(list(service), branch, commit):
         sys.exit(1)
 
 
 @images.command()
 @click.argument("service", nargs=-1)
-@click.option("--branch")
-@click.option("--commit")
+@click.option("--branch", help="The branch the image was tagged with.")
+@click.option("--commit", help="The commit the image was tagged with.")
 @log_command_args
 def push(service: Tuple[str], branch: str, commit: str) -> None:
-    """Push the Docker image for a service."""
+    """
+    Push the Docker image for SERVICE.
+
+    If SERVICE is not specified, push all services' Docker images.
+    """
     if not service_service.push(list(service), branch, commit):
         sys.exit(1)

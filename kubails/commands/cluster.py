@@ -67,21 +67,29 @@ def manifests():
 
 @manifests.command()
 @click.argument("service", nargs=-1)
-@click.option("--namespace", default=DEFAULT_NAMESPACE)
-@click.option("--tag", default=DEFAULT_TAG)
+@click.option("--namespace", default=DEFAULT_NAMESPACE, help="The namespace the service(s) will be deployed to.")
+@click.option("--tag", default=DEFAULT_TAG, help="A tag to associate with this version of the manifests.")
 @log_command_args
 def generate(service: Tuple[str], tag: str, namespace: str) -> None:
-    """Generate manifests for all of your services."""
+    """
+    Generate manifests for SERVICE.
+
+    If SERVICE is not specified, generate manifests for all services.
+    """
     if not cluster_service.generate_manifests(list(service), tag, namespace):
         sys.exit(1)
 
 
 @manifests.command(name="deploy")
 @click.argument("service", nargs=-1)
-@click.option("--namespace", default=DEFAULT_NAMESPACE)
+@click.option("--namespace", default=DEFAULT_NAMESPACE, help="The namespace to deploy to.")
 @log_command_args
 def manifests_deploy(service: Tuple[str], namespace: str) -> None:
-    """Deploy the generated manifests for all of your services."""
+    """
+    Deploy the generated manifests for SERVICE.
+
+    If SERVICE is not specified, deploy the generated manifests for all services.
+    """
     if not cluster_service.deploy_manifests(list(service), namespace):
         sys.exit(1)
 
@@ -98,10 +106,14 @@ def secrets():
 
 @secrets.command(name="deploy")
 @click.argument("service", nargs=-1)
-@click.option("--namespace", default=DEFAULT_NAMESPACE)
+@click.option("--namespace", default=DEFAULT_NAMESPACE, help="The namespace to deploy to.")
 @log_command_args
 def secrets_deploy(service: Tuple[str], namespace: str) -> None:
-    """Deploy an encrypted file as a Kubernetes secret."""
+    """
+    Deploy the secrets for SERVICE.
+
+    If SERVICE is not specified, deploy the secrets for all services.
+    """
     if not cluster_service.deploy_secrets(list(service), namespace):
         sys.exit(1)
 
@@ -115,17 +127,23 @@ def _get_service_from_folder() -> str:
 
 @secrets.command()
 @click.argument("file-path", type=click.Path(exists=True))
-@click.option("--service", prompt=True, default=_get_service_from_folder())
+@click.option(
+    "--service",
+    prompt=True,
+    default=_get_service_from_folder(),
+    help="The service to associate with the secret."
+)
 @click.option(
     "--secret-name",
     prompt=True,
     # This assumes that the user would run this command in the folder for
     # a service (since that's where a secrets file would normally be).
-    default=lambda: "{}-secrets".format(os.path.basename(os.getcwd()))
+    default=lambda: "{}-secrets".format(os.path.basename(os.getcwd())),
+    help="The name of the secret."
 )
 @log_command_args
 def create(file_path: str, service: str, secret_name: str) -> None:
-    """Create a secret by encrypting a file using GCP KMS."""
+    """Create a secret by encrypting a file at FILE_PATH using GCP KMS."""
     if not service:
         logger.error("Service name required.")
         raise click.Abort()
