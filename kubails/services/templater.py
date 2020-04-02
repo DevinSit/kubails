@@ -1,15 +1,16 @@
 import os
 from cookiecutter.main import cookiecutter
-from kubails.utils.service_helpers import get_codebase_subfolder
+from kubails.utils.service_helpers import get_resources_subfolder
 
 
-TEMPLATES_FOLDER = get_codebase_subfolder("templates")
+TEMPLATES_FOLDER = get_resources_subfolder("templates")
+PRIMARY_TEMPLATE = "primary"
 
 
 class Templater:
     @staticmethod
     def template_primary() -> None:
-        cookiecutter(os.path.join(TEMPLATES_FOLDER, "primary"))
+        cookiecutter(os.path.join(TEMPLATES_FOLDER, PRIMARY_TEMPLATE))
 
     @staticmethod
     def template_service(service_type: str, title: str, name: str, output_dir: str) -> None:

@@ -4,7 +4,7 @@ import sys
 from typing import Tuple
 from kubails.commands import helpers
 from kubails.services.service import Service
-from kubails.templates import SERVICE_TEMPLATES
+from kubails.resources.templates import SERVICE_TEMPLATES
 from kubails.utils.command_helpers import log_command_args_factory
 
 

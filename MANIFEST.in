@@ -1,2 +1,1 @@
-recursive-include kubails/templates *
 recursive-include kubails/resources *

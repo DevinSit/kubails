@@ -3,7 +3,7 @@ import os
 from typing import Callable, Dict, List
 from kubails.external_services import dependency_checker, docker, docker_compose
 from kubails.services import config_store, manifest_manager, templater
-from kubails.templates import ConfigGenerator, SERVICES_CONFIG
+from kubails.resources.templates import ConfigGenerator, SERVICES_CONFIG
 from kubails.utils.service_helpers import call_command, sanitize_name
 
 
