@@ -1,7 +1,7 @@
 import click
 from typing import Dict
 from kubails.services.service import Service
-from kubails.templates import SERVICES_CONFIG, SERVICE_TEMPLATES
+from kubails.resources.templates import SERVICES_CONFIG, SERVICE_TEMPLATES
 
 
 SERVICE_GENERATION_PROMPTS = {
