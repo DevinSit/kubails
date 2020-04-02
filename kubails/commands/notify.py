@@ -12,6 +12,7 @@ notify_service = None
 
 @click.group()
 def notify():
+    """Manage notifications for your build pipeline."""
     global notify_service
 
     notify_service = Notify()
@@ -24,6 +25,7 @@ def notify():
 
 @notify.group()
 def slack():
+    """Manage Slack notifications."""
     pass
 
 
@@ -33,6 +35,7 @@ def slack():
 @click.option("--commit", prompt=True)
 @log_command_args
 def success(webhook: str, namespace: str, commit: str) -> None:
+    """Send a success message to Slack."""
     notify_service.send_slack_success_message(webhook, namespace=namespace, commit=commit)
 
 
@@ -41,6 +44,7 @@ def success(webhook: str, namespace: str, commit: str) -> None:
 @click.option("--repo")
 @log_command_args
 def deploy_failure_notifier(webhook: str, repo: str) -> None:
+    """Deploy a notifier that sends failure messages to Slack."""
     notify_service.deploy_slack_failure_notifier(webhook, repo_name=repo)
 
 
@@ -51,6 +55,7 @@ def deploy_failure_notifier(webhook: str, repo: str) -> None:
 
 @notify.group()
 def git():
+    """Manage Git hosting provider build statuses."""
     pass
 
 
@@ -59,6 +64,7 @@ def git():
 @click.option("--repo")
 @log_command_args
 def deploy_github_notifier(access_token: str, repo: str) -> None:
+    """Deploy a notifier that sends build statuses to GitHub."""
     notify_service.deploy_github_notifier(access_token, repo_name=repo)
 
 
@@ -68,4 +74,5 @@ def deploy_github_notifier(access_token: str, repo: str) -> None:
 @click.option("--repo")
 @log_command_args
 def deploy_bitbucket_notifier(access_token: str, user: str, repo: str) -> None:
+    """Deploy a notifier that sends build statuses to Bitbucket."""
     notify_service.deploy_bitbucket_notifier(access_token, user, repo_name=repo)

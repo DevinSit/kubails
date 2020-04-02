@@ -16,6 +16,7 @@ cluster_service = None
 
 @click.group()
 def infra():
+    """Manage the infrastructure for your project."""
     global infra_service
     global cluster_service
 
@@ -26,6 +27,7 @@ def infra():
 @infra.command()
 @log_command_args
 def setup() -> None:
+    """Configure your GCP project to work with Kubails."""
     infra_service.setup()
 
 
@@ -35,12 +37,14 @@ def setup() -> None:
 )
 @log_command_args
 def cleanup() -> None:
+    """Cleanup the resources created by 'setup'."""
     infra_service.cleanup()
 
 
 @infra.command()
 @log_command_args
 def authenticate() -> None:
+    """Generate a new Kubails service account key and initialize Terraform."""
     if not infra_service.authenticate():
         sys.exit(1)
 
@@ -48,6 +52,7 @@ def authenticate() -> None:
 @infra.command()
 @log_command_args
 def unauthenticate() -> None:
+    """Removes your current key from the Kubails service account."""
     if not infra_service.unauthenticate():
         sys.exit(1)
 
@@ -56,6 +61,7 @@ def unauthenticate() -> None:
 @click.option("--component", type=click.Choice(["all", "builder"]), default="all")
 @log_command_args
 def deploy(component: str) -> None:
+    """Deploy the infrastructure needed for your Kubails project."""
     if component == "all":
         deploy_result = infra_service.deploy()
 
@@ -90,6 +96,7 @@ def deploy(component: str) -> None:
 @infra.command()
 @log_command_args
 def destroy() -> None:
+    """Destroy all of the infrastructure for your Kubails project."""
     message = (
         "This will delete all of the infrastructure for project '{}'. Are you sure?"
     ).format(infra_service.config.project_name)
@@ -105,4 +112,5 @@ def destroy() -> None:
 @click.option("--with-vars", default=False, is_flag=True)
 @log_command_args
 def terraform(command: str, arguments: Tuple[str], with_vars: bool) -> None:
+    """Run a Terraform command directly."""
     infra_service.terraform_command(command, list(arguments), with_vars=with_vars)

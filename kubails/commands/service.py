@@ -16,6 +16,7 @@ service_service = None
 
 @click.group()
 def service():
+    """Manage the services for your project."""
     global service_service
 
     service_service = Service()
@@ -25,12 +26,14 @@ def service():
 @click.argument("service", nargs=-1)
 @log_command_args
 def start(service: Tuple[str]) -> None:
+    """Start up your services locally."""
     service_service.start(list(service))
 
 
 @service.command()
 @log_command_args
 def destroy() -> None:
+    """Teardown your local services."""
     service_service.destroy()
 
 
@@ -39,6 +42,7 @@ def destroy() -> None:
 @click.option("--tag")
 @log_command_args
 def lint(service: Tuple[str], tag: str) -> None:
+    """Lint your services."""
     if not service_service.lint(list(service), tag):
         sys.exit(1)
 
@@ -48,6 +52,7 @@ def lint(service: Tuple[str], tag: str) -> None:
 @click.option("--tag")
 @log_command_args
 def test(service: Tuple[str], tag) -> None:
+    """Test your services."""
     if not service_service.test(list(service), tag):
         sys.exit(1)
 
@@ -57,6 +62,7 @@ def test(service: Tuple[str], tag) -> None:
 @click.option("--tag")
 @log_command_args
 def ci(service: Tuple[str], tag: str) -> None:
+    """Run CI on your services."""
     if not service_service.ci(list(service), tag):
         sys.exit(1)
 
@@ -65,6 +71,7 @@ def ci(service: Tuple[str], tag: str) -> None:
 @click.argument("command", required=True)
 @log_command_args
 def make(command: str) -> None:
+    """Execute a Make command on your services."""
     if not service_service.make(command):
         sys.exit(1)
 
@@ -84,6 +91,7 @@ def make(command: str) -> None:
 @click.option("--title", prompt=helpers.SERVICE_GENERATION_PROMPTS["without_index"]["title"])
 @log_command_args
 def generate(service_type: str, subdomain: str, title: str) -> None:
+    """Generate a new service."""
     helpers.generate_service(
         service_service,
         service_type=service_type,
@@ -99,6 +107,7 @@ def generate(service_type: str, subdomain: str, title: str) -> None:
 
 @service.group()
 def images():
+    """Build and push Docker images for your services."""
     pass
 
 
@@ -108,6 +117,7 @@ def images():
 @click.option("--commit")
 @log_command_args
 def build(service: Tuple[str], branch: str, commit: str) -> None:
+    """Build the Docker image for a service."""
     if not service_service.build(list(service), branch, commit):
         sys.exit(1)
 
@@ -118,5 +128,6 @@ def build(service: Tuple[str], branch: str, commit: str) -> None:
 @click.option("--commit")
 @log_command_args
 def push(service: Tuple[str], branch: str, commit: str) -> None:
+    """Push the Docker image for a service."""
     if not service_service.push(list(service), branch, commit):
         sys.exit(1)

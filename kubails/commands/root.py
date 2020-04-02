@@ -20,6 +20,7 @@ def root():
 @root.command()
 @log_command_args
 def new() -> None:
+    """Generate a new Kubails project."""
     _generate_new_project()
 
 

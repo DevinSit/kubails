@@ -17,6 +17,7 @@ kube_git_syncer_service = None
 
 @click.group()
 def cluster():
+    """Manage the operation of your cluster."""
     global cluster_service
     global kube_git_syncer_service
 
@@ -27,12 +28,14 @@ def cluster():
 @cluster.command()
 @log_command_args
 def authenticate() -> None:
+    """Authenticate kubectl to your cluster."""
     cluster_service.authenticate()
 
 
 @cluster.command()
 @log_command_args
 def destroy() -> None:
+    """Destroy your cluster."""
     message = (
         "This will delete the cluster for project '{}'. Are you sure?"
     ).format(cluster_service.config.project_name)
@@ -44,6 +47,7 @@ def destroy() -> None:
 @cluster.command()
 @log_command_args
 def cleanup_namespaces() -> None:
+    """Remove any cluster namespaces that don't have corresponding git branches."""
     kube_git_syncer_service.cleanup_namespaces()
 
 
@@ -57,6 +61,7 @@ DEFAULT_TAG = "latest"
 
 @cluster.group()
 def manifests():
+    """Generate and deploy cluster manifests."""
     pass
 
 
@@ -66,6 +71,7 @@ def manifests():
 @click.option("--tag", default=DEFAULT_TAG)
 @log_command_args
 def generate(service: Tuple[str], tag: str, namespace: str) -> None:
+    """Generate manifests for all of your services."""
     if not cluster_service.generate_manifests(list(service), tag, namespace):
         sys.exit(1)
 
@@ -75,6 +81,7 @@ def generate(service: Tuple[str], tag: str, namespace: str) -> None:
 @click.option("--namespace", default=DEFAULT_NAMESPACE)
 @log_command_args
 def manifests_deploy(service: Tuple[str], namespace: str) -> None:
+    """Deploy the generated manifests for all of your services."""
     if not cluster_service.deploy_manifests(list(service), namespace):
         sys.exit(1)
 
@@ -85,6 +92,7 @@ def manifests_deploy(service: Tuple[str], namespace: str) -> None:
 
 @cluster.group()
 def secrets():
+    """Create and deploy secrets encrypted using GCP KMS."""
     pass
 
 
@@ -93,6 +101,7 @@ def secrets():
 @click.option("--namespace", default=DEFAULT_NAMESPACE)
 @log_command_args
 def secrets_deploy(service: Tuple[str], namespace: str) -> None:
+    """Deploy an encrypted file as a Kubernetes secret."""
     if not cluster_service.deploy_secrets(list(service), namespace):
         sys.exit(1)
 
@@ -116,6 +125,7 @@ def _get_service_from_folder() -> str:
 )
 @log_command_args
 def create(file_path: str, service: str, secret_name: str) -> None:
+    """Create a secret by encrypting a file using GCP KMS."""
     if not service:
         logger.error("Service name required.")
         raise click.Abort()
