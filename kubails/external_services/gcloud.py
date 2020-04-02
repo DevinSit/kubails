@@ -5,13 +5,14 @@ import shutil
 from functools import reduce
 from typing import Dict, List
 from kubails.utils.service_helpers import (
-    call_command, get_command_output, get_codebase_folder, get_codebase_subfolder, STDERR_INTO_OUTPUT
+    call_command, get_command_output, get_codebase_folder, get_resources_subfolder, STDERR_INTO_OUTPUT
 )
 
 
 logger = logging.getLogger(__name__)
 
 BUILDER_IMAGE = "kubails-builder"
+BUILDER_FOLDER = "builder"
 
 
 class GoogleCloud:
@@ -35,7 +36,8 @@ class GoogleCloud:
 
         root_folder = get_codebase_folder()
         root_kubails_folder = os.path.join(root_folder, "kubails")
-        builder_folder = get_codebase_subfolder("builder")
+
+        builder_folder = get_resources_subfolder(BUILDER_FOLDER)
         builder_kubails_folder = os.path.join(builder_folder, "kubails")
         cloudbuild_config = os.path.join(builder_folder, "cloudbuild.yaml")
 

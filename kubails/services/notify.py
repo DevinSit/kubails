@@ -1,10 +1,9 @@
 import click
 import logging
-import os
 from typing import Dict
 from kubails.external_services import gcloud, slack
 from kubails.services import config_store
-from kubails.utils.service_helpers import get_codebase_subfolder, sanitize_name
+from kubails.utils.service_helpers import get_resources_subfolder, sanitize_name
 
 
 logger = logging.getLogger(__name__)
@@ -111,7 +110,7 @@ class Notify:
             # TODO: This should probably be changed at some point.
             repo_name = self.config.project_name
 
-        notifier_source = os.path.join(get_codebase_subfolder("resources"), NOTIFIER_FOLDER)
+        notifier_source = get_resources_subfolder(NOTIFIER_FOLDER)
 
         self.gcloud.deploy_function(
             "{}-{}".format(repo_name, notifier_name),
