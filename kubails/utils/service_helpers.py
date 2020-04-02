@@ -114,13 +114,17 @@ def sanitize_name(branch_name: str) -> str:
     return re.sub("[^0-9a-zA-Z]+", "-", branch_name.lower())
 
 
+def get_codebase_folder() -> str:
+    return os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))))
+
+
 def get_codebase_subfolder(folder: str) -> str:
     current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     return os.path.join(os.path.dirname(current_dir), folder)
 
 
-def get_codebase_folder() -> str:
-    return os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))))
+def get_resources_subfolder(folder: str) -> str:
+    return os.path.join(get_codebase_subfolder("resources"), folder)
 
 
 def _format_command(command: List[str], shell: bool = False) -> Union[Sequence[str], str]:
