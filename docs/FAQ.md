@@ -6,6 +6,8 @@ Ultimately, **Kubails** is a CLI tool that wraps together many technologies like
 
 When creating a new Kubails project, you get an entire folder structure bootstrapped for you. It will contain all the configuration needed to get up and running, including Terraform configs, Helm manifests, and Cloud Build (CI/CD) config. Learn more about [Folder Structure](#TODO).
 
+Additionally, you can choose from some predefined templates for generating your services (e.g. frontend, backend, etc). Learn more about [Service Templates](#TODO).
+
 Once the project has been created, you can deploy all of the necessary infrastructure to your GCP project of choice using the `kubails` CLI. Among other things, this will create a Kubernetes (GKE) cluster where all your code will be deployed as Docker services. Learn more about [Infrastructure](#TODO).
 
 Finally, during development, a **Cloud Build** pipeline will automatically deploy code from _every_ commit from _every_ branch to a live environment on the Kubernetes cluster. Each branch gets its own dedicated URL (with SSL/TLS) and cluster namespace, so that all branches are functionally equivalent (including your master/production branch). Learn more about [Per Branch Deployments](#TODO) and [CI/CD](#TODO).
