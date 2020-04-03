@@ -14,7 +14,7 @@ If you do not have these competencies (or are unwilling to learn them), then Kub
 
 ## Prerequisites
 
-> Since Kubails wraps together many individual tools, you'll need to have all of them installed to make use Kubails.
+> Since Kubails wraps together many individual tools, you'll need to have all of them installed.
 
 You will need **Python 3** and `pip` to be able to install and operate the `kubails` CLI.
 
@@ -63,18 +63,18 @@ You'll then be prompted to enter information on how to configure your project. H
 
 | Field | Description |
 | :--- | :--- |
-| `project\_title` | The human-readable title of your project. |
-| `project\_name` | The machine-readable name of your project Used for naming resource, so it can't contain spaces. |
+| `project_title` | The human-readable title of your project. |
+| `project_name` | The machine-readable name of your project Used for naming resource, so it can't contain spaces. |
 | `description` | A description of your project for the README. |
 | `domain` | The domain that will host your application. Yes, it is mandatory. |
-| `domain\_owner\_email` | The email of whoever should receive emails if something goes wrong with the SSL certificate (LetsEncrypt). |
-| `gcp\_project` | The ID of the GCP project to host the Kubails infrastructure. |
-| `gcp\_region` | The region to use for certain pieces of the Kubails infrastructure. |
-| `gcp\_zone` | The zone to use for certain pieces of the Kubails infrastructure. Must be a zone in gcp\_region. |
-| `remote\_repo\_host` | Where your Git repo will be hosted. Your choice of either GitHub or Bitbucket. |
-| `remote\_repo\_owner` | The (lowercased) owner of your hosted Git repo. For example, for Kubails, the owner is 'devinsit' (from https://github.com/DevinSit/kubails). |
+| `domain_owner_email` | The email of whoever should receive emails if something goes wrong with the SSL certificate (LetsEncrypt). |
+| `gcp_project` | The ID of the GCP project to host the Kubails infrastructure. |
+| `gcp_region` | The region to use for certain pieces of the Kubails infrastructure. |
+| `gcp_zone` | The zone to use for certain pieces of the Kubails infrastructure. Must be a zone in gcp\_region. |
+| `remote_repo_host` | Where your Git repo will be hosted. Your choice of either GitHub or Bitbucket. |
+| `remote_repo_owner` | The (lowercased) owner of your hosted Git repo. For example, for Kubails, the owner is 'devinsit' (from https://github.com/DevinSit/kubails). |
 
-!['kubails new' demonstration](.gitbook/assets/kubails_new.svg)
+![](assets/kubails_new.svg)
 
 After you've entered this information, you'll then be prompted to create some services. 
 
@@ -83,14 +83,14 @@ You'll be asked how many services you need and to choose which templates to use 
 For more information on services and templates, check out [Services](#TODO).
 
 {% hint style="info" %}
-If you want a service to be exposed at the root domain, then leave the subdomain prompt empty.
+If you want a service to be exposed at the root domain, then leave the `subdomain` prompt empty.
 
 Obviously, you can only have one service at the root domain :)
 {% endhint %}
 
-Once you have the project created, don't forget to turn it into a Git repo and push it to your provider of choice.
+Once you have the project created, don't forget to turn it into a Git repo and push it to your remote host of choice.
 
-But now you have another choice: you can either [start developing locally](#start-developing-locally) right now, or you can [deploy the infrastructure](#deploy-the-kubails-infrastructure) to start taking advantage of the power of Kubails. Your choice :)
+But now you have another choice: you can either [start developing locally](#start-developing-locally) right now, or you can [deploy the infrastructure](#deploy-the-kubails-infrastructure) to start taking advantage of the power of Kubails.
 
 # Start Developing Locally
 
