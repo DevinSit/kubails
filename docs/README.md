@@ -4,31 +4,31 @@ description: What is Kubails?
 
 # Introduction
 
-**Kubails** is a highly opinionated framework for enabling rapid deployment and prototyping of Docker-based web services. 
+**Kubails** is a highly opinionated framework for enabling rapid deployment and prototyping of Docker-based web services.
 
 That is, if you're developing a web app, **Kubails** makes a bunch of tooling and infrastructure decisions for you so that you can get your app deployed in **less than an hour**. Then you can start iterating quickly while being supported by modern development comforts like **true CI/CD** and **per branch deployments**.
 
-So if this sounds like the sort of thing that would be helpful for your project, then make your project a **Kubails Project** and get to building _now_.
+So if this sounds like the sort of thing that would be helpful for your project, then try out Kubails and get to building _now_.
 
-If you have any questions about the project, feel free to check the [FAQ](#faq.md).
+If you have any questions about the project, feel free to check the [FAQ](./FAQ.md).
 
 {% hint style="warning" %}
-Kubails is still **alpha** software. 
+Kubails is still **alpha** software.
 
 While the underlying technologies are mostly production-ready, using Kubails for production projects is certainly at **your own risk**!
 {% endhint %}
 
 ## Features
 
-- **Fast initial setup**: Get deployed and developing in less than an hour.
-- **Opinionated project architecture**: All the decisions for infrastructure, pipelines, dep 
-- **Robust infrastructure management**: With Terraform and Helm, everything is just configuration as code.
-- **Scale as you grow**: With the power of _The Cloud™_ and Kubernetes, you can scale as much as you have money.
-- **Modern developer experience**: Between Docker and per branch deployments, you can be sure that what works in one place works everywhere.
+* **Fast initial setup**: Get deployed and developing in less than an hour.
+* **Opinionated project architecture**: Worry less about deciding between one person's cloud or another.
+* **Robust infrastructure management**: With Terraform and Helm, everything is just configuration as code.
+* **Scale as you grow**: By the power of _The Cloud™_ and Kubernetes, you can scale as much as you have money.
+* **Modern developer experience**: Between Docker and per branch deployments, you can be sure that what works in one place works everywhere.
 
 ## Get Started
 
-Follow the [Getting Started guide](#gettingstarted.md) to get your project up and running in the next hour. 
+Follow the [Getting Started guide](./GettingStarted.md) to get your project up and running in the next hour.
 
 ## Guides
 
