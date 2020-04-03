@@ -7,9 +7,9 @@ description: Get your project up and running.
 This guide will show you how to create your first Kubails project, deploy the necessary infrastructure to GCP, and start developing your product.
 
 {% hint style="warning" %}
-	This guide (and Kubails in general) assumes a baseline competency of all the tools and technologies outlined in the Prerequisites below.
+This guide (and Kubails in general) assumes a baseline competency of all the tools and technologies outlined in the Prerequisites below.
 
-    If you do not have these competencies (or are unwilling to learn them), then Kubails is probably not the tool for you.
+If you do not have these competencies (or are unwilling to learn them), then Kubails is probably not the tool for you.
 {% endhint %}
 
 ## Prerequisites
@@ -33,7 +33,7 @@ On top of having these installed, you'll also need **sufficient privileges** (i.
 Finally, the last prerequisite to using Kubails is that you must own a **domain name** and have sufficient privileges to change its name servers. This is because we'll be using GCP Cloud DNS later for DNS resolution.
 
 {% hint style="info" %}
-	Kubails does not yet fully support Terraform 0.12. As such, you must use Terraform 0.11 for the time being.
+Kubails does not yet fully support Terraform 0.12. As such, you must use Terraform 0.11 for the time being.
 {% endhint %}
 
 ## Install Kubails
@@ -48,7 +48,7 @@ pip install .
 ```
 
 {% hint style="info" %}
-    Kubails will be installable directly from `pip` in the future. 
+Kubails will be installable directly from `pip` in the future. 
 {% endhint %}
 
 ## Create a Kubails Project
@@ -83,9 +83,9 @@ You'll be asked how many services you need and to choose which templates to use 
 For more information on services and templates, check out [Services](#TODO).
 
 {% hint style="info" %}
-    If you want a service to be exposed at the root domain, then leave the subdomain prompt empty.
+If you want a service to be exposed at the root domain, then leave the subdomain prompt empty.
 
-    Obviously, you can only have one service at the root domain :)
+Obviously, you can only have one service at the root domain :)
 {% endhint %}
 
 Once you have the project created, don't forget to turn it into a Git repo and push it to your provider of choice.
@@ -109,11 +109,11 @@ These commands essentially map down to `docker-compose up`, but with some extra 
 Once all the services have been started, you'll be able to access them locally over their exposed ports. Check your `services/docker-compose.yaml` file for the port mappings of your particular services.
 
 {% hint style="info" %}
-    One of the (many) opinionated decisions for Kubails was to use `make` as basically a task runner. 
-    
-    That's why there's a root `Makefile` with a task for starting the services.
+One of the (many) opinionated decisions for Kubails was to use `make` as basically a task runner. 
 
-    For more information on the use of `make` in Kubails, see [Make as a Task Runner](#TODO).
+That's why there's a root `Makefile` with a task for starting the services.
+
+For more information on the use of `make` in Kubails, see [Make as a Task Runner](#TODO).
 {% endhint %}
 
 # Deploy the Kubails Infrastructure
@@ -218,9 +218,9 @@ kubectl -n cert-manager get certificates
 If the `READY` state for the certificate is `True`, then you're good to go! Otherwise, you'll just need to wait.
 
 {% hint style="info" %}
-    If the certificate doesn't become ready within a day or two, then you'll need to manually troubleshoot it. 
-    
-    This is where your knowledge of DNS, Kubernetes, and `cert-manager` is gonna come handy!
+If the certificate doesn't become ready within a day or two, then you'll need to manually troubleshoot it. 
+
+This is where your knowledge of DNS, Kubernetes, and `cert-manager` is gonna come handy!
 {% endhint %}
 
 ## Enabling the CI/CD Pipeline
