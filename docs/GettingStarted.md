@@ -23,7 +23,7 @@ Additionally, you should have the following installed to be able to make use of 
 - [git](https://git-scm.com/downloads)
 - [terraform 0.11](https://releases.hashicorp.com/terraform/)
 - [gcloud](https://cloud.google.com/sdk/install)
-- kubectl (can install using `gcloud components install kubectl`)
+- kubectl (can be installed using `gcloud components install kubectl`)
 - [docker](https://docs.docker.com/install/)
 - [docker-compose](https://docs.docker.com/compose/install/)
 - [helm](https://helm.sh/docs/intro/install/)
@@ -174,6 +174,8 @@ gcloud config set compute/zone us-east1-d
 Before deploying anything, we need to make sure the StackDriver workspace has been created. 
 
 This can be done simply by going to the [Monitoring](https://console.cloud.google.com/monitoring) section in the GCP console and waiting for GCP to configure workspace.
+
+![](assets/stackdriver_workspace_creation.png)
 
 ## Deploy the Infrastructure
 
