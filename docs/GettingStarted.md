@@ -64,7 +64,7 @@ You'll then be prompted to enter information on how to configure your project. H
 | Field | Description |
 | :--- | :--- |
 | `project_title` | The human-readable title of your project. |
-| `project_name` | The machine-readable name of your project Used for naming resource, so it can't contain spaces. |
+| `project_name` | The machine-readable name of your project. Used for naming resources, so it can't contain spaces. |
 | `description` | A description of your project for the README. |
 | `domain` | The domain that will host your application. Yes, it is mandatory. |
 | `domain_owner_email` | The email of whoever should receive emails if something goes wrong with the SSL certificate (LetsEncrypt). |
