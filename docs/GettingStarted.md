@@ -204,19 +204,19 @@ This is the part that takes the longest. However, thanks to Kubails, most of it 
 kubails infra deploy
 ```
 
-[TODO: INSERT DEPLOYMENT GIF HERE]
+![](assets/kubails_infra_deploy_1.svg)
 
 This command starts off by deploying all of the GCP infrastructure using Terraform.
 
 Then it waits and prompts you to do another one of the non-automatable tasks: change your name servers! Yes, Kubails makes use of GCP's Cloud DNS service for DNS resolution. As such, you'll need to change the name servers of your domain at your registrar to use those provided at the prompt.
 
-[TODO: INSERT NAME SERVERS GIF HERE]
+![](assets/kubails_infra_deploy_2.svg)
 
 Once you've confirmed that the name servers have been changed, the `deploy` command will go through its final phase: deploying all the necessary manifests to the Kubernetes cluster -- things like `cert-manager` and `ingress-nginx`.
 
-After the cluster has finished being configured, you will now have all of the infrastructure deployed! 🎉
+![](assets/kubails_infra_deploy_3.svg)
 
-[TODO: INSERT COMPLETION GIF HERE]
+After the cluster has finished being configured, you will now have all of the infrastructure deployed! 🎉
 
 However...
 
