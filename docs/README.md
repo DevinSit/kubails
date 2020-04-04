@@ -35,15 +35,15 @@ Follow the [Getting Started guide](./GettingStarted.md) to get your project up a
 
 While Kubails makes a lot of decisions for you and tries to automate away a lot of the drudgery, that doesn't mean you shouldn't understand the underlying concepts and technologies.
 
-Here are some guide that explain each piece of Kubails and what technologies are used to make it happen:
+Here are some guides that explain each piece of Kubails and what technologies are used to make it happen:
 
-1. [Folder Structure](guides/FolderStructure.md)
-2. [Services](guides/services/Services.md)
-3. [Infrastructure](guides/infrastructure/Infrastructure.md)
-4. [CI/CD and Per Branch Deployments](guides/PerBranchDeployments.md)
-5. [Project Configuration](guides/ProjectConfiguration.md)
-6. [Manifests](guides/Manifests.md)
-7. [Make as a Task Runner](guides/MakeTaskRunner.md)
+1. [Folder Structure](topics/FolderStructure.md)
+2. [Services](topics/services/Services.md)
+3. [Infrastructure](topics/infrastructure/Infrastructure.md)
+4. [CI/CD and Per Branch Deployments](topics/PerBranchDeployments.md)
+5. [Project Configuration](topics/ProjectConfiguration.md)
+6. [Manifests](topics/Manifests.md)
+7. [Make as a Task Runner](topics/MakeTaskRunner.md)
 
 ## References
 

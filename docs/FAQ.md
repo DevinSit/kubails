@@ -4,19 +4,19 @@
 
 Ultimately, **Kubails** is a CLI tool that wraps together many technologies like **Docker**, **Kubernetes**, **Terraform**, and **Google Cloud Platform (GCP)**. It removes the drudgery of manually configuring all these tools to work together so that you focus more on product development.
 
-When creating a new Kubails project, you get an entire folder structure bootstrapped for you. It will contain all the configuration needed to get up and running, including Terraform configs, Helm manifests, and Cloud Build (CI/CD) config. Learn more about [Folder Structure](./guides/FolderStructure.md).
+When creating a new Kubails project, you get an entire folder structure bootstrapped for you. It will contain all the configuration needed to get up and running, including Terraform configs, Helm manifests, and Cloud Build (CI/CD) config. Learn more about [Folder Structure](./topics/FolderStructure.md).
 
-Additionally, you can choose from some predefined templates for generating your services (e.g. frontend, backend, etc). Learn more about [Service Templates](./guides/services/Templates.md).
+Additionally, you can choose from some predefined templates for generating your services (e.g. frontend, backend, etc). Learn more about [Service Templates](./topics/services/Templates.md).
 
-Once the project has been created, you can deploy all of the necessary infrastructure to your GCP project of choice using the `kubails` CLI. Among other things, this will create a Kubernetes (GKE) cluster where all your code will be deployed as Docker services. Learn more about [Infrastructure](./guides/infrastructure/Infrastructure.md).
+Once the project has been created, you can deploy all of the necessary infrastructure to your GCP project of choice using the `kubails` CLI. Among other things, this will create a Kubernetes (GKE) cluster where all your code will be deployed as Docker services. Learn more about [Infrastructure](./topics/infrastructure/Infrastructure.md).
 
-Finally, during development, a **Cloud Build** pipeline will automatically deploy code from _every_ commit from _every_ branch to a live environment on the Kubernetes cluster. Each branch gets its own dedicated URL (with SSL/TLS) and cluster namespace, so that all branches are functionally equivalent (including your master/production branch). Learn more about [CI/CD and Per Branch Deployments](./guides/PerBranchDeployments.md).
+Finally, during development, a **Cloud Build** pipeline will automatically deploy code from _every_ commit from _every_ branch to a live environment on the Kubernetes cluster. Each branch gets its own dedicated URL (with SSL/TLS) and cluster namespace, so that all branches are functionally equivalent (including your master/production branch). Learn more about [CI/CD and Per Branch Deployments](./topics/PerBranchDeployments.md).
 
 ### Wait, you said _a_ Kubernetes cluster? Like one? For everything?
 
 Yes, each branch (including the one you designate as 'production', e.g. `master`) gets deployed onto a single Kubernetes cluster.
 
-Now, this cluster can be configured with as many nodes as you need, but obviously having production colocated with a bunch of 'staging' environments isn't an ideal high-availability setup.
+Now, this cluster can be configured with as many nodes as you need, but obviously having production co-located with a bunch of 'staging' environments isn't an ideal high-availability setup.
 
 However, high-availability isn't the point of a Kubails setup; rapid deployment and prototyping is. Heck, the default node type is 'preemptible' (i.e. the node can be deleted at any time) to save on server costs, so high-availability _really_ isn't the goal.
 
@@ -63,7 +63,7 @@ As such, you'll want to be familiar with most, if not all, of the underlying tec
 
 Well depending on which technology X is (and which technology Y is), that may be next to impossible.
 
-You're of course free to _try_ and switch technologies around, but that kind of defeats the purpose of Kubails being a _highly-opionated_ framework.
+You're of course free to _try_ and switch technologies around, but that kind of defeats the purpose of Kubails being a _highly-opinionated_ framework.
 
 So... sorry, but only my technology choice X is supported!
 
@@ -79,11 +79,11 @@ So... no AWS! (for now)
 
 ### How do per branch deployments work?
 
-For a detailed explanation, check out [Per Branch Deployments](./guides/PerBranchDeployments.md).
+For a detailed explanation, check out [Per Branch Deployments](./topics/PerBranchDeployments.md).
 
-But in short, every branch gets deployed to an isolated namespace in the Kubernetes cluster. This namespace includes every service needed to run your app (e.g. a Frontend service and a Backend service with a databse).
+But in short, every branch gets deployed to an isolated namespace in the Kubernetes cluster. This namespace includes every service needed to run your app (e.g. a `Frontend` service and a `Backend` service with a database).
 
-Each namespace then has all its services exposed using branch-specific URLs. For example, a branch named `ABC-123` with a Frontend and Backend service could have two exposed URLs: `abc-123.yourdomain.com` and `backend.abc-123.yourdomain.com`.
+Each namespace then has all its services exposed using branch-specific URLs. For example, a branch named `ABC-123` with a `Frontend` and `Backend` service could have two exposed URLs: `abc-123.yourdomain.com` and `backend.abc-123.yourdomain.com`.
 
 Essentially, each branch deployment is equivalent to the 'production' environment, which is just your `master` branch. As such, while developing, you can test your code in a deployed environment to be certain that it's going to work in production.
 
