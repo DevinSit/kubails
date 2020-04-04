@@ -1,3 +1,7 @@
+---
+description: Your questions, answered.
+---
+
 # What does Kubails actually _do_?
 
 Ultimately, **Kubails** is a CLI tool that wraps together many technologies like **Docker**, **Kubernetes**, **Terraform**, and **Google Cloud Platform (GCP)**. It removes the drudgery of manually configuring all these tools to work together so that you can focus more on product development.
