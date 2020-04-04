@@ -73,6 +73,24 @@ Of course, if someone wants to contribute a port, by all means!
 
 So... no AWS! (for now)
 
+### I saw 'centralized configuration' mentioned as a feature? Something about a `kubails.json` file?
+
+Yes! One of the biggest selling points of Kubails is that it provides a way to share configuration between all the different tools it uses (most notably, between Helm and Terraform).
+
+With the `kubails.json` file at the root of every project, Kubails can take these values and inject them into all of its the tools. This means no more copy/pasting values between Helm's `values.yaml` and Terraform's `.tfvars` — just change the value in `kubails.json` and you're good to go.
+
+### Ugh, another configuration file I have to deal with?
+
+Yep!
+
+### Wait, why is the configuration file JSON? Why can't it be YAML?
+
+Well, originally it was because I thought a JSON file could be used directly as a `-var-file` for Terraform and a values file for Helm (since JSON is technically a subset of YAML), but due to some technical limitations that I hit, this wasn't possible.
+
+However, I had already gotten so far using a JSON file for configuration that I didn't bother switching it out for YAML, so... here we are.
+
+Adding support for a `kubails.yaml` file might be something to come in the future.
+
 ### Why should I use Kubails? Why should I use Kubails over X?
 
 Good question! See [this page](#TODO) if you need some more convincing.

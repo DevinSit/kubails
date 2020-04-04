@@ -6,7 +6,7 @@ description: What is Kubails?
 
 **Kubails** is a highly opinionated framework for enabling rapid deployment and prototyping of Docker-based web services.
 
-That is, if you're developing a web app, **Kubails** makes a bunch of tooling and infrastructure decisions for you so that you can get your app deployed in **less than an hour**. Then you can start iterating quickly while being supported by modern development comforts like **true CI/CD** and **per branch deployments**.
+That is, if you're developing a web app, **Kubails** makes a bunch of tooling and infrastructure decisions for you so that you can get your app deployed in **less than an hour**. Then you can start iterating quickly while being supported by modern development comforts like **repeatable environments**, **true CI/CD**, and **per branch deployments**.
 
 So if this sounds like the sort of thing that would be helpful for your project, then try out Kubails and get to building _now_.
 
@@ -23,6 +23,7 @@ While the underlying technologies are mostly production-ready, using Kubails for
 * **Fast initial setup**: Get deployed and developing in less than an hour.
 * **Opinionated project architecture**: Worry less about deciding between one person's cloud or another.
 * **Robust infrastructure management**: With Terraform and Helm, everything is just configuration as code.
+* **Centralized configuration**: `kubails.json` is your entrypoint to keeping Terraform, Helm, and everything else in sync.
 * **Scale as you grow**: By the power of _The Cloud™_ and Kubernetes, you can scale as much as you have money.
 * **Modern developer experience**: Between Docker and per branch deployments, you can be sure that what works in one place works everywhere.
 
