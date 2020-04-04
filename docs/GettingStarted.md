@@ -204,9 +204,9 @@ This is the part that takes the longest. However, thanks to Kubails, most of it 
 kubails infra deploy
 ```
 
-![](assets/kubails_infra_deploy_1.svg)
-
 This command starts off by deploying all of the GCP infrastructure using Terraform.
+
+![](assets/kubails_infra_deploy_1.svg)
 
 Then it waits and prompts you to do another one of the non-automatable tasks: change your name servers! Yes, Kubails makes use of GCP's Cloud DNS service for DNS resolution. As such, you'll need to change the name servers of your domain at your registrar to use those provided at the prompt.
 
@@ -228,13 +228,9 @@ As much as deploying all of the above infrastructure might take 10 to 20 minutes
 
 And why is this important? Well, the domain needs to be resolvable using the Cloud DNS name servers so that the SSL/TLS certificate can be generated. And only once this has happened can you access any services deployed to the cluster.
 
-In the meantime, you can check whether the certificate has been generated (and by proxy, whether the domain is resolvable) by running this command:
+In the meantime, you can check whether the certificate has been generated (and by proxy, whether the domain is resolvable):
 
-```
-kubectl -n cert-manager get certificates
-```
-
-[TODO: REPLACE THE ABOVE WITH A SCREENSHOT OF THE COMMAND AND THE RESULT]
+![](assets/kubails_kubectl_certificates.svg)
 
 If the `READY` state for the certificate is `True`, then you're good to go! Otherwise, you'll just need to wait.
 

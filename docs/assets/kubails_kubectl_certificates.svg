@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="terminal" baseProfile="full" viewBox="0 0 719 455" width="719" version="1.1">
+    <defs>
+        <termtosvg:template_settings xmlns:termtosvg="https://github.com/nbedos/termtosvg">
+            <termtosvg:screen_geometry columns="84" rows="22"/>
+            <termtosvg:animation type="css"/>
+        </termtosvg:template_settings>
+        <style type="text/css" id="generated-style"><![CDATA[#screen {
+                font-family: 'DejaVu Sans Mono', monospace;
+                font-style: normal;
+                font-size: 14px;
+            }
+
+        text {
+            dominant-baseline: text-before-edge;
+            white-space: pre;
+        }
+    
+            :root {
+                --animation-duration: 7164ms;
+            }
+
+            @keyframes roll {
+                0.000%{transform:translateY(0px)}
+0.251%{transform:translateY(-408px)}
+13.568%{transform:translateY(-816px)}
+15.843%{transform:translateY(-1224px)}
+17.058%{transform:translateY(-1632px)}
+17.839%{transform:translateY(-2040px)}
+20.603%{transform:translateY(-2448px)}
+24.065%{transform:translateY(-2856px)}
+25.796%{transform:translateY(-3264px)}
+31.854%{transform:translateY(-3672px)}
+39.852%{transform:translateY(-4080px)}
+40.061%{transform:translateY(-4488px)}
+43.495%{transform:translateY(-4896px)}
+44.165%{transform:translateY(-5304px)}
+100.000%{transform:translateY(-5304px)}
+            }
+
+            #screen_view {
+                animation-duration: 7164ms;
+                animation-iteration-count:infinite;
+                animation-name:roll;
+                animation-timing-function: steps(1,end);
+                animation-fill-mode: forwards;
+            }
+        ]]></style>
+        <style type="text/css" id="user-style">
+            /* The colors defined below are the default 16 colors used for rendering text of the terminal. Adjust
+               them as needed.
+               gjm8 color theme (source: https://terminal.sexy/) */
+            .foreground {fill: #f8f8f2}
+            .background {fill: #272822}
+            .color0 {fill: #272822}
+            .color1 {fill: #f92672}
+            .color2 {fill: #a6e22e}
+            .color3 {fill: #f4bf75}
+            .color4 {fill: #66d9ef}
+            .color5 {fill: #ae81ff}
+            .color6 {fill: #a1efe4}
+            .color7 {fill: #f8f8f2}
+            .color8 {fill: #75715e}
+            .color9 {fill: #fd971f}
+            .color10 {fill: #383830}
+            .color11 {fill: #49483e}
+            .color12 {fill: #a59f85}
+            .color13 {fill: #f5f4f1}
+            .color14 {fill: #cc6633}
+            .color15 {fill: #f9f8f5}
+        </style>
+    </defs>
+    <rect id="terminalui" class="background" width="100%" height="100%" ry="4.5826941"/>
+    <circle cx="24" cy="23" r="7" class="color1"/>
+    <circle cx="44" cy="23" r="7" class="color3"/>
+    <circle cx="64" cy="23" r="7" class="color2"/>
+    <svg id="screen" width="672" height="374" x="23" y="50" viewBox="0 0 672 374" preserveAspectRatio="xMidYMin slice"><rect class="background" height="100%" width="100%" x="0" y="0"/><defs><g id="g1"><text class="color2" textLength="8" x="0">$</text><text class="foreground" textLength="8" x="8"> </text><text class="background" textLength="8" x="16"> </text><text class="foreground" textLength="648" x="24">                                                                                 </text></g><g id="g2"><text class="color2" textLength="8" x="0">$</text><text class="foreground" textLength="8" x="8"> </text><text class="foreground" text-decoration="underline" textLength="8" x="16">k</text><text class="background" textLength="8" x="24">u</text><text class="color4" textLength="304" x="32">bectl -n cert-manager get certificates</text><text class="foreground" textLength="336" x="336">                                          </text></g><g id="g3"><text class="color2" textLength="8" x="0">$</text><text class="foreground" textLength="8" x="8"> </text><text class="foreground" text-decoration="underline" textLength="16" x="16">ku</text><text class="background" textLength="8" x="32">b</text><text class="color4" textLength="296" x="40">ectl -n cert-manager get certificates</text><text class="foreground" textLength="336" x="336">                                          </text></g><g id="g4"><text class="color2" textLength="8" x="0">$</text><text class="foreground" textLength="8" x="8"> </text><text class="foreground" text-decoration="underline" textLength="24" x="16">kub</text><text class="background" textLength="8" x="40">e</text><text class="color4" textLength="288" x="48">ctl -n cert-manager get certificates</text><text class="foreground" textLength="336" x="336">                                          </text></g><g id="g5"><text class="color2" textLength="8" x="0">$</text><text class="foreground" textLength="8" x="8"> </text><text class="color9" font-weight="bold" textLength="32" x="16">kube</text><text class="background" textLength="8" x="48">c</text><text class="color4" textLength="280" x="56">tl -n cert-manager get certificates</text><text class="foreground" textLength="336" x="336">                                          </text></g><g id="g6"><text class="color2" textLength="8" x="0">$</text><text class="foreground" textLength="8" x="8"> </text><text class="color9" font-weight="bold" textLength="40" x="16">kubec</text><text class="background" textLength="8" x="56">t</text><text class="color4" textLength="272" x="64">l -n cert-manager get certificates</text><text class="foreground" textLength="336" x="336">                                          </text></g><g id="g7"><text class="color2" textLength="8" x="0">$</text><text class="foreground" textLength="8" x="8"> </text><text class="color9" font-weight="bold" textLength="48" x="16">kubect</text><text class="background" textLength="8" x="64">l</text><text class="color4" textLength="264" x="72"> -n cert-manager get certificates</text><text class="foreground" textLength="336" x="336">                                          </text></g><g id="g8"><text class="color2" textLength="8" x="0">$</text><text class="foreground" textLength="8" x="8"> </text><text class="color2" textLength="56" x="16">kubectl</text><text class="background" textLength="8" x="72"> </text><text class="color4" textLength="256" x="80">-n cert-manager get certificates</text><text class="foreground" textLength="336" x="336">                                          </text></g><g id="g9"><text class="color2" textLength="8" x="0">$</text><text class="foreground" textLength="8" x="8"> </text><text class="color2" textLength="56" x="16">kubectl</text><text class="foreground" textLength="264" x="72"> -n cert-manager get certificates</text><text class="background" textLength="8" x="336"> </text><text class="foreground" textLength="328" x="344">                                         </text></g><g id="g10"><text class="color2" textLength="8" x="0">$</text><text class="foreground" textLength="8" x="8"> </text><text class="color2" textLength="56" x="16">kubectl</text><text class="foreground" textLength="600" x="72"> -n cert-manager get certificates                                          </text></g><g id="g11"><text class="background" textLength="8" x="0"> </text></g><g id="g12"><text class="foreground" textLength="264" x="0">NAME     READY   SECRET       AGE</text></g><g id="g13"><text class="foreground" textLength="264" x="0">my-app   False   my-app-tls   12m</text></g></defs><g id="screen_view"><g><rect class="foreground" height="17" width="8" x="16" y="0"/><use y="0" xlink:href="#g1"/></g><g><rect class="foreground" height="17" width="8" x="16" y="408"/><use y="408" xlink:href="#g1"/></g><g><rect class="foreground" height="17" width="8" x="24" y="816"/><use y="816" xlink:href="#g2"/></g><g><rect class="foreground" height="17" width="8" x="32" y="1224"/><use y="1224" xlink:href="#g3"/></g><g><rect class="foreground" height="17" width="8" x="40" y="1632"/><use y="1632" xlink:href="#g4"/></g><g><rect class="foreground" height="17" width="8" x="48" y="2040"/><use y="2040" xlink:href="#g5"/></g><g><rect class="foreground" height="17" width="8" x="56" y="2448"/><use y="2448" xlink:href="#g6"/></g><g><rect class="foreground" height="17" width="8" x="64" y="2856"/><use y="2856" xlink:href="#g7"/></g><g><rect class="foreground" height="17" width="8" x="72" y="3264"/><use y="3264" xlink:href="#g8"/></g><g><rect class="foreground" height="17" width="8" x="336" y="3672"/><use y="3672" xlink:href="#g9"/></g><g><rect class="foreground" height="17" width="8" x="336" y="4080"/><use y="4080" xlink:href="#g9"/></g><g><use y="4488" xlink:href="#g10"/><rect class="foreground" height="17" width="8" x="0" y="4505"/><use y="4505" xlink:href="#g11"/></g><g><use y="4896" xlink:href="#g10"/><use y="4913" xlink:href="#g12"/><use y="4930" xlink:href="#g13"/><rect class="foreground" height="17" width="8" x="0" y="4947"/><use y="4947" xlink:href="#g11"/></g><g><use y="5304" xlink:href="#g10"/><use y="5321" xlink:href="#g12"/><use y="5338" xlink:href="#g13"/><rect class="foreground" height="17" width="8" x="16" y="5355"/><use y="5355" xlink:href="#g1"/></g></g></svg>
+</svg>
