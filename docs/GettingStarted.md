@@ -230,6 +230,10 @@ And why is this important? Well, the domain needs to be resolvable using the Clo
 
 In the meantime, you can check whether the certificate has been generated (and by proxy, whether the domain is resolvable):
 
+```
+kubectl -n cert-manager get certificates
+```
+
 ![](assets/kubails_kubectl_certificates.svg)
 
 If the `READY` state for the certificate is `True`, then you're good to go! Otherwise, you'll just need to wait.
