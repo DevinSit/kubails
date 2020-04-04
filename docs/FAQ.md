@@ -1,6 +1,4 @@
-## FAQ
-
-### What does Kubails actually _do_?
+# What does Kubails actually _do_?
 
 Ultimately, **Kubails** is a CLI tool that wraps together many technologies like **Docker**, **Kubernetes**, **Terraform**, and **Google Cloud Platform (GCP)**. It removes the drudgery of manually configuring all these tools to work together so that you can focus more on product development.
 
@@ -12,7 +10,11 @@ Once the project has been created, you can deploy all of the necessary **infrast
 
 Finally, during development, a **Cloud Build** pipeline will automatically deploy code from _every_ commit from _every_ branch to the Kubernetes cluster. Each branch gets its own **dedicated URL** (with SSL/TLS) and **cluster namespace**, so that all branches are functionally equivalent (including your master/production branch). Learn more about [CI/CD and Per Branch Deployments](./topics/PerBranchDeployments.md).
 
-### Wait, you said _a_ Kubernetes cluster? Like one? For everything?
+Here's a high-level overview of the general flow of **developing using Kubails**:
+
+![](assets/kubails_components.svg)
+
+# Wait, you said _a_ Kubernetes cluster? Like one? For everything?
 
 Yes, each branch (including the one you designate as 'production', e.g. `master`) gets deployed onto a **single Kubernetes cluster**.
 
@@ -20,7 +22,7 @@ Now, this cluster can be configured with as many nodes as you need, but obviousl
 
 However, high-availability is _not_ the point of a Kubails setup; **rapid deployment and prototyping** is. Heck, the default node type is 'preemptible' (i.e. the node can be deleted at any time) to save on server costs, so high-availability _really_ isn't the goal.
 
-### What if I _do_ want high-availability?
+# What if I _do_ want high-availability?
 
 Then **don't use Kubails**.
 
@@ -30,11 +32,11 @@ First, the Kubernetes cluster could always be reconfigured to be **regional** (i
 
 But if you want to go so far as to keep production in an entirely separate cluster, then even while it is technically possible, I would suggest not using Kubails.
 
-### What exactly are the technologies that Kubails uses?
+# What exactly are the technologies that Kubails uses?
 
 Here's a quick rundown:
 
-* `kubails` **CLI**: Written in Python with the [click](https://click.palletsprojects.com/en/7.x/) CLI framework
+* `kubails` **CLI**: Written in [Python 3](https://www.python.org/) with the [click](https://click.palletsprojects.com/en/7.x/) CLI framework
 * **Infrastructure management**: [Terraform](https://www.terraform.io/)
 * **Cloud hosting**: [Google Cloud Platform](https://cloud.google.com/) (GCP)
 * **Service containerization**: [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
@@ -47,11 +49,7 @@ Here's a quick rundown:
 * **Monitoring**: [Stackdriver](https://cloud.google.com/products/operations)
 * **Git hosting**: Supports repositories hosted on [GitHub](https://github.com/) and [Bitbucket](https://bitbucket.org/)
 
-Here's an overview of how **some** of these components interact:
-
-![](assets/kubails_components.svg)
-
-### Do I need to know how Docker, Kubernetes, Terraform, etc. work?
+# Do I need to know how Docker, Kubernetes, Terraform, etc. work?
 
 For the most part, **yes!** Unlike a managed service, using Kubails for your project is a 'host it yourself, manage it yourself' situation.
 
@@ -59,7 +57,7 @@ And while Kubails can get you pretty far, I'd be lying if I said it could comple
 
 As such, you'll want to be familiar with most, if not all, of the underlying technologies in order to be able adapt them to fit your changing needs as well as to fix things as they come up.
 
-### What if I want to replace your technology choice X with my technology choice Y?
+# What if I want to replace your technology choice X with my technology choice Y?
 
 Well depending on which technology X is (and which technology Y is), that may be **next to impossible**.
 
@@ -67,7 +65,7 @@ You're of course free to _try_ and switch technologies around, but that kind of 
 
 So... sorry, but only my technology choice X is supported!
 
-### Aww come on, I really want to use AWS instead of GCP...
+# Aww come on, I really want to use AWS instead of GCP...
 
 I had toyed around with porting Kubails to AWS at one point, but life got in the way...
 
@@ -77,7 +75,7 @@ Of course, if someone wants to contribute a port, by all means!
 
 So... **no AWS**! (for now)
 
-### How do per branch deployments work?
+# How do per branch deployments work?
 
 For a detailed explanation, check out [Per Branch Deployments](./topics/PerBranchDeployments.md).
 
@@ -87,7 +85,7 @@ Each namespace then has all its services exposed using **branch-specific URLs**.
 
 Essentially, each branch deployment is equivalent to the 'production' environment, which is just your `master` branch. As such, while developing, **you can test your code in a deployed environment** to be certain that it's going to work in production.
 
-### Wait, _every_ branch is exposed to the internet?
+# Wait, _every_ branch is exposed to the internet?
 
 **That is correct**. Now, while this might sound scary, you have to remember that each branch's namespace is completely independent.
 
@@ -95,17 +93,17 @@ If you have a database in one branch's namespace, then it's completely separate 
 
 Obviously, more **points of entry = more points of risk**, but I think the potential risk is well worth the **advantages of per branch deployments**.
 
-### I saw 'centralized configuration' mentioned as a feature? Something about a `kubails.json` file?
+# I saw 'centralized configuration' mentioned as a feature? Something about a `kubails.json` file?
 
 Yes! One of the biggest selling points of Kubails is that it provides a way to **share configuration** between all the different tools it uses (most notably, between Helm and Terraform).
 
 With the `kubails.json` file at the root of every project, Kubails can take these values and **inject them** into all of its the tools. This means **no more copy/pasting** values between Helm's `values.yaml` and Terraform's `.tfvars` — just change the value in `kubails.json` and you're good to go.
 
-### Ugh, another configuration file that I have to deal with?
+# Ugh, another configuration file that I have to deal with?
 
 Yep!
 
-### Wait, why is the configuration file JSON? Why can't it be YAML?
+# Wait, why is the configuration file JSON? Why can't it be YAML?
 
 Well, originally it was because I thought a JSON file could be used directly as a `-var-file` for Terraform and a values file for Helm (since JSON is technically a subset of YAML), but due to some **technical limitations** that I hit, this wasn't possible.
 
@@ -113,10 +111,10 @@ However, I had already gotten so far using a JSON file for configuration that I 
 
 Adding support for a `kubails.yaml` file might be **something to come in the future**.
 
-### Why should I use Kubails? Why should I use Kubails over X?
+# Why should I use Kubails? Why should I use Kubails over X?
 
 Good question! See [this page](./WhyKubails.md) if you need some more convincing.
 
-### Why should I _not_ use Kubails?
+# Why should I _not_ use Kubails?
 
 An equally good question! We've got a [page](./WhyNotKubails.md) for that too.
