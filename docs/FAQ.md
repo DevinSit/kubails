@@ -4,13 +4,13 @@
 
 Ultimately, **Kubails** is a CLI tool that wraps together many technologies like **Docker**, **Kubernetes**, **Terraform**, and **Google Cloud Platform (GCP)**. It removes the drudgery of manually configuring all these tools to work together so that you focus more on product development.
 
-When creating a new Kubails project, you get an entire folder structure bootstrapped for you. It will contain all the configuration needed to get up and running, including Terraform configs, Helm manifests, and Cloud Build (CI/CD) config. Learn more about [Folder Structure](#TODO).
+When creating a new Kubails project, you get an entire folder structure bootstrapped for you. It will contain all the configuration needed to get up and running, including Terraform configs, Helm manifests, and Cloud Build (CI/CD) config. Learn more about [Folder Structure](./guides/FolderStructure.md).
 
-Additionally, you can choose from some predefined templates for generating your services (e.g. frontend, backend, etc). Learn more about [Service Templates](#TODO).
+Additionally, you can choose from some predefined templates for generating your services (e.g. frontend, backend, etc). Learn more about [Service Templates](./guides/services/Templates.md).
 
-Once the project has been created, you can deploy all of the necessary infrastructure to your GCP project of choice using the `kubails` CLI. Among other things, this will create a Kubernetes (GKE) cluster where all your code will be deployed as Docker services. Learn more about [Infrastructure](#TODO).
+Once the project has been created, you can deploy all of the necessary infrastructure to your GCP project of choice using the `kubails` CLI. Among other things, this will create a Kubernetes (GKE) cluster where all your code will be deployed as Docker services. Learn more about [Infrastructure](./guides/infrastructure/Infrastructure.md).
 
-Finally, during development, a **Cloud Build** pipeline will automatically deploy code from _every_ commit from _every_ branch to a live environment on the Kubernetes cluster. Each branch gets its own dedicated URL (with SSL/TLS) and cluster namespace, so that all branches are functionally equivalent (including your master/production branch). Learn more about [Per Branch Deployments](#TODO) and [CI/CD](#TODO).
+Finally, during development, a **Cloud Build** pipeline will automatically deploy code from _every_ commit from _every_ branch to a live environment on the Kubernetes cluster. Each branch gets its own dedicated URL (with SSL/TLS) and cluster namespace, so that all branches are functionally equivalent (including your master/production branch). Learn more about [CI/CD and Per Branch Deployments](./guides/PerBranchDeployments.md).
 
 ### Wait, you said _a_ Kubernetes cluster? Like one? For everything?
 
@@ -79,7 +79,7 @@ So... no AWS! (for now)
 
 ### How do per branch deployments work?
 
-For a detailed explanation, check out [Per Branch Deployments](#TODO).
+For a detailed explanation, check out [Per Branch Deployments](./guides/PerBranchDeployments.md).
 
 But in short, every branch gets deployed to an isolated namespace in the Kubernetes cluster. This namespace includes every service needed to run your app (e.g. a Frontend service and a Backend service with a databse).
 
@@ -115,8 +115,8 @@ Adding support for a `kubails.yaml` file might be something to come in the futur
 
 ### Why should I use Kubails? Why should I use Kubails over X?
 
-Good question! See [this page](#TODO) if you need some more convincing.
+Good question! See [this page](./WhyKubails.md) if you need some more convincing.
 
 ### Why should I _not_ use Kubails?
 
-An equally good question! We've got a [page](#TODO) for that too.
+An equally good question! We've got a [page](./WhyNotKubails.md) for that too.

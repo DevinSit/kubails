@@ -31,29 +31,23 @@ While the underlying technologies are mostly production-ready, using Kubails for
 
 Follow the [Getting Started guide](./GettingStarted.md) to get your project up and running in the next hour.
 
-## Guides
-
-Once you've got a Kubails project going, here are some guides on how to accomplish certain tasks.
-
-1. TODO
-
 ## Learn about Kubails
 
 While Kubails makes a lot of decisions for you and tries to automate away a lot of the drudgery, that doesn't mean you shouldn't understand the underlying concepts and technologies.
 
-The docs are structured to explain each piece of Kubails and what technologies are used to make it happen.
+Here are some guide that explain each piece of Kubails and what technologies are used to make it happen:
 
 1. Folder Structure
 2. Services
 3. Infrastructure
-4. Configuration
-5. Manifests
-6. TODO
+4. CI/CD and Per Branch Deployments
+5. Project Configuration
+6. Manifests
+7. Make as a Task Runner
 
 ## References
 
 Need to quickly look up what a configuration does or how a command works? Look no further.
 
 1. CLI Reference
-2. kubails.json Reference
-3. TODO
+2. `kubails.json` Reference
