@@ -33,7 +33,7 @@ On top of having these installed, you'll also need **sufficient privileges** (i.
 Finally, the last prerequisite to using Kubails is that you must own a **domain name** and have sufficient privileges to change its name servers. This is because we'll be using GCP Cloud DNS later for DNS resolution.
 
 {% hint style="info" %}
-Kubails does not yet fully support Terraform 0.12. As such, you must use Terraform 0.11 for the time being.
+Kubails does not yet fully support Terraform 0.12. As such, you _must_ use **Terraform 0.11** for the time being.
 {% endhint %}
 
 ## Install Kubails
@@ -48,7 +48,7 @@ pip install .
 ```
 
 {% hint style="info" %}
-Kubails will be installable directly from `pip` in the future. 
+Kubails will be **directly installable** from `pip` in the future. 
 {% endhint %}
 
 ## Create a Kubails Project
@@ -83,9 +83,9 @@ You'll be asked how many services you need and to choose which **templates** to 
 For more information on services and templates, check out [Services](#TODO).
 
 {% hint style="info" %}
-If you want a service to be exposed at the root domain, then leave the `subdomain` prompt empty.
+If you want a service to be exposed at the **root domain**, then leave the `subdomain` prompt empty.
 
-Obviously, you can only have one service at the root domain :)
+Obviously, you can only have **one** service at the root domain :)
 {% endhint %}
 
 Once you have the project created, don't forget to turn it into a **Git repo** and push it to your remote host of choice.
@@ -109,7 +109,7 @@ These commands essentially map down to `docker-compose up`, but with some extra 
 Once all the services have been started, you'll be able to access them locally over their exposed ports. Check your `services/docker-compose.yaml` file for the port mappings of your particular services.
 
 {% hint style="info" %}
-One of the (many) opinionated decisions for Kubails was to use `make` as basically a task runner. 
+One of the (many) opinionated decisions for Kubails was to use `make` as basically a **task runner**. 
 
 That's why there's a root `Makefile` with a task for starting the services.
 
@@ -212,7 +212,7 @@ Then it waits and prompts you to do another one of the non-automatable tasks: **
 
 ![](assets/kubails_infra_deploy_2.svg)
 
-Once you've confirmed that the name servers have been changed, the `deploy` command will go through its final phase: deploying all the **necessary manifests** to the Kubernetes cluster -- things like `cert-manager` and `ingress-nginx`.
+Once you've confirmed that the name servers have been changed, the `deploy` command will go through its final phase: deploying all the **necessary manifests** to the Kubernetes cluster — things like `cert-manager` and `ingress-nginx`.
 
 ![](assets/kubails_infra_deploy_3.svg)
 
