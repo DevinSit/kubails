@@ -85,7 +85,7 @@ For more information on services and templates, check out [Services](./topics/se
 {% hint style="info" %}
 If you want a service to be exposed at the **root domain**, then leave the `subdomain` prompt empty.
 
-Obviously, you can only have **one** service at the root domain :)
+Obviously, you can only have **one** service at the root domain 😄
 {% endhint %}
 
 Once you have the project created, don't forget to turn it into a **Git repo** and push it to your remote host of choice.
