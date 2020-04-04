@@ -47,6 +47,10 @@ Here's a quick rundown:
 - Monitoring: [Stackdriver](https://cloud.google.com/products/operations)
 - Git hosting: Supports repositories hosted on [GitHub](https://github.com/) and [Bitbucket](https://bitbucket.org/)
 
+Here's an overview of how some of these components interact:
+
+![](assets/kubails_components.svg)
+
 ### Do I need to know how Docker, Kubernetes, Terraform, etc. work?
 
 For the most part, yes! Unlike a managed service, using Kubails for your project is a 'host it yourself, manage it yourself' situation.
@@ -72,6 +76,24 @@ Ultimately, it _should_ be doable, since Kubernetes is Kubernetes and everything
 Of course, if someone wants to contribute a port, by all means!
 
 So... no AWS! (for now)
+
+### How do per branch deployments work?
+
+For a detailed explanation, check out [Per Branch Deployments](#TODO).
+
+But in short, every branch gets deployed to an isolated namespace in the Kubernetes cluster. This namespace includes every service needed to run your app (e.g. a Frontend service and a Backend service with a databse).
+
+Each namespace then has all its services exposed using branch-specific URLs. For example, a branch named `ABC-123` with a Frontend and Backend service could have two exposed URLs: `abc-123.yourdomain.com` and `backend.abc-123.yourdomain.com`.
+
+Essentially, each branch deployment is equivalent to the 'production' environment, which is just your `master` branch. As such, while developing, you can test your code in a deployed environment to be certain that it's going to work in production.
+
+### Wait, _every_ branch is exposed to the internet?
+
+You are correct. Now, while this might sound scary, you have to remember that each branch's namespace is completely independent.
+
+If you have a database in one branch's namespace, then it's completely separate (both access wise and data wise) from every other namespace.
+
+Obviously, more points of entry = more points of risk, but I think the potential risk is well worth the advantages of per branch deployments.
 
 ### I saw 'centralized configuration' mentioned as a feature? Something about a `kubails.json` file?
 

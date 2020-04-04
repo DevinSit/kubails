@@ -27,8 +27,6 @@ While the underlying technologies are mostly production-ready, using Kubails for
 * **Scale as you grow**: By the power of _The Cloud™_ and Kubernetes, you can scale as much as you have money.
 * **Modern developer experience**: Between Docker and per branch deployments, you can be sure that what works in one place works everywhere.
 
-![](assets/kubails_components.svg)
-
 ## Get Started
 
 Follow the [Getting Started guide](./GettingStarted.md) to get your project up and running in the next hour.
