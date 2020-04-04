@@ -7,9 +7,9 @@ description: Get your project up and running.
 This guide will show you how to create your first Kubails project, deploy the necessary infrastructure to GCP, and start developing your product.
 
 {% hint style="warning" %}
-This guide (and Kubails in general) assumes a baseline competency of all the tools and technologies outlined in the Prerequisites below.
+This guide (and Kubails in general) assumes a **baseline competency** of all the tools and technologies outlined in the Prerequisites below.
 
-If you do not have these competencies (or are unwilling to learn them), then Kubails is probably not the tool for you.
+If you do not have these competencies (or are unwilling to learn them), then **Kubails is probably not the tool for you**.
 {% endhint %}
 
 ## Prerequisites
@@ -18,7 +18,7 @@ If you do not have these competencies (or are unwilling to learn them), then Kub
 
 You will need **Python 3** and `pip` to be able to install and operate the `kubails` CLI.
 
-Additionally, you should have the following installed to be able to make use of Kubails:
+Additionally, you must have the following installed to be able to make use of Kubails:
 
 * [git](https://git-scm.com/downloads)
 * [terraform 0.11](https://releases.hashicorp.com/terraform/)
@@ -48,7 +48,7 @@ pip install .
 ```
 
 {% hint style="info" %}
-Kubails will be **directly installable** from `pip` in the future. 
+Kubails will be **directly installable** from `pip` sometime in the future.
 {% endhint %}
 
 ## Create a Kubails Project
@@ -59,26 +59,26 @@ To create a new Kubails project, run the following:
 kubails new
 ```
 
-You'll then be prompted to enter information on how to configure your project. Here's an explanation of all the fields: 
+You'll then be prompted to enter information on how to configure your project. Here's an explanation of all the fields:
 
 | Field | Description |
 | :--- | :--- |
 | `project_title` | The human-readable title of your project. |
 | `project_name` | The machine-readable name of your project. Used for naming resources, so it can't contain spaces. |
-| `description` | A description of your project for the README. |
-| `domain` | The domain that will host your application. Yes, it is mandatory. |
+| `description` | A description of your project for the `README`. |
+| `domain` | The domain that will host your application. Yes, it is **mandatory**. |
 | `domain_owner_email` | The email of whoever should receive emails if something goes wrong with the SSL certificate (LetsEncrypt). |
 | `gcp_project` | The ID of the GCP project to host the Kubails infrastructure. |
 | `gcp_region` | The region to use for certain pieces of the Kubails infrastructure. |
-| `gcp_zone` | The zone to use for certain pieces of the Kubails infrastructure. Must be a zone in gcp\_region. |
-| `remote_repo_host` | Where your Git repo will be hosted. Your choice of either GitHub or Bitbucket. |
-| `remote_repo_owner` | The (lowercased) owner of your hosted Git repo. For example, for Kubails, the owner is 'devinsit' (from https://github.com/DevinSit/kubails). |
+| `gcp_zone` | The zone to use for certain pieces of the Kubails infrastructure. Must be a zone in `gcp_region`. |
+| `remote_repo_host` | Where your Git repo will be hosted. Your choice of either **GitHub** or **Bitbucket**. |
+| `remote_repo_owner` | The (lowercased) owner of your hosted Git repo. For example, for Kubails, the owner is `devinsit` (from https://github.com/DevinSit/kubails). |
 
 ![](assets/kubails_new.svg)
 
 After you've entered this information, you'll then be prompted to create some **services**.
 
-You'll be asked how many services you need and to choose which **templates** to use for each service. Finally, you'll be asked at what **subdomain** each service will be exposed at and to give a name to the service. 
+You'll be asked how many services you need and to choose which **templates** to use for each service. Finally, you'll be asked at what **subdomain** each service will be exposed and to give a name to each service.
 
 For more information on services and templates, check out [Services](#TODO).
 
@@ -96,20 +96,26 @@ But now you have another choice: you can either [start developing locally](#star
 
 Since Kubails uses `docker-compose` for local development, getting things started is quite easy:
 
+{% tabs %}
+{% tab title="kubails" %}
 ```
 kubails service start
+```
+{% endtab %}
 
-or
-
+{% tab title="make" %}
+```
 make start
 ```
+{% endtab %}
+{% endtabs %}
 
-These commands essentially map down to `docker-compose up`, but with some extra benefits.
+These commands essentially map down to `docker-compose up`, but with some quality-of-life tweaks.
 
-Once all the services have been started, you'll be able to access them locally over their exposed ports. Check your `services/docker-compose.yaml` file for the port mappings of your particular services.
+Once all the services have been started, you'll be able to access them locally over their **exposed ports**. Check your `services/docker-compose.yaml` file for the port mappings of your particular services.
 
 {% hint style="info" %}
-One of the (many) opinionated decisions for Kubails was to use `make` as basically a **task runner**. 
+One of the (many) opinionated decisions for Kubails was to use `make` as basically a **task runner**.
 
 That's why there's a root `Makefile` with a task for starting the services.
 
@@ -171,11 +177,15 @@ gcloud config set compute/zone us-east1-d
 
 > This is one of the few non-automatable tasks.
 
-Before deploying anything, we need to make sure the **StackDriver workspace** has been created. 
+Before deploying anything, we need to make sure the **StackDriver workspace** has been created.
 
 This can be done simply by going to the [Monitoring](https://console.cloud.google.com/monitoring) section in the GCP console and waiting for GCP to configure workspace.
 
 ![](assets/stackdriver_workspace_creation.png)
+
+{% hint style="info" %}
+StackDriver is GCP's **all-in-one operations** service. It handles things like centralized logging, monitoring, and alerting.
+{% endhint %}
 
 ## Setup the GCP Project
 
@@ -224,7 +234,7 @@ However...
 
 There's this one last little, itty-bitty thing to worry about... **DNS**.
 
-As much as deploying all of the above infrastructure might take **10 to 20 minutes**, waiting for the change in name servers to propagate could take anywhere from a couple hours to 1 or 2 days. 
+As much as deploying all of the above infrastructure might take **10 to 20 minutes**, waiting for the change in name servers to propagate could take anywhere from a couple hours to 1 or 2 days.
 
 And why is this important? Well, the domain needs to be resolvable using the Cloud DNS name servers so that the **SSL/TLS certificate** can be generated. And only once this has happened can you access any services deployed to the cluster.
 
@@ -239,7 +249,7 @@ kubectl -n cert-manager get certificates
 If the `READY` state for the certificate is `True`, then you're good to go! Otherwise, you'll just need to wait.
 
 {% hint style="info" %}
-If the certificate doesn't become ready within a day or two, then you'll need to manually troubleshoot it. 
+If the certificate doesn't become ready within a day or two, then you'll need to **manually troubleshoot it**.
 
 This is where your knowledge of DNS, Kubernetes, and `cert-manager` is gonna come handy!
 {% endhint %}
@@ -250,7 +260,7 @@ This is where your knowledge of DNS, Kubernetes, and `cert-manager` is gonna com
 
 Although the infrastructure deployment step from earlier created the Cloud Build trigger that constitutes the CI/CD pipeline for Kubails, there's one manual step we have to take to enable it.
 
-GCP has their own hosted Git solution called **Cloud Source Repositories**. All Cloud Build triggers are.. triggered by changes from a Cloud Source Repository. 
+GCP has their own hosted Git solution called **Cloud Source Repositories**. All Cloud Build triggers are.. triggered by changes from a Cloud Source Repository.
 
 However, one of the things this service enables is mirroring a repo from an external Git host like GitHub or Bitbucket. As such, here's what we'll need to do to get the Cloud Build pipeline working:
 
@@ -274,9 +284,9 @@ To learn more the CI/CD process and per branch deployments, check out [this page
 
 Developing your project of course!
 
-Although if you're looking for more things about Kubails... 
+Although if you're looking for more things about Kubails...
 
-* How about [enabling Slack notifications](#TODO)? 
+* How about [enabling Slack notifications](#TODO)?
 * Perhaps you'd be interested in [getting build statuses forwarded to your Git provider](#TODO)?
 * Or maybe you want to learn [how to further configure Kubails](#TODO)?
 

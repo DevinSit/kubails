@@ -16,7 +16,7 @@ Finally, during development, a **Cloud Build** pipeline will automatically deplo
 
 Yes, each branch (including the one you designate as 'production', e.g. `master`) gets deployed onto a single Kubernetes cluster.
 
-Now, this cluster can be configured with as many nodes as you need, but obviously having production colocated with a bunch of 'staging' environments isn't an ideal high-availability setup. 
+Now, this cluster can be configured with as many nodes as you need, but obviously having production colocated with a bunch of 'staging' environments isn't an ideal high-availability setup.
 
 However, high-availability isn't the point of a Kubails setup; rapid deployment and prototyping is. Heck, the default node type is 'preemptible' (i.e. the node can be deleted at any time) to save on server costs, so high-availability _really_ isn't the goal.
 
@@ -59,13 +59,13 @@ As such, you'll want to be familiar with most, if not all, of the underlying tec
 
 Well depending on which technology X is (and which technology Y is), that may be next to impossible.
 
-You're of course free to _try_ and switch technologies around, but that kind of defeats the purpose of Kubails being a _highly-opionated_ framework. 
+You're of course free to _try_ and switch technologies around, but that kind of defeats the purpose of Kubails being a _highly-opionated_ framework.
 
 So... sorry, but only my technology choice X is supported!
 
 ### Aww come on, I really want to use AWS instead of GCP...
 
-I had toyed around with porting Kubails to AWS at one point, but life got in the way... 
+I had toyed around with porting Kubails to AWS at one point, but life got in the way...
 
 Ultimately, it _should_ be doable, since Kubernetes is Kubernetes and everything else more-or-less has AWS equivalents, but I'm personally happy enough with GCP at the moment that I don't care enough to port it.
 
