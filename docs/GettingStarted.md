@@ -250,12 +250,15 @@ GCP has their own hosted Git solution called Cloud Source Repositories. All Clou
 
 However, one of the things this service enables is mirroring a repo from an external Git host like GitHub or Bitbucket. As such, here's what we'll need to do to get the Cloud Build pipeline working:
 
-1. Go to the [Cloud Source Repositories service](https://source.cloud.google.com/).
-2. Find the repository that corresponds with your project and go to its settings.
-3. Delete the repository. Yes, delete it! This was just placeholder for the mirrored repo that you're about to create.
-4. Add a new repository and choose `Connect external repository`.
-5. From here, just follow the prompts to authenticate to your Git provider and choose the correct repo to mirror.
-6. Once the repo has finished being mirrored, you're all done!
+### 1. Go to the [Cloud Source Repositories service](https://source.cloud.google.com/).
+### 2. Find the repository that corresponds with your project and go to its settings.
+### 3. Delete the repository. Yes, delete it! This was just placeholder for the mirrored repo that you're about to create.
+
+![](assets/source_repositories_deletion.png)
+
+### 4. Add a new repository and choose `Connect external repository`.
+### 5. From here, just follow the prompts to authenticate to your Git provider and choose the correct repo to mirror.
+### 6. Once the repo has finished being mirrored, you're all done!
 
 Because of the way we named the dummy repo, it should match the name of new mirrored repo and the Cloud Build trigger will automatically be connected to it.
 
