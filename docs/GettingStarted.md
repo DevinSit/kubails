@@ -7,7 +7,7 @@ description: Get your project up and running.
 This guide will show you how to create your first Kubails project, deploy the necessary infrastructure to GCP, and start developing your product.
 
 {% hint style="warning" %}
-This guide (and Kubails in general) assumes a **baseline competency** of all the tools and technologies outlined in the Prerequisites below.
+This guide (and Kubails in general) assumes a **baseline competency** of all the tools and technologies outlined in the _Prerequisites_ below.
 
 If you do not have these competencies (or are unwilling to learn them), then **Kubails is probably not the tool for you**.
 {% endhint %}
@@ -254,7 +254,7 @@ If the certificate doesn't become ready within a day or two, then you'll need to
 This is where your knowledge of DNS, Kubernetes, and `cert-manager` is gonna come handy!
 {% endhint %}
 
-## Enabling the CI/CD Pipeline
+## Enable the CI/CD Pipeline
 
 > This is the last of the non-automatable tasks.
 
