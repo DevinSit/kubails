@@ -37,7 +37,7 @@ Here's a quick rundown:
 - `kubails` CLI: Written in **Python** with the [click](https://click.palletsprojects.com/en/7.x/) CLI framework
 - Infrastructure management: [Terraform](https://www.terraform.io/)
 - Cloud hosting: [Google Cloud Platform](https://cloud.google.com/) (GCP)
-- Service containerization: [Docker](https://www.docker.com/)
+- Service containerization: [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
 - Container orchestration: [Kubernetes](https://cloud.google.com/kubernetes-engine) (GKE)
 - Kubernetes manifests: Templated using [Helm](https://helm.sh/) (Tiller is not used)
 - CI/CD: [Cloud Build](https://cloud.google.com/cloud-build)
