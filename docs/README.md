@@ -50,4 +50,4 @@ Here are some guide that explain each piece of Kubails and what technologies are
 Need to quickly look up what a configuration does or how a command works? Look no further.
 
 1. [CLI Reference](references/CliReference.md)
-2. [`kubails.json` Reference](references/ConfigReference.md)
+2. [kubails.json Reference](references/ConfigReference.md)

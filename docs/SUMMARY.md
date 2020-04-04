@@ -26,4 +26,4 @@
 ## References
 
 * [CLI Reference](references/CliReference.md)
-* [`kubails.json` Reference](references/ConfigReference.md)
+* [kubails.json Reference](references/ConfigReference.md)
