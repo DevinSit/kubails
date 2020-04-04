@@ -37,17 +37,17 @@ While Kubails makes a lot of decisions for you and tries to automate away a lot 
 
 Here are some guide that explain each piece of Kubails and what technologies are used to make it happen:
 
-1. Folder Structure
-2. Services
-3. Infrastructure
-4. CI/CD and Per Branch Deployments
-5. Project Configuration
-6. Manifests
-7. Make as a Task Runner
+1. [Folder Structure](guides/FolderStructure.md)
+2. [Services](guides/services/Services.md)
+3. [Infrastructure](guides/infrastructure/Infrastructure.md)
+4. [CI/CD and Per Branch Deployments](guides/PerBranchDeployments.md)
+5. [Project Configuration](guides/ProjectConfiguration.md)
+6. [Manifests](guides/Manifests.md)
+7. [Make as a Task Runner](guides/MakeTaskRunner.md)
 
 ## References
 
 Need to quickly look up what a configuration does or how a command works? Look no further.
 
-1. CLI Reference
-2. `kubails.json` Reference
+1. [CLI Reference](references/CliReference.md)
+2. [`kubails.json` Reference](references/ConfigReference.md)

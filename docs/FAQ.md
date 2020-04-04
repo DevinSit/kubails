@@ -101,7 +101,7 @@ Yes! One of the biggest selling points of Kubails is that it provides a way to s
 
 With the `kubails.json` file at the root of every project, Kubails can take these values and inject them into all of its the tools. This means no more copy/pasting values between Helm's `values.yaml` and Terraform's `.tfvars` — just change the value in `kubails.json` and you're good to go.
 
-### Ugh, another configuration file I have to deal with?
+### Ugh, another configuration file that I have to deal with?
 
 Yep!
 
