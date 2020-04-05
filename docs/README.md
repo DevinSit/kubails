@@ -4,7 +4,7 @@ description: What is Kubails?
 
 # Introduction
 
-**Kubails** is a highly opinionated framework for enabling rapid deployment and prototyping of Docker-based web services.
+[Kubails](https://github.com/DevinSit/kubails) is a highly opinionated framework for enabling rapid deployment and prototyping of Docker-based web services.
 
 That is, if you're developing a web app, **Kubails** makes a bunch of tooling and infrastructure decisions for you so that you can get your app deployed in **less than an hour**. Then you can start iterating quickly while being supported by modern development comforts like **repeatable environments**, **true CI/CD**, and **per branch deployments**.
 
