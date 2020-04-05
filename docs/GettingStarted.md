@@ -264,6 +264,10 @@ This is where your knowledge of DNS, Kubernetes, and `cert-manager` is gonna com
 
 > This is the last of the non-automatable tasks.
 
+{% hint style="danger" %}
+You must have **admin privileges** over your Git repo to do this step.
+{% endhint %}
+
 Although the infrastructure deployment step from earlier created the Cloud Build trigger that constitutes the CI/CD pipeline for Kubails, there's one manual step we have to take to enable it.
 
 GCP has their own hosted Git solution called **Cloud Source Repositories**. All Cloud Build triggers are.. triggered by changes from a Cloud Source Repository.
