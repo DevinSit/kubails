@@ -8,5 +8,5 @@
     "gcp_region": "us-east1",
     "gcp_zone": "us-east1-d",
     "remote_repo_host": ["github", "bitbucket"],
-    "remote_repo_owner": "The owner of the remote repo that will be used for Cloud Build (e.g. your Bitbucket username or Github organization)"
+    "remote_repo_owner": "e.g. your Bitbucket username or GitHub organization"
 }
