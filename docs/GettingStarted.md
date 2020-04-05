@@ -30,6 +30,8 @@ Additionally, you must have the following installed to be able to make use of Ku
 
 On top of having these installed, you'll also need **sufficient privileges** (i.e. admin) over your Git hosting provider of choice. This is for connecting the repo to GCP later.
 
+Additionally, you must have the **Owner** role on your GCP project.
+
 Finally, the last prerequisite to using Kubails is that you must own a **domain name** and have sufficient privileges to change its name servers. This is because we'll be using GCP Cloud DNS later for DNS resolution.
 
 {% hint style="info" %}
@@ -188,6 +190,10 @@ StackDriver is GCP's **all-in-one operations** service. It handles things like c
 {% endhint %}
 
 ## Setup the GCP Project
+
+{% hint style="danger" %}
+You must have the **Owner** role on your GCP project to do this step.
+{% endhint %}
 
 Before the infrastructure can be deployed, we need to get the GCP project all ready to receive the infrastructure:
 
