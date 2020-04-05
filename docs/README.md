@@ -15,7 +15,7 @@ If you have any questions about the project, feel free to check the [FAQ](./FAQ.
 {% hint style="warning" %}
 Kubails is still **alpha** software.
 
-While the underlying technologies are mostly production-ready, using Kubails for production projects is certainly at **your own risk**!
+While the underlying technologies are mostly production-ready, using **Kubails** for production projects is certainly at **your own risk**!
 {% endhint %}
 
 ## Features

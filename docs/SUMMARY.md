@@ -13,6 +13,7 @@
     * [Templates](topics/services/Templates.md)
 * [Infrastructure](topics/infrastructure/Infrastructure.md)
     * [Builder Image](topics/infrastructure/BuilderImage.md)
+    * [Cost Breakdown](topics/infrastructure/CostBreakdown.md)
 * [CI/CD and Per Branch Deployments](topics/PerBranchDeployments.md)
 * [Project Configuration](topics/ProjectConfiguration.md)
 * [Manifests](topics/Manifests.md)

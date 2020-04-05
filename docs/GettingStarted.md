@@ -276,7 +276,7 @@ However, one of the things this service enables is mirroring a repo from an exte
 
 Because of the way we named the dummy repo, it should match the name of new mirrored repo and the Cloud Build trigger will **be automatically connected** to it.
 
-From now on, any commits you push to your remote Git repo will trigger builds that will be deployed to your cluster! 🎉
+From now on, any commits you push to your remote Git repo will trigger builds that will deploy your services to the cluster! 🎉
 
 To learn more the CI/CD process and per branch deployments, check out [this page](./topics/PerBranchDeployments.md).
 
@@ -286,7 +286,7 @@ Developing your project of course!
 
 Although if you're looking for more things about Kubails...
 
-* How about [enabling Slack notifications](./integrations/SlackNotifications.md)?
+* How about [enabling Slack notifications](./integrations/SlackNotifications.md) for build statuses?
 * Perhaps you'd be interested in [getting build statuses forwarded to your Git provider](./integrations/GitBuildStatuses.md)?
 * Or maybe you want to learn [how to further configure Kubails](./topics/ProjectConfiguration.md)?
 

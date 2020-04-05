@@ -6,13 +6,13 @@ description: Your questions, answered.
 
 Ultimately, **Kubails** is a CLI tool that wraps together many technologies like **Docker**, **Kubernetes**, **Terraform**, and **Google Cloud Platform (GCP)**. It removes the drudgery of manually configuring all these tools to work together so that you can focus more on product development.
 
-When creating a new Kubails project, you get an **entire folder structure** bootstrapped for you. It will contain all the configuration needed to get up and running, including **Terraform configs**, **Helm manifests**, and a **Cloud Build (CI/CD) pipeline**. Learn more about [Folder Structure](./topics/FolderStructure.md).
+When creating a new Kubails project, you get an **entire folder structure** bootstrapped for you. It contains all of the configuration needed to get up and running, including **Terraform configs**, **Helm manifests**, and a **Cloud Build (CI/CD) pipeline**. Learn more about [Folder Structure](./topics/FolderStructure.md).
 
-Additionally, you can choose from some predefined **templates** for generating your **services** (e.g. frontend, backend, etc). Learn more about [Service Templates](./topics/services/Templates.md).
+Additionally, you can choose from some **templates** for generating your **services** (e.g. frontend, backend, etc). Learn more about [Service Templates](./topics/services/Templates.md).
 
-Once the project has been created, you can deploy all of the necessary **infrastructure** to your GCP project using the `kubails` CLI. Among other things, this will create a **Kubernetes (GKE) cluster** where all your code will be deployed as **Docker services**. Learn more about [Infrastructure](./topics/infrastructure/Infrastructure.md).
+Once the project has been created, you deploy all of the necessary **infrastructure** to your GCP project using the `kubails` CLI. Among other things, this creates a **Kubernetes (GKE) cluster** where all your code will be deployed as **Docker services**. Learn more about [Infrastructure](./topics/infrastructure/Infrastructure.md).
 
-Finally, during development, a **Cloud Build** pipeline will automatically deploy code from _every_ commit from _every_ branch to the Kubernetes cluster. Each branch gets its own **dedicated URL** (with SSL/TLS) and **cluster namespace**, so that all branches are functionally equivalent (including your master/production branch). Learn more about [CI/CD and Per Branch Deployments](./topics/PerBranchDeployments.md).
+Finally, during development, a **Cloud Build** pipeline automatically deploys code from _every_ commit from _every_ branch to the Kubernetes cluster. Each branch gets its own **dedicated URL** (with SSL/TLS) and **cluster namespace**, so that all branches are functionally equivalent (including your master/production branch). Learn more about [CI/CD and Per Branch Deployments](./topics/PerBranchDeployments.md).
 
 Here's a high-level overview of the general flow of **developing using Kubails**:
 
@@ -22,9 +22,9 @@ Here's a high-level overview of the general flow of **developing using Kubails**
 
 Yes, each branch (including the one you designate as 'production', e.g. `master`) gets deployed onto a **single Kubernetes cluster**.
 
-Now, this cluster can be configured with as many nodes as you need, but obviously having production co-located with a bunch of 'staging' environments isn't an ideal high-availability setup.
+Now, this cluster can be configured with as many nodes as you need, but having production co-located with a bunch of 'staging' environments isn't an ideal high-availability setup.
 
-However, high-availability is _not_ the point of a Kubails setup; **rapid deployment and prototyping** is. Heck, the default node type is 'preemptible' (i.e. the node can be deleted at any time) to save on server costs, so high-availability _really_ isn't the goal.
+However, high-availability is _not_ the point of a Kubails setup — **rapid deployment and prototyping** is. Heck, the default node type is [preemptible](https://cloud.google.com/preemptible-vms) to save on costs, so high-availability _really_ isn't the goal.
 
 # What if I _do_ want high-availability?
 
@@ -78,6 +78,16 @@ Ultimately, it _should_ be doable, since Kubernetes is Kubernetes and everything
 Of course, if someone wants to contribute a port, by all means!
 
 So... **no AWS**! (for now)
+
+# How much does it cost to run a Kubails project?
+
+I've worked hard to minimze the costs of the infrastructure needed to run Kubails. The total cost usually comes out between **$25 and $35 USD** (when running in the `us-east1` region).
+
+The variability mostly comes from whether the Kubernetes cluster can scale down to 1 node from the default 2 (which all depends on how many services/branches are deployed).
+
+Most of the cost comes from just the Cloud Load Balancer; the rest is taken up by compute and storage resources.
+
+For a complete breakdown of the infrastructure costs, see the [Cost Breakdown](./topics/infrastructure/CostBreakdown.md).
 
 # How do per branch deployments work?
 
