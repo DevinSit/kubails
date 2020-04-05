@@ -79,6 +79,14 @@ Of course, if someone wants to contribute a port, by all means!
 
 So... **no AWS**! (for now)
 
+# What platforms does the `kubails` CLI run on?
+
+Well, since the `kubails` CLI is Python, it should work on any platform with Python installed. In theory.
+
+In practice, however, it has only ever been tested on **Linux** (specifically Ubuntu), so it is currently unknown if it works on Windows or Mac.
+
+I suspect it'd be fine on Mac and utterly garbage on Windows.
+
 # How much does it cost to run a Kubails project?
 
 I've worked hard to minimze the costs of the infrastructure needed to run Kubails. The total cost usually comes out between **$25 and $35 USD** (when running in the `us-east1` region).
