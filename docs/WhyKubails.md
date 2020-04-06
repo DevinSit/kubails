@@ -2,7 +2,7 @@
 description: Here's why you should use Kubails for your next project.
 ---
 
-Here we're going to take a moment to discuss why I built Kubails and why you should use it for your next project.
+Here we're going to take a moment to discuss **why I built Kubails** and **why you should use it** for your next project.
 
 If you haven't already, I suggest going through the [Introduction](./README.md) and the [FAQ](./FAQ.md) to learn more about _what_ Kubails is.
 
@@ -51,7 +51,7 @@ Here's just **a couple use cases** for who would appreciate this:
 
 OK, this one is _really_ counterintuitive, but hear me out.
 
-As much as Kubails is highly opinionated about things like infrastructure and project structure, it it entirely **devoid of opinion** of what you run _on_ the infrastructure.
+As much as Kubails is highly opinionated about things like infrastructure and project structure, it it **entirely devoid of opinion** of what you run _on_ the infrastructure.
 
 This really goes back to the power of Docker: if you can dockerize a service, then it'll run on Kubails. If it can run on Kubails, then it can **run anywhere a Docker container can**.
 
@@ -63,13 +63,13 @@ OpenShift is pretty darn close to Kubernetes, so it's no wonder that went smooth
 
 If you already make use of a lot of the technologies that Kubails does, then this goes back to the first point: all the decisions are made for you.
 
-Except all the tools are well integrated together, so you **don't have to write a bunch of glue scripts** like I did before Kubails.
+Except with Kubails, all the tools are well integrated together, so you **don't have to write a bunch of glue scripts** like I did before Kubails.
 
 ## You _want_ to use Docker, Kubernetes, GCP, etc
 
 Now this is certainly one of the weaker cases. If you are in the process of learning and trying out all these technologies, then Kubails can help **serve as an example** of how you might tie them all together.
 
-You can setup a Kubails project then poke around and see how everything works together. Then you can start deconstructing it and picking off the pieces that you want and just use those.
+You can setup a Kubails project then **poke around and see how everything works together**. Then you can start deconstructing it and picking off the pieces that you want and just use those.
 
 ## You are the creator of Kubails
 

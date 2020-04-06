@@ -18,7 +18,7 @@ As such, if you think you'll need support outside of what the documentation offe
 
 # It's still pretty alpha
 
-As much as _I've_ been using Kubails for several projects (some of which have been going for a while now) doesn't mean _I_ have the utmost confidence to say that anyone else should use it. If only because it's **never been tested under a true production load**.
+As much as _I've_ been using Kubails for several projects — some of which have been going for a while now — doesn't mean _I_ have the utmost confidence to say that anyone else should use it. If only because it's **never been tested under a true production load**.
 
 Kubails really was designed to fit my personal needs for bootstrapping projects, so I don't think it's a point where I'm confident enough to say that "yes, this'll fit your needs too".
 
@@ -28,6 +28,6 @@ Obviously, if you don't _want_ to use/learn the underlying technologies, there's
 
 # You want to use AWS
 
-As I outlined in the [FAQ](./FAQ.md#aww-come-on-i-really-want-to-use-aws-instead-of-gcp), **AWS support is not currently in the works**. As such, you must assume that it'll never.
+As I outlined in the [FAQ](./FAQ.md#aww-come-on-i-really-want-to-use-aws-instead-of-gcp), **AWS support is not currently in the works**. As such, you must assume that it'll never happen.
 
-So... yeah, don't use Kubails if _must_ use AWS.
+So yeah... don't use Kubails if you _must_ use AWS.
