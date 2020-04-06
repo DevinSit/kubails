@@ -1,28 +1,31 @@
 # Kubails
 
-`Kubails` is an opinionated framework for **organizing and developing Docker-based services** for deployment on Google Kubernetes Engine (on Google Cloud Platform). `Kubails` combines industry standard DevOps tooling to handle setting up your local development environment, your CI/CD pipeline, and your cloud infrastructure, so that you can focus on what really matters: building your project.
+**Kubails** is a highly opinionated framework for enabling rapid deployment and prototyping of Docker-based web services.
 
-The key features of `Kubails` are:
+That is, if you're developing a web app, **Kubails** makes a bunch of tooling and infrastructure decisions for you so that you can get your app deployed in **less than an hour**. Then you can start iterating quickly while being supported by modern development comforts like **repeatable environments**, **true CI/CD**, and **per branch deployments**.
 
-- **Opinionated Project Architecture**: Worry less about about managing servers, pipelines, and deployments; `Kubails` does the heavy lifting of making these things work for you so that you can focus more on writing your application code.
+So if this sounds like the sort of thing that would be helpful for your project, then try out Kubails and get to building _now_.
 
-- **Modern Developer Experience**: With a local docker-compose based development environment and a per-branch Kubernetes deployment setup, you can ensure consistency and reproducibility across the entire lifecycle of your application's development. You can be certain that what you have on your branch is going to work exactly the same way in production.
+The key features of Kubails are:
 
-- **Robust Infrastructure Management**: Combining tools like Terraform, Kubernetes, and Helm, `Kubails` offers a robust and standardized way of managing your immutable cloud infrastructure. The default setup gets you up and running quickly, but leaves open the option to adding or tweaking whatever you need. And with the centralized config file, your infrastructure configuration is as DRY as it can be.
-
-- **Comprehensive CLI**: Wrapping together all of the functionality needed to create, deploy, and manage `Kubails` projects, the `Kubails` CLI acts as the glue-code between all of the different DevOps tools to both centralize project-specific configuration and provide a single interface for controlling your projects.
+* **Fast initial setup**: Get deployed and developing in less than an hour.
+* **Opinionated project architecture**: Worry less about deciding between one person's cloud or another.
+* **Robust infrastructure management**: With Terraform and Helm, everything is just configuration as code.
+* **Centralized configuration**: `kubails.json` is your entrypoint to keeping Terraform, Helm, and everything else in sync.
+* **Scale as you grow**: By the power of _The Cloud™_ and Kubernetes, you can scale as much as you have money.
+* **Modern developer experience**: Between Docker and per branch deployments, you can be sure that what works in one place works everywhere.
 
 ## ⚠️ Disclaimer
 
-`Kubails` is very much **alpha** software; it is highly advised that you don't go using it for production-class projects.
+Kubails is still **alpha** software.
 
-It is, however, appreciated if you try it out and share your feedback!
+While the underlying technologies are mostly production-ready, using **Kubails** for production projects is certainly at **your own risk**!
 
-## Installation
+## Quick Installation
 
-Before installing the `Kubails` CLI, make sure you meet all of the prerequisites outlined in the [Getting Started](./docs/GettingStarted.md) guide.
+Before installing the `kubails` CLI, make sure you meet all of the prerequisites outlined in the [Getting Started](https://docs.kubails.com/gettingstarted) guide.
 
-The `Kubails` CLI is not yet published on `pip`, so it must be installed **from this repo**:
+The `kubails` CLI is not yet published on `pip`, so it must be installed **from this repo**:
 
 ```
 $ git clone git@github.com:DevinSit/kubails.git
@@ -30,11 +33,11 @@ $ cd kubails
 $ pip install .
 ```
 
-For more info on getting started and setting up a new `Kubails` project, see the [Getting Started](./docs/GettingStarted.md) guide.
+For more info on getting started and setting up a new Kubails project, see the [Getting Started](https://docs.kubails.com/gettingstarted) guide.
 
 ## Documentation
 
-You can find all of the `Kubails` documentation [here](./docs/index.md).
+You can find all of the Kubails documentation [here](https://docs.kubails.com/).
 
 ## Roadmap
 

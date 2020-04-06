@@ -30,7 +30,9 @@ Additionally, you must have the following installed to be able to make use of Ku
 
 On top of having these installed, you'll also need **sufficient privileges** (i.e. admin) over your Git hosting provider of choice. This is for connecting the repo to GCP later.
 
-Finally, the last prerequisite to using Kubails is that you must own a **domain name** and have sufficient privileges to change its name servers. This is because we'll be using GCP Cloud DNS later for DNS resolution.
+Additionally, you must have the **Owner** role on your GCP project.
+
+Finally, you must own a **domain name** and have sufficient privileges to change its name servers. This is because we'll be using GCP Cloud DNS later for DNS resolution.
 
 {% hint style="info" %}
 Kubails does not yet fully support Terraform 0.12. As such, you _must_ use **Terraform 0.11** for the time being.
@@ -189,6 +191,10 @@ StackDriver is GCP's **all-in-one operations** service. It handles things like c
 
 ## Setup the GCP Project
 
+{% hint style="danger" %}
+You must have the **Owner** role on your GCP project to do this step.
+{% endhint %}
+
 Before the infrastructure can be deployed, we need to get the GCP project all ready to receive the infrastructure:
 
 ```
@@ -257,6 +263,10 @@ This is where your knowledge of DNS, Kubernetes, and `cert-manager` is gonna com
 ## Enable the CI/CD Pipeline
 
 > This is the last of the non-automatable tasks.
+
+{% hint style="danger" %}
+You must have **admin privileges** over your Git repo to do this step.
+{% endhint %}
 
 Although the infrastructure deployment step from earlier created the Cloud Build trigger that constitutes the CI/CD pipeline for Kubails, there's one manual step we have to take to enable it.
 

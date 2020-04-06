@@ -10,6 +10,7 @@
 
 * [Folder Structure](topics/FolderStructure.md)
 * [Services](topics/services/Services.md)
+    * [Secrets](topics/services/Secrets.md)
     * [Templates](topics/services/Templates.md)
 * [Infrastructure](topics/infrastructure/Infrastructure.md)
     * [Builder Image](topics/infrastructure/BuilderImage.md)
