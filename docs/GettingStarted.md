@@ -32,7 +32,7 @@ On top of having these installed, you'll also need **sufficient privileges** (i.
 
 Additionally, you must have the **Owner** role on your GCP project.
 
-Finally, the last prerequisite to using Kubails is that you must own a **domain name** and have sufficient privileges to change its name servers. This is because we'll be using GCP Cloud DNS later for DNS resolution.
+Finally, you must own a **domain name** and have sufficient privileges to change its name servers. This is because we'll be using GCP Cloud DNS later for DNS resolution.
 
 {% hint style="info" %}
 Kubails does not yet fully support Terraform 0.12. As such, you _must_ use **Terraform 0.11** for the time being.

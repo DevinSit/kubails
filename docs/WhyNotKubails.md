@@ -18,7 +18,7 @@ As such, if you think you'll need support outside of what the documentation offe
 
 # It's still pretty alpha
 
-As much as _I've_ been using Kubails for several projects — some of which have been going for a while now — doesn't mean _I_ have the utmost confidence to say that anyone else should use it. If only because it's **never been tested under a true production load**.
+As much as _I've_ been using Kubails for several projects — some of which have been going for a while now — that doesn't mean _I_ have the utmost confidence to say that anyone else should use it. If only because it's **never been tested under a true production load**.
 
 Kubails really was designed to fit my personal needs for bootstrapping projects, so I don't think it's a point where I'm confident enough to say that "yes, this'll fit your needs too".
 
