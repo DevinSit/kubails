@@ -265,9 +265,9 @@ class Service:
         domains = [self.config.domain, "*.{}".format(self.config.domain)]
 
         for service, config in config["__services"].items():
-            host = config["host"]
+            host = config.get("host", None)
 
-            if "ingress" in config["templates"] and host not in domains:
+            if "ingress" in config["templates"] and host is not None and host not in domains:
                 domains.append("*.{}".format(host))
 
         certificate_manifest_location = "cert-manager/wildcard-certificate.yaml"
