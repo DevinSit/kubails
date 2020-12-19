@@ -166,6 +166,7 @@ class ConfigStore:
             "replicapool.googleapis.com",
             "replicapoolupdater.googleapis.com",
             "resourceviews.googleapis.com",
+            "secretmanager.googleapis.com",
             "sourcerepo.googleapis.com"
         ]
 
