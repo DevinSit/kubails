@@ -25,8 +25,20 @@ class KubeGitSyncer:
 
         unused_namespaces = _get_unused_namespaces(remote_branches, existing_namespaces)
 
+        def cleanup_namespace(namespace: str) -> bool:
+            result = self.kubectl.delete_namespace(namespace)
+
+            if result:
+                # Print the namespace so that it acts as output for the command.
+                # This way, the cleanup command can be extended to do other things in user-land.
+                # Note: Don't use the logger here, since we need the namespace to go to stdout
+                # so that it can be captured in a variable.
+                print(namespace)
+
+            return result
+
         return reduce(
-            lambda acc, namespace: acc and self.kubectl.delete_namespace(namespace),
+            lambda acc, namespace: acc and cleanup_namespace(namespace),
             unused_namespaces,
             True
         )
