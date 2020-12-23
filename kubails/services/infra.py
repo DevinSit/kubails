@@ -54,6 +54,10 @@ class Infra:
             "serviceAccount", cloud_build_service_account, self.config.crypto_key_decrypter_role
         )
 
+        self.gcloud.add_role_to_entity(
+            "serviceAccount", cloud_build_service_account, self.config.secret_manager_role
+        )
+
         # Create the Terraform state bucket (if it doesn't already exist) and initialize Terraform to use it.
         terraform_bucket = self.config.terraform_state_bucket
 
