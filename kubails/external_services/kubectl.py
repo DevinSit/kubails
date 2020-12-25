@@ -1,4 +1,5 @@
 import logging
+import subprocess
 from typing import List
 from kubails.utils.service_helpers import call_command, get_command_output
 
@@ -55,7 +56,11 @@ class Kubectl:
 
     def delete_namespace(self, namespace: str) -> bool:
         command = self.base_command + ["delete", "namespace", namespace]
-        return call_command(command)
+
+        # Redirect output to /dev/null so that the command doesn't output anything.
+        # This is so that the output from `kube_git_syncer`s `cleanup_namespace` function
+        # only ouputs the cleaned up namespaces (and not junk from kubectl).
+        return call_command(command, stdout=subprocess.DEVNULL)
 
     def create_secret_from_file(
         self, name: str, secret_file: str, namespace: str,
