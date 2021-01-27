@@ -87,7 +87,13 @@ class Service:
                 return self.docker.build(service_path, [images["latest"]])
             else:  # CI/CD pipeline use case
                 cache_image = images["fixed_tag"] if fixed_tag else images["branch"]
-                return self.docker.build(service_path, list(images.values()), cache_image=cache_image)
+
+                return self.docker.build(
+                    service_path,
+                    list(images.values()),
+                    cache_image=cache_image,
+                    branch=branch_tag
+                )
 
         return self._apply_to_services(build_function, services)
 

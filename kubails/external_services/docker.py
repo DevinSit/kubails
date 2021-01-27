@@ -10,7 +10,7 @@ class Docker:
     def __init__(self):
         self.base_command = ["docker"]
 
-    def build(self, context: str, tags: List[str] = [], cache_image: str = None) -> bool:
+    def build(self, context: str, tags: List[str] = [], cache_image: str = None, branch: str = None) -> bool:
         command = self.base_command + ["build"]
 
         for tag in tags:
@@ -18,6 +18,9 @@ class Docker:
 
         if cache_image:
             command.extend(["--cache-from", cache_image])
+
+        if branch:
+            command.extend(["--build-arg", "branch={}".format(branch)])
 
         command.append(context)
 
