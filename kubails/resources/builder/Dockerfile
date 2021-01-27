@@ -45,7 +45,7 @@ RUN apt-get -y update \
     && wget -qO- https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz | tar zxv -C /builder \
     && CLOUDSDK_PYTHON="python2.7" /builder/google-cloud-sdk/install.sh --usage-reporting=false --bash-completion=false --disable-installation-options \
     # Install crcmod: https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod
-    && easy_install -U pip \
+    && easy_install -U pip==20.3.4 \
     && pip install -U crcmod \
     # Install kubectl
     && gcloud -q components install kubectl \
