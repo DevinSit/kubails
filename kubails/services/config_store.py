@@ -293,11 +293,9 @@ class _ConfigStore(object):
 # Stole this technique from https://stackoverflow.com/a/52351425.
 #
 # `reset_instance` is just an escape hatch for testing, so that the tests always get a fresh instance.
-def ConfigStore(
-    config: Dict[str, Any] = {}, config_file_name: str = CONFIG_FILE_NAME, reset_instance: bool = False
-):
+def ConfigStore(reset_instance: bool = False, **kwargs):
     if _ConfigStore._instance is None or reset_instance is True:
-        _ConfigStore._instance = _ConfigStore(config=config, config_file_name=config_file_name)
+        _ConfigStore._instance = _ConfigStore(**kwargs)
 
     return _ConfigStore._instance
 
