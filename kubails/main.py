@@ -32,6 +32,11 @@ def construct_cli(commands: Sequence[Union[click.Command, click.Group]], docstri
                     logger.info("Using all services: '{}' is production".format(branch))
                     return
 
+                # Authenticate here just so we don't need to as part of the build pipeline.
+                # Just gotta make sure that `kubails infra authenticate` is run before this command.
+                # Ideally `kubails infra authenticate` is the first command of the pipeline.
+                cluster.authenticate()
+
                 if cluster.is_new_namespace_cloud_build(branch):
                     logger.info("Using all services: '{}' is a new branch".format(branch))
                     return

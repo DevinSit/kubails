@@ -204,30 +204,13 @@ class Cluster:
     # Need this caching because there might be steps in Cloud Build that happen after the namespace
     # ends up being created but that still rely on knowing whether or not the namespace is new.
     def is_new_namespace_cloud_build(self, namespace: str) -> bool:
-        # Authenticate here just so we don't need to as part of the build pipeline.
-        self.authenticate()
+        filename = "is_new_namespace.txt"
 
-        filename = os.path.join(gcloud.CLOUD_BUILD_FOLDER, "is_new_namespace.txt")
-
-        try:
-            with open(filename, "r") as file:
-                result = file.read().strip()
-                logger.info("Read value 'is_new_namespace={}' from {}".format(result, filename))
-
-                return result == "True"
-        except FileNotFoundError:
+        def callback() -> str:
             new_namespace = self.is_new_namespace(namespace)
+            return "True" if new_namespace else "False"
 
-            # If the Cloud Build folder doesn't exist, then we're probably not running in Cloud Build.
-            # Fallback to just returning the value.
-            if os.path.isdir(gcloud.CLOUD_BUILD_FOLDER):
-                with open(filename, "w") as file:
-                    file.write("True" if new_namespace else "False")
-                    logger.info("Wrote value 'is_new_namespace={}' to {}".format(new_namespace, filename))
-            else:
-                logger.info("Cloud Build volume is not mounted; not writing temp file.")
-
-            return new_namespace
+        return self.gcloud.cache_in_cloud_build(filename, callback)
 
     def _deploy_storage_classes(self) -> None:
         storage_class_manifests = self.manifest_manager.static_manifest_location("storage-classes")

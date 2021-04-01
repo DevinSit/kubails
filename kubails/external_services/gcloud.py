@@ -3,7 +3,7 @@ import logging
 import os
 import shutil
 from functools import reduce
-from typing import Dict, List
+from typing import Callable, Dict, List
 from kubails.utils.service_helpers import (
     call_command, get_command_output, get_codebase_folder, get_resources_subfolder, STDERR_INTO_OUTPUT
 )
@@ -321,10 +321,33 @@ class GoogleCloud:
         result = get_command_output(command)
         result_json = json.loads(result)
 
-        if (len(result_json)):
+        if len(result_json) and result_json[0].get("tags") and len(result_json[0]["tags"]):
             return result_json[0]["tags"][0]
 
         return ""
+
+    def cache_in_cloud_build(self, filename: str, callback: Callable[[], str]) -> str:
+        filename = os.path.join(CLOUD_BUILD_FOLDER, filename)
+
+        try:
+            with open(filename, "r") as file:
+                result = file.read().strip()
+                logger.info("Read value '{}' from {}".format(result, filename))
+
+                return result
+        except FileNotFoundError:
+            result = callback()
+
+            # If the Cloud Build folder doesn't exist, then we're probably not running in Cloud Build.
+            # Fallback to just returning the value.
+            if os.path.isdir(CLOUD_BUILD_FOLDER):
+                with open(filename, "w") as file:
+                    file.write(result)
+                    logger.info("Wrote value '{}' to {}".format(result, filename))
+            else:
+                logger.info("Cloud Build volume is not mounted; not writing temp file.")
+
+            return result
 
     def format_gcr_image(self, project_name: str, base_image: str, tag: str = "") -> str:
         image = "gcr.io/{}/{}-{}".format(self.project_id, project_name, base_image)
