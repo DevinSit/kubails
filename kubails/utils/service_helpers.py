@@ -110,8 +110,10 @@ def escape_value(value: OptionValueType) -> OptionValueType:
 # they must be sanitized to not contain any special characters.
 # As such, all non-alphanumeric should be converted to hyphens.
 def sanitize_name(branch_name: str) -> str:
+    # If the branch_name is None or something, the call to `.lower()` below will fail.
+    # Prevent that.
     if not branch_name:
-        return branch_name
+        return ""
 
     # Regex taken from https://stackoverflow.com/a/12985459.
     return re.sub("[^0-9a-zA-Z]+", "-", branch_name.lower())
