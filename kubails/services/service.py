@@ -1,7 +1,7 @@
 import logging
 import os
 from typing import Callable, Dict, List
-from kubails.external_services import dependency_checker, docker, docker_compose
+from kubails.external_services import dependency_checker, docker, docker_compose, gcloud
 from kubails.services import config_store, manifest_manager, templater
 from kubails.resources.templates import ConfigGenerator, SERVICES_CONFIG
 from kubails.utils.service_helpers import call_command, sanitize_name
@@ -40,6 +40,12 @@ class Service:
         self.docker_compose = docker_compose.DockerCompose(
             self.config.project_name,
             self.config.get_project_path("services")
+        )
+
+        self.gcloud = gcloud.GoogleCloud(
+            self.config.gcp_project_id,
+            self.config.gcp_project_region,
+            self.config.gcp_project_zone
         )
 
         self.manifest_manager = manifest_manager.ManifestManager(
@@ -151,12 +157,8 @@ class Service:
         def function(service: str) -> bool:
             base_image = self._get_base_image_name(service)
 
-            cache_option = "" if not tag else "--cache-from=gcr.io/{}/{}-{}:{}".format(
-                self.config.gcp_project_id,
-                self.config.project_name,
-                base_image,
-                tag
-            )
+            cache_image = self.gcloud.format_gcr_image(self.config.project_name, base_image, tag)
+            cache_option = "" if not tag else "--cache-from={}".format(cache_image)
 
             full_command = [
                 "make", "-C", self._get_service_path(service), command, "CACHE={}".format(cache_option)
@@ -203,11 +205,7 @@ class Service:
     ) -> Dict[str, str]:
         images = {}
 
-        images["base"] = "gcr.io/{}/{}-{}".format(
-            self.config.gcp_project_id,
-            self.config.project_name,
-            base_image
-        )
+        images["base"] = self.gcloud.format_gcr_image(self.config.project_name, base_image)
 
         images["latest"] = "{}:latest".format(images["base"])
         images["branch"] = "{}:{}".format(images["base"], branch_tag)
