@@ -332,7 +332,7 @@ class GoogleCloud:
 
         try:
             with open(filename, "r") as file:
-                result = file.read().strip()
+                result = file.read().strip()  # Need to strip the ending newline.
                 logger.info("Read value '{}' from {}".format(result, filename))
 
                 return result
