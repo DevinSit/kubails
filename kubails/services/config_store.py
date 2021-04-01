@@ -13,8 +13,21 @@ logger = logging.getLogger(__name__)
 CONFIG_FILE_NAME = "kubails.json"
 
 
-class ConfigStore:
+# This 'Borg' class basically allows us to turn the ConfigStore into a singleton. In that
+# all instances of ConfigStore will be different _instances_, but will have _shared_ state.
+# See https://stackoverflow.com/a/32487 and
+# https://python-3-patterns-idioms-test.readthedocs.io/en/latest/Singleton.html for reference.
+class Borg:
+    __shared_state = {}
+
+    def __init__(self):
+        self.__dict__ = self.__shared_state
+
+
+class ConfigStore(Borg):
     def __init__(self, config: Dict[str, Any] = {}, config_file_name: str = CONFIG_FILE_NAME) -> None:
+        Borg.__init__(self)
+
         if config:  # So that it doesn't go searching for config files during tests
             self.config = config
         else:
@@ -103,6 +116,9 @@ class ConfigStore:
 
     def get_project_path(self, sub_path: str) -> str:
         return os.path.join(self.config_dir, sub_path)
+
+    def use_changed_services(self) -> None:
+        print("CHANGED")
 
     def _search_for_file_dir(self, file_name: str) -> str:
         current_dir = os.getcwd()
