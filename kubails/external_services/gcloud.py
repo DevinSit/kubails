@@ -312,6 +312,27 @@ class GoogleCloud:
         project_number = self.get_project_number()
         return "{}@cloudbuild.gserviceaccount.com".format(project_number)
 
+    def get_last_built_tag_for_service(self, project_name: str, service_name: str) -> str:
+        image = self.format_gcr_image(project_name, service_name)
+
+        command = self.base_command + ["container", "images", "list-tags", "--format=json", "--limit=1", image]
+
+        result = get_command_output(command)
+        result_json = json.loads(result)
+
+        if (len(result_json)):
+            return result_json[0]["tags"][0]
+
+        return ""
+
+    def format_gcr_image(self, project_name: str, base_image: str, tag: str = "") -> str:
+        image = "gcr.io/{}/{}-{}".format(self.project_id, project_name, base_image)
+
+        if tag:
+            image = "{}:{}".format(image, tag)
+
+        return image
+
     def _format_full_service_account(self, service_account: str) -> str:
         return "{}@{}.iam.gserviceaccount.com".format(service_account, self.project_id)
 

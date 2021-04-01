@@ -9,7 +9,7 @@ from kubails.utils.service_helpers import call_command, sanitize_name
 
 logger = logging.getLogger(__name__)
 
-SERVICES_FOLDER = "services"
+SERVICES_FOLDER = config_store.SERVICES_FOLDER
 
 DEFAULT_KUBAILS_SERVICE_CONFIG = {
     "container_port": "",
@@ -185,7 +185,7 @@ class Service:
         return True
 
     def _get_service_path(self, service: str) -> str:
-        folder = self.config.services.get(service, {}).get("folder", service)
+        folder = self.config.get_service_folder(service)
         return self.config.get_project_path(os.path.join(SERVICES_FOLDER, folder))
 
     def _get_base_image_name(self, service: str) -> str:
