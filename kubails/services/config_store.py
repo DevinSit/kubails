@@ -6,14 +6,20 @@ import operator
 import traceback
 from functools import reduce
 from typing import Any, Dict, List, Union
+from kubails.external_services import gcloud, git
 
 
 logger = logging.getLogger(__name__)
 
 CONFIG_FILE_NAME = "kubails.json"
+SERVICES_FOLDER = "services"
 
 
-class ConfigStore:
+# See the definition of ConfigStore at the bottom of the file for why this has an underscore.
+# tl;dr It's a singleton.
+class _ConfigStore(object):
+    _instance = None  # type: _ConfigStore
+
     def __init__(self, config: Dict[str, Any] = {}, config_file_name: str = CONFIG_FILE_NAME) -> None:
         if config:  # So that it doesn't go searching for config files during tests
             self.config = config
@@ -25,6 +31,14 @@ class ConfigStore:
             self.config = self._open_config()
 
         self._parse_config(self.config)
+
+        self.gcloud = gcloud.GoogleCloud(
+            self.gcp_project_id,
+            self.gcp_project_region,
+            self.gcp_project_zone
+        )
+
+        self.git = git.Git()
 
     def get_config(self) -> Dict[str, Any]:
         return self.config
@@ -103,6 +117,21 @@ class ConfigStore:
 
     def get_project_path(self, sub_path: str) -> str:
         return os.path.join(self.config_dir, sub_path)
+
+    def get_service_folder(self, service: str) -> str:
+        return self.services.get(service, {}).get("folder", service)
+
+    def use_changed_services(self) -> None:
+        def callback() -> str:
+            # Need to convert the list to a string for caching.
+            return ",".join(self._get_service_names_with_changes())
+
+        # Leverage Cloud Build caching so that the changed services don't need to be re-computed every step.
+        service_names = self.gcloud.cache_in_cloud_build("changed_services.txt", callback).split(",")
+        logger.info("Using only changed services: {}".format(service_names))
+
+        self.services = filter_dict(self.services, service_names)  # type: Dict[str, Dict[str, Any]]
+        self.services_with_code = filter_dict(self.services_with_code, service_names)  # type: Dict[str, Dict[str, Any]]
 
     def _search_for_file_dir(self, file_name: str) -> str:
         current_dir = os.getcwd()
@@ -228,3 +257,48 @@ class ConfigStore:
             return {k: v for k, v in services.items() if "secrets" in v and v.get("secrets")}
         else:
             return None
+
+    def _get_service_names_with_changes(self) -> List[str]:
+        services = self.services
+        services_with_changes = []
+
+        if isinstance(services, dict):
+            for service in services:
+                folder = services[service].get("folder", None)
+
+                fixed_tag = services[service].get("fixed_tag", None)
+                tag = self.gcloud.get_last_built_tag_for_service(self.project_name, service)
+
+                if folder and tag:
+                    if (
+                        # If the service has a fixed tag, then we'll never actually know if it has changed
+                        # or not, because we don't have old commit tags to cache bust on.
+                        #
+                        # As such, just always include them.
+                        (fixed_tag and tag == fixed_tag) or
+                        # Otherwise, use our magic function for determining whether the service changed.
+                        self.git.folder_changed(os.path.join(SERVICES_FOLDER, folder), tag)
+                    ):
+                        services_with_changes.append(service)
+
+            return services_with_changes
+        else:
+            return []
+
+
+# This is how we turn ConfigStore into a singleton: by tricking the end-developer into thinking
+# this function call of "ConfigStore" is a class definition. We just store the singleton instance
+# on the _ConfigStore class and return it if it's already instantiated.
+#
+# Stole this technique from https://stackoverflow.com/a/52351425.
+#
+# `reset_instance` is just an escape hatch for testing, so that the tests always get a fresh instance.
+def ConfigStore(reset_instance: bool = False, **kwargs):
+    if _ConfigStore._instance is None or reset_instance is True:
+        _ConfigStore._instance = _ConfigStore(**kwargs)
+
+    return _ConfigStore._instance
+
+
+def filter_dict(d: Dict[str, Any], keys: List[str]) -> Dict[str, Any]:
+    return {k: v for k, v in d.items() if k in keys}

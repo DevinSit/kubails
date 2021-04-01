@@ -178,6 +178,7 @@ class TestConfigStore(TestCase):
         )
     ])
     def test_flatten_config(self, config, expected_flattened_config):
-        config_service = config_store.ConfigStore(config=config)
+        # Need to reset the singleton on every test.
+        config_service = config_store.ConfigStore(config=config, reset_instance=True)
         flattened_config = config_service.get_flattened_config()
         self.assertDictEqual(flattened_config, expected_flattened_config)

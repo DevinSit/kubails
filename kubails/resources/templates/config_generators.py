@@ -1,5 +1,5 @@
 from typing import Any, Dict, List
-from kubails.services.config_store import ConfigStore
+from kubails.services.config_store import _ConfigStore
 
 ExtraConfigType = Dict[str, str]
 ExtraConfigOptionsType = List[ExtraConfigType]
@@ -16,7 +16,7 @@ class ConfigGenerator:
     def __init__(
         self,
         name: str,
-        config_store: ConfigStore,
+        config_store: _ConfigStore,
         extra_config: ExtraConfigType,
         has_database_volume: bool = False,
         has_deps_volume: bool = False,
@@ -54,7 +54,7 @@ class DatabaseBackupGenerator(ConfigGenerator):
         }
         ]  # type: ExtraConfigOptionsType
 
-    def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
+    def __init__(self, name: str, config_store: _ConfigStore, extra_config: ExtraConfigType) -> None:
         ConfigGenerator.__init__(
             self,
             name,
@@ -106,7 +106,7 @@ class DatabaseBackupGenerator(ConfigGenerator):
 
 
 class ExpressConfigGenerator(ConfigGenerator):
-    def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
+    def __init__(self, name: str, config_store: _ConfigStore, extra_config: ExtraConfigType) -> None:
         ConfigGenerator.__init__(
             self,
             name,
@@ -214,7 +214,7 @@ class ExpressConfigGenerator(ConfigGenerator):
 
 
 class FlaskConfigGenerator(ConfigGenerator):
-    def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
+    def __init__(self, name: str, config_store: _ConfigStore, extra_config: ExtraConfigType) -> None:
         ConfigGenerator.__init__(
             self,
             name,
@@ -261,7 +261,7 @@ class FlaskConfigGenerator(ConfigGenerator):
 
 
 class ReactConfigGenerator(ConfigGenerator):
-    def __init__(self, name: str, config_store: ConfigStore, extra_config: ExtraConfigType) -> None:
+    def __init__(self, name: str, config_store: _ConfigStore, extra_config: ExtraConfigType) -> None:
         ConfigGenerator.__init__(
             self,
             name,

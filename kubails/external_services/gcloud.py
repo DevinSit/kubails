@@ -3,7 +3,7 @@ import logging
 import os
 import shutil
 from functools import reduce
-from typing import Dict, List
+from typing import Callable, Dict, List
 from kubails.utils.service_helpers import (
     call_command, get_command_output, get_codebase_folder, get_resources_subfolder, STDERR_INTO_OUTPUT
 )
@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 BUILDER_IMAGE = "kubails-builder"
 BUILDER_FOLDER = "builder"
+CLOUD_BUILD_FOLDER = "/workspace"
 
 
 class GoogleCloud:
@@ -311,6 +312,51 @@ class GoogleCloud:
     def get_cloud_build_service_account(self) -> str:
         project_number = self.get_project_number()
         return "{}@cloudbuild.gserviceaccount.com".format(project_number)
+
+    def get_last_built_tag_for_service(self, project_name: str, service_name: str) -> str:
+        image = self.format_gcr_image(project_name, service_name)
+
+        command = self.base_command + ["container", "images", "list-tags", "--format=json", "--limit=1", image]
+
+        result = get_command_output(command)
+        result_json = json.loads(result)
+
+        if len(result_json) and result_json[0].get("tags") and len(result_json[0]["tags"]):
+            return result_json[0]["tags"][0]
+
+        return ""
+
+    # This takes advantage of the `/workspace` volume mounted in Cloud Build to cache the result.
+    def cache_in_cloud_build(self, filename: str, callback: Callable[[], str]) -> str:
+        filename = os.path.join(CLOUD_BUILD_FOLDER, filename)
+
+        try:
+            with open(filename, "r") as file:
+                result = file.read().strip()  # Need to strip the ending newline.
+                logger.info("Read value '{}' from {}".format(result, filename))
+
+                return result
+        except FileNotFoundError:
+            result = callback()
+
+            # If the Cloud Build folder doesn't exist, then we're probably not running in Cloud Build.
+            # Fallback to just returning the value.
+            if os.path.isdir(CLOUD_BUILD_FOLDER):
+                with open(filename, "w") as file:
+                    file.write(result)
+                    logger.info("Wrote value '{}' to {}".format(result, filename))
+            else:
+                logger.info("Cloud Build volume is not mounted; not writing {}".format(filename))
+
+            return result
+
+    def format_gcr_image(self, project_name: str, base_image: str, tag: str = "") -> str:
+        image = "gcr.io/{}/{}-{}".format(self.project_id, project_name, base_image)
+
+        if tag:
+            image = "{}:{}".format(image, tag)
+
+        return image
 
     def _format_full_service_account(self, service_account: str) -> str:
         return "{}@{}.iam.gserviceaccount.com".format(service_account, self.project_id)

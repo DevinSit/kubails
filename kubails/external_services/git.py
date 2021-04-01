@@ -27,4 +27,16 @@ class Git:
 
         cleaned_branches = list(map(lambda x: x.strip().lower().replace("origin/", ""), result.split("\n")))
         filtered_branches = list(filter(None, cleaned_branches))
+
         return sorted(filtered_branches)
+
+    def folder_changed(self, folder: str, since_commit: str) -> bool:
+        # Need the full git history to diff commits.
+        self.fetch("origin", prune=True)
+        self.fetch("origin", prune=True, unshallow=True)
+
+        command = self.base_command + ["diff", "--quiet", "HEAD", since_commit, "--", folder]
+
+        # If the command is successful, then that means there _no_ changes.
+        # But since we want to know if the folder _did_ change, we have to invert the result.
+        return not call_command(command)
