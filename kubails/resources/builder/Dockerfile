@@ -21,12 +21,11 @@ RUN apt-get -y update \
         curl \
         wget \
         build-essential \
-        python2.7 \
         python3 \
         python3-pip \
-        python-dev \
-        python-setuptools \
-        python-software-properties \
+        python3-dev \
+        python3-setuptools \
+        python3-software-properties \
         unzip \
     # Setup docker PPA
     && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
@@ -43,10 +42,9 @@ RUN apt-get -y update \
     # Setup Google Cloud SDK (latest)
     && mkdir -p /builder \
     && wget -qO- https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz | tar zxv -C /builder \
-    && CLOUDSDK_PYTHON="python2.7" /builder/google-cloud-sdk/install.sh --usage-reporting=false --bash-completion=false --disable-installation-options \
+    && /builder/google-cloud-sdk/install.sh --usage-reporting=false --bash-completion=false --disable-installation-options \
     # Install crcmod: https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod
-    && easy_install -U pip==20.3.4 \
-    && pip install -U crcmod \
+    && pip3 install -U crcmod \
     # Install kubectl
     && gcloud -q components install kubectl \
     # Install Helm
@@ -58,7 +56,7 @@ RUN apt-get -y update \
     && mv terraform /usr/local/bin/ \
     && rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
     # Clean up
-    && apt-get -y remove gcc python-dev python-setuptools wget \
+    && apt-get -y remove gcc wget \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf ~/.config/gcloud \
     # Make the kubails folder
