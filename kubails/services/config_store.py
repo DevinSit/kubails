@@ -122,8 +122,12 @@ class _ConfigStore(object):
         return self.services.get(service, {}).get("folder", service)
 
     def use_changed_services(self) -> None:
-        service_names = self._get_service_names_with_changes()
+        def callback() -> str:
+            # Need to convert the list to a string for caching.
+            return ",".join(self._get_service_names_with_changes())
 
+        # Leverage Cloud Build caching so that the changed services don't need to be re-computed every step.
+        service_names = self.gcloud.cache_in_cloud_build("changed_services.txt", callback).split(",")
         logger.info("Using only changed services: {}".format(service_names))
 
         self.services = filter_dict(self.services, service_names)  # type: Dict[str, Dict[str, Any]]
@@ -279,7 +283,7 @@ class _ConfigStore(object):
 
             return services_with_changes
         else:
-            return None
+            return []
 
 
 # This is how we turn ConfigStore into a singleton: by tricking the end-developer into thinking

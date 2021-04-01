@@ -326,6 +326,7 @@ class GoogleCloud:
 
         return ""
 
+    # This takes advantage of the `/workspace` volume mounted in Cloud Build to cache the result.
     def cache_in_cloud_build(self, filename: str, callback: Callable[[], str]) -> str:
         filename = os.path.join(CLOUD_BUILD_FOLDER, filename)
 
@@ -345,7 +346,7 @@ class GoogleCloud:
                     file.write(result)
                     logger.info("Wrote value '{}' to {}".format(result, filename))
             else:
-                logger.info("Cloud Build volume is not mounted; not writing temp file.")
+                logger.info("Cloud Build volume is not mounted; not writing {}".format(filename))
 
             return result
 

@@ -200,9 +200,8 @@ class Cluster:
 
         return namespace not in namespaces
 
-    # This takes advantage of the `/workspace` volume mounted in Cloud Build to cache the result.
-    # Need this caching because there might be steps in Cloud Build that happen after the namespace
-    # ends up being created but that still rely on knowing whether or not the namespace is new.
+    # Need to use Cloud Build caching because there might be steps in Cloud Build that happen after the
+    # namespace ends up being created but that still rely on knowing whether or not the namespace is new.
     def is_new_namespace_cloud_build(self, namespace: str) -> bool:
         def callback() -> str:
             return "True" if self.is_new_namespace(namespace) else "False"
