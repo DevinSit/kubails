@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 BUILDER_IMAGE = "kubails-builder"
 BUILDER_FOLDER = "builder"
+CLOUD_BUILD_FOLDER = "/workspace"
 
 
 class GoogleCloud:

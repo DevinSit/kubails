@@ -124,6 +124,8 @@ class _ConfigStore(object):
     def use_changed_services(self) -> None:
         service_names = self._get_service_names_with_changes()
 
+        logger.info("Using only changed services: {}".format(service_names))
+
         self.services = filter_dict(self.services, service_names)  # type: Dict[str, Dict[str, Any]]
         self.services_with_code = filter_dict(self.services_with_code, service_names)  # type: Dict[str, Dict[str, Any]]
 
