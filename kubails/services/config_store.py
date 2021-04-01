@@ -18,7 +18,7 @@ SERVICES_FOLDER = "services"
 # See the definition of ConfigStore at the bottom of the file for why this has an underscore.
 # tl;dr It's a singleton.
 class _ConfigStore(object):
-    _instance = None
+    _instance = None  # type: _ConfigStore
 
     def __init__(self, config: Dict[str, Any] = {}, config_file_name: str = CONFIG_FILE_NAME) -> None:
         if config:  # So that it doesn't go searching for config files during tests
@@ -124,8 +124,8 @@ class _ConfigStore(object):
     def use_changed_services(self) -> None:
         service_names = self._get_service_names_with_changes()
 
-        self.services = filter_dict(self.services, service_names)
-        self.services_with_code = filter_dict(self.services_with_code, service_names)
+        self.services = filter_dict(self.services, service_names)  # type: Dict[str, Dict[str, Any]]
+        self.services_with_code = filter_dict(self.services_with_code, service_names)  # type: Dict[str, Dict[str, Any]]
 
     def _search_for_file_dir(self, file_name: str) -> str:
         current_dir = os.getcwd()
@@ -285,9 +285,13 @@ class _ConfigStore(object):
 # on the _ConfigStore class and return it if it's already instantiated.
 #
 # Stole this technique from https://stackoverflow.com/a/52351425.
-def ConfigStore():
-    if _ConfigStore._instance is None:
-        _ConfigStore._instance = _ConfigStore()
+#
+# `reset_instance` is just an escape hatch for testing, so that the tests always get a fresh instance.
+def ConfigStore(
+    config: Dict[str, Any] = {}, config_file_name: str = CONFIG_FILE_NAME, reset_instance: bool = False
+):
+    if _ConfigStore._instance is None or reset_instance is True:
+        _ConfigStore._instance = _ConfigStore(config=config, config_file_name=config_file_name)
 
     return _ConfigStore._instance
 
