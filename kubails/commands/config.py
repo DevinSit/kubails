@@ -47,7 +47,7 @@ def get(key_path: str) -> None:
     - kubails config get __services.backend.container_port
     """
     value = config_service.get_value(key_path)
-    logger.info(json.dumps(value, indent=4, sort_keys=True))
+    print(json.dumps(value, indent=4, sort_keys=True))
 
 
 @config.command()
