@@ -195,17 +195,14 @@ class Cluster:
         logger.info("Created {} and updated kubails.json with secrets info.".format(encrypted_file))
 
     def is_new_namespace(self, namespace: str) -> bool:
-        namespace = sanitize_name(namespace)
-        namespaces = self.kubectl.get_namespaces()
-
-        return namespace not in namespaces
-
-    # Need to use Cloud Build caching because there might be steps in Cloud Build that happen after the
-    # namespace ends up being created but that still rely on knowing whether or not the namespace is new.
-    def is_new_namespace_cloud_build(self, namespace: str) -> bool:
         def callback() -> str:
-            return "True" if self.is_new_namespace(namespace) else "False"
+            sanitized_namespace = sanitize_name(namespace)
+            namespaces = self.kubectl.get_namespaces()
 
+            return "True" if sanitized_namespace not in namespaces else "False"
+
+        # Need to use Cloud Build caching because there might be steps in Cloud Build that happen after the
+        # namespace ends up being created but that still rely on knowing whether or not the namespace is new.
         return self.gcloud.cache_in_cloud_build("is_new_namespace.txt", callback) == "True"
 
     def _deploy_storage_classes(self) -> None:
