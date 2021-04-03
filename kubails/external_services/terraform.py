@@ -88,7 +88,7 @@ class Terraform:
 
             raise click.Abort()
 
-        return result
+        return result.strip('"')
 
     def run_command(self, subcommand: str, arguments: List[str] = [], with_vars=True) -> bool:
         command = self.base_command + [subcommand] + arguments
