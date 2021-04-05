@@ -1,7 +1,7 @@
 # This image fills the gap of needing ruby, docker, and helm in a single Cloud Builder step 
 # (since we have ruby scripts that call out to these other tools).
 
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 ENV KUBECTL_VERSION="v1.11.2"
 ENV HELM_VERSION="v2.10.0"
@@ -29,8 +29,7 @@ RUN apt-get -y update \
         unzip \
     # Setup docker PPA
     && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
-    && apt-key fingerprint 0EBFCD88 \
-    && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial edge" \ 
+    && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable" \
     # Setup git PPA
     && add-apt-repository ppa:git-core/ppa \
     # Install build tools
