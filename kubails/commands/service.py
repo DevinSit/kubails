@@ -3,6 +3,7 @@ import logging
 import sys
 from typing import Tuple
 from kubails.commands import helpers
+from kubails.services.config_store import ConfigStore
 from kubails.services.service import Service
 from kubails.resources.templates import SERVICE_TEMPLATES
 from kubails.utils.command_helpers import log_command_args_factory
@@ -11,14 +12,17 @@ from kubails.utils.command_helpers import log_command_args_factory
 logger = logging.getLogger(__name__)
 log_command_args = log_command_args_factory(logger, "Service '{}' args")
 
+config_store = None
 service_service = None
 
 
 @click.group()
 def service():
     """Manage the services for your project."""
+    global config_store
     global service_service
 
+    config_store = ConfigStore()
     service_service = Service()
 
 
@@ -120,6 +124,15 @@ def generate(service_type: str, subdomain: str, title: str) -> None:
         subdomain=subdomain,
         title=title,
     )
+
+
+@service.command()
+@click.argument("service")
+@log_command_args
+def has_changed(service: str) -> None:
+    """Returns whether or not the given service has changed since the last build."""
+    if not config_store.is_changed_service(service):
+        sys.exit(1)
 
 
 ############################################################

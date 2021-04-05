@@ -37,7 +37,7 @@ def construct_cli(commands: Sequence[Union[click.Command, click.Group]], docstri
                 # Ideally `kubails infra authenticate` is the first command of the pipeline.
                 cluster.authenticate()
 
-                if cluster.is_new_namespace_cloud_build(branch):
+                if cluster.is_new_namespace(branch):
                     logger.info("Using all services: '{}' is a new branch".format(branch))
                     return
 

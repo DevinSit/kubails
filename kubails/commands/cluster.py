@@ -51,6 +51,15 @@ def cleanup_namespaces() -> None:
     kube_git_syncer_service.cleanup_namespaces()
 
 
+@cluster.command()
+@click.argument("namespace")
+@log_command_args
+def is_new_namespace(namespace: str) -> None:
+    """Returns whether or not the given namespace is new."""
+    if not cluster_service.is_new_namespace(namespace):
+        sys.exit(1)
+
+
 ############################################################
 # Manifests sub-group
 ############################################################
