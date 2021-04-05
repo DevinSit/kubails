@@ -98,9 +98,10 @@ class Service:
                     result = result and self.docker.build(service_path, [tagged_images["latest"]])
                 else:  # CI/CD pipeline use case
                     cache_image = tagged_images["fixed_tag"] if fixed_tag else tagged_images["branch"]
+                    master_cache_image = tagged_images["master"]
 
                     # Each previous stage image is used to build the next stage.
-                    cache_images = stage_images + [cache_image]
+                    cache_images = stage_images + [cache_image, master_cache_image]
                     stage_images.append(cache_image)
 
                     # If we're on the last image, then that means it's the final stage and
@@ -241,6 +242,7 @@ class Service:
         images["base"] = self.gcloud.format_gcr_image(self.config.project_name, base_image)
 
         images["latest"] = "{}:latest".format(images["base"])
+        images["master"] = "{}:master".format(images["base"])
         images["branch"] = "{}:{}".format(images["base"], branch_tag)
         images["commit"] = "{}:{}".format(images["base"], commit_tag)
         images["fixed_tag"] = "{}:{}".format(images["base"], fixed_tag)
