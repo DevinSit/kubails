@@ -98,14 +98,19 @@ class Service:
                     result = result and self.docker.build(service_path, [tagged_images["latest"]])
                 else:  # CI/CD pipeline use case
                     cache_image = tagged_images["fixed_tag"] if fixed_tag else tagged_images["branch"]
-                    prod_cache_image = tagged_images[self.config.production_namespace]
 
                     # Each previous stage image is used to build the next stage.
-                    cache_images = stage_images + [cache_image, prod_cache_image]
+                    cache_images = stage_images + [cache_image]
                     stage_images.append(cache_image)
 
+                    # Use the production namespace image as a cache image for other branches.
+                    # This should greatly speed up new branch builds, since it had to do a full build
+                    # everytime before.
+                    if branch_tag != self.config.production_namespace:
+                        cache_images.append(tagged_images[self.config.production_namespace])
+
                     # If we're on the last image, then that means it's the final stage and
-                    # # we don't need to specify a target stage.
+                    # we don't need to specify a target stage.
                     # Otherwise, each previous stage needs to specify a target in the Dockerfile to be
                     # built (and pushed) separately.
                     target_stage = None if is_last_image else base_image
@@ -238,15 +243,17 @@ class Service:
         fixed_tag: str = None
     ) -> Dict[str, str]:
         images = {}
-        prod_branch = self.config.production_namespace
 
         images["base"] = self.gcloud.format_gcr_image(self.config.project_name, base_image)
-
         images["latest"] = "{}:latest".format(images["base"])
-        images[prod_branch] = "{}:{}".format(images["base"], prod_branch)
         images["branch"] = "{}:{}".format(images["base"], branch_tag)
         images["commit"] = "{}:{}".format(images["base"], commit_tag)
         images["fixed_tag"] = "{}:{}".format(images["base"], fixed_tag)
+
+        # Include a tag for the production namespace, so that the production image can be used as a cache
+        # image on new branches, greatly speeding up initial build for new branches.
+        prod_branch = self.config.production_namespace
+        images[prod_branch] = "{}:{}".format(images["base"], prod_branch)
 
         return images
 
