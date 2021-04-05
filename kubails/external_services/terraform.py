@@ -77,7 +77,7 @@ class Terraform:
         return self._run_terraform_command(get_state_command, call_function=get_command_output).split("\n")
 
     def get_output(self, output: str) -> str:
-        command = self.base_command + ["output", output]
+        command = self.base_command + ["output", "-json", output]
         result = self._run_terraform_command(command, get_command_output)
 
         if not result:
@@ -88,7 +88,7 @@ class Terraform:
 
             raise click.Abort()
 
-        return result
+        return result.strip('"')
 
     def run_command(self, subcommand: str, arguments: List[str] = [], with_vars=True) -> bool:
         command = self.base_command + [subcommand] + arguments
