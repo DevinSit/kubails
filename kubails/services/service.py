@@ -85,21 +85,45 @@ class Service:
         def build_function(service: str) -> bool:
             service_path = self._get_service_path(service)
             fixed_tag = self._get_fixed_tag(service)
-            base_image = self._get_base_image_name(service)
+            base_images = self._get_base_images(service)
 
-            images = self._generate_tagged_images(base_image, branch_tag, commit_tag, fixed_tag=fixed_tag)
+            stage_images = []  # type: List[str]
+            result = True
 
-            if not branch_tag and not commit_tag:  # Local dev use case
-                return self.docker.build(service_path, [images["latest"]])
-            else:  # CI/CD pipeline use case
-                cache_image = images["fixed_tag"] if fixed_tag else images["branch"]
+            for index, base_image in enumerate(base_images):
+                is_last_image = index == len(base_images) - 1
+                tagged_images = self._generate_tagged_images(base_image, branch_tag, commit_tag, fixed_tag=fixed_tag)
 
-                return self.docker.build(
-                    service_path,
-                    list(images.values()),
-                    cache_image=cache_image,
-                    branch=branch_tag
-                )
+                if not branch_tag and not commit_tag:  # Local dev use case
+                    result = result and self.docker.build(service_path, [tagged_images["latest"]])
+                else:  # CI/CD pipeline use case
+                    cache_image = tagged_images["fixed_tag"] if fixed_tag else tagged_images["branch"]
+
+                    # Each previous stage image is used to build the next stage.
+                    cache_images = stage_images + [cache_image]
+                    stage_images.append(cache_image)
+
+                    # Use the production namespace image as a cache image for other branches.
+                    # This should greatly speed up new branch builds, since it had to do a full build
+                    # everytime before.
+                    if branch_tag != self.config.production_namespace:
+                        cache_images.append(tagged_images[self.config.production_namespace])
+
+                    # If we're on the last image, then that means it's the final stage and
+                    # we don't need to specify a target stage.
+                    # Otherwise, each previous stage needs to specify a target in the Dockerfile to be
+                    # built (and pushed) separately.
+                    target_stage = None if is_last_image else base_image
+
+                    result = result and self.docker.build(
+                        service_path,
+                        list(tagged_images.values()),
+                        target_stage=target_stage,
+                        cache_images=cache_images,
+                        branch=branch_tag
+                    )
+
+            return result
 
         return self._apply_to_services(build_function, services)
 
@@ -108,25 +132,27 @@ class Service:
 
         def push_function(service: str) -> bool:
             fixed_tag = self._get_fixed_tag(service)
-            base_image = self._get_base_image_name(service)
+            base_images = self._get_base_images(service)
 
-            images = self._generate_tagged_images(base_image, branch_tag, commit_tag, fixed_tag=fixed_tag)
+            result = True
 
-            if not branch_tag and not commit_tag:  # Local dev use case
-                return self.docker.push(images["latest"])
-            else:  # CI/CD pipeline use case
-                result = True
+            for base_image in base_images:
+                tagged_images = self._generate_tagged_images(base_image, branch_tag, commit_tag, fixed_tag=fixed_tag)
 
-                if fixed_tag:
-                    result = result and self.docker.push(images["fixed_tag"])
-                else:
-                    result = result and self.docker.push(images["branch"])
-                    result = result and self.docker.push(images["commit"])
+                if not branch_tag and not commit_tag:  # Local dev use case
+                    result = result and self.docker.push(tagged_images["latest"])
+                else:  # CI/CD pipeline use case
 
-                    if branch_tag == self.config.production_namespace:
-                        result = result and self.docker.push(images["latest"])
+                    if fixed_tag:
+                        result = result and self.docker.push(tagged_images["fixed_tag"])
+                    else:
+                        result = result and self.docker.push(tagged_images["branch"])
+                        result = result and self.docker.push(tagged_images["commit"])
 
-                return result
+                        if branch_tag == self.config.production_namespace:
+                            result = result and self.docker.push(tagged_images["latest"])
+
+            return result
 
         return self._apply_to_services(push_function, services)
 
@@ -155,7 +181,7 @@ class Service:
         tag = sanitize_name(tag)
 
         def function(service: str) -> bool:
-            base_image = self._get_base_image_name(service)
+            base_image = self._get_base_images(service)[-1]
 
             cache_image = self.gcloud.format_gcr_image(self.config.project_name, base_image, tag)
             cache_option = "" if not tag else "--cache-from={}".format(cache_image)
@@ -190,8 +216,21 @@ class Service:
         folder = self.config.get_service_folder(service)
         return self.config.get_project_path(os.path.join(SERVICES_FOLDER, folder))
 
-    def _get_base_image_name(self, service: str) -> str:
-        return self.config.services.get(service, {}).get("image", service)
+    def _get_base_images(self, service: str) -> List[str]:
+        base_image = self.config.services.get(service, {}).get("image", service)
+        image_stages = self.config.services.get(service, {}).get("image_stages", [])
+
+        # If `image_stages` is provided in the config, then that means that the service uses a multi-stage Dockerfile.
+        # As such, we want to build the specified stages before the final image, so that we can push them separately,
+        # so that we can cache them separately, so that we actually cache improvements for subsequent builds.
+        #
+        # If we don't cache each stage image separately, then we get no caching for the final image, since it
+        # will be completely separate from the previous stages.
+        #
+        # Note: The values listed in `image_stages` must correspond to the names of the stages in the Dockerfile
+        # If a stage is declared as `FROM node:14 as build-env`, then `image_stages` must contain `build-env`.
+        # This is because the images are tagged the same as the stages.
+        return image_stages + [base_image]
 
     def _get_fixed_tag(self, service: str) -> str:
         return self.config.services.get(service, {}).get("fixed_tag", None)
@@ -206,11 +245,15 @@ class Service:
         images = {}
 
         images["base"] = self.gcloud.format_gcr_image(self.config.project_name, base_image)
-
         images["latest"] = "{}:latest".format(images["base"])
         images["branch"] = "{}:{}".format(images["base"], branch_tag)
         images["commit"] = "{}:{}".format(images["base"], commit_tag)
         images["fixed_tag"] = "{}:{}".format(images["base"], fixed_tag)
+
+        # Include a tag for the production namespace, so that the production image can be used as a cache
+        # image on new branches, greatly speeding up initial build for new branches.
+        prod_branch = self.config.production_namespace
+        images[prod_branch] = "{}:{}".format(images["base"], prod_branch)
 
         return images
 
