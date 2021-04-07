@@ -35,10 +35,11 @@ class Docker:
             command.extend(["--target", target_stage])
 
         for cache_image in cache_images:
-            if self.pull(cache_image):
-                command.extend(["--cache-from", cache_image])
-            else:
-                logger.info("No cache found for image {}.".format(cache_image))
+            command.extend(["--cache-from", cache_image])
+            # if self.pull(cache_image):
+            #   command.extend(["--cache-from", cache_image])
+            # else:
+            #     logger.info("No cache found for image {}.".format(cache_image))
 
         for tag in tags:
             command.extend(["-t", tag])

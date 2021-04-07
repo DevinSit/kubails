@@ -101,7 +101,7 @@ class Service:
 
                     # Each previous stage image is used to build the next stage.
                     cache_images = stage_images + [cache_image, tagged_images["latest"]]
-                    stage_images.append(cache_image)
+                    stage_images.append(tagged_images["commit"])
 
                     # If we're on the last image, then that means it's the final stage and
                     # we don't need to specify a target stage.
