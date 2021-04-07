@@ -100,14 +100,8 @@ class Service:
                     cache_image = tagged_images["fixed_tag"] if fixed_tag else tagged_images["branch"]
 
                     # Each previous stage image is used to build the next stage.
-                    cache_images = stage_images + [cache_image]
+                    cache_images = stage_images + [cache_image, tagged_images["latest"]]
                     stage_images.append(cache_image)
-
-                    # Use the production namespace image as a cache image for other branches.
-                    # This should greatly speed up new branch builds, since it had to do a full build
-                    # everytime before.
-                    if branch_tag != self.config.production_namespace:
-                        cache_images.append(tagged_images[self.config.production_namespace])
 
                     # If we're on the last image, then that means it's the final stage and
                     # we don't need to specify a target stage.
@@ -248,12 +242,9 @@ class Service:
         images["latest"] = "{}:latest".format(images["base"])
         images["branch"] = "{}:{}".format(images["base"], branch_tag)
         images["commit"] = "{}:{}".format(images["base"], commit_tag)
-        images["fixed_tag"] = "{}:{}".format(images["base"], fixed_tag)
 
-        # Include a tag for the production namespace, so that the production image can be used as a cache
-        # image on new branches, greatly speeding up initial build for new branches.
-        prod_branch = self.config.production_namespace
-        images[prod_branch] = "{}:{}".format(images["base"], prod_branch)
+        if fixed_tag:
+            images["fixed_tag"] = "{}:{}".format(images["base"], fixed_tag)
 
         return images
 
