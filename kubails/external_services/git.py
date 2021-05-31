@@ -35,6 +35,9 @@ class Git:
         self.fetch("origin", prune=True)
         self.fetch("origin", prune=True, unshallow=True)
 
+        # Need to checkout the current_branch, otherwise it doesn't exist for the diff command.
+        call_command(self.base_command + ["checkout", current_branch])
+
         command = self.base_command + ["diff", "--quiet", current_branch, since_commit, "--", folder]
 
         # If the command is successful, then that means there _no_ changes.
