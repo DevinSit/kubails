@@ -275,15 +275,22 @@ class _ConfigStore(object):
                 fixed_tag = services[service].get("fixed_tag", None)
                 tag = self.gcloud.get_last_built_tag_for_service(self.project_name, service)
 
+                test1 = (fixed_tag and tag == fixed_tag)
+                test2 = self.git.folder_changed(os.path.join(SERVICES_FOLDER, folder), current_branch, tag)
+
+                print(service)
+                print(tag)
+                print(test2)
+
                 if folder and tag:
                     if (
                         # If the service has a fixed tag, then we'll never actually know if it has changed
                         # or not, because we don't have old commit tags to cache bust on.
                         #
                         # As such, just always include them.
-                        (fixed_tag and tag == fixed_tag) or
+                        test1 or
                         # Otherwise, use our magic function for determining whether the service changed.
-                        self.git.folder_changed(os.path.join(SERVICES_FOLDER, folder), current_branch, tag)
+                        test2
                     ):
                         services_with_changes.append(service)
 
