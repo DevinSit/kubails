@@ -15,13 +15,13 @@ logger = create_logger()  # noqa: Create the root logger for submodules to use
 def construct_cli(commands: Sequence[Union[click.Command, click.Group]], docstring: str) -> click.Group:
     @click.group(context_settings=CONTEXT_SETTINGS, help=docstring)
     @click.version_option(version=VERSION)
-    @click.option("--only-changed-services", is_flag=True)
+    @click.option("--only-changed-services")
     @click.option(
         "--all-services-branch",
         help="Pass the branch to override --only-changed-services for new branches and production."
     )
-    def cli(only_changed_services: bool, all_services_branch: str):
-        if (only_changed_services):
+    def cli(only_changed_services: str, all_services_branch: str):
+        if only_changed_services:
             config = config_store.ConfigStore()
             cluster = cluster_service.Cluster()
 
@@ -41,7 +41,7 @@ def construct_cli(commands: Sequence[Union[click.Command, click.Group]], docstri
                     logger.info("Using all services: '{}' is a new branch".format(branch))
                     return
 
-            config.use_changed_services()
+            config.use_changed_services(only_changed_services)
 
     for command in commands:
         cli.add_command(command)
