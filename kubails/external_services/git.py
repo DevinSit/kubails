@@ -40,3 +40,13 @@ class Git:
         # If the command is successful, then that means there _no_ changes.
         # But since we want to know if the folder _did_ change, we have to invert the result.
         return not call_command(command)
+
+    def get_commit_timestamp(self, commit_sha: str) -> int:
+        # Note: "--format=%ct" gets the timestamp as a Unix epoch timestamp.
+        # Makes it easier for sorting.
+        command = self.base_command + ["show", "--quiet", "-s", "--format=%ct", commit_sha]
+
+        output = get_command_output(command)
+
+        # If the commit_sha isn't a valid commit, then the output will be blank. Return 0 instead.
+        return int(output) if output else 0
