@@ -121,23 +121,23 @@ class _ConfigStore(object):
     def get_service_folder(self, service: str) -> str:
         return self.services.get(service, {}).get("folder", service)
 
-    def get_changed_services(self) -> List[str]:
+    def get_changed_services(self, current_branch: str) -> List[str]:
         def callback() -> str:
             # Need to convert the list to a string for caching.
-            return ",".join(self._get_service_names_with_changes())
+            return ",".join(self._get_service_names_with_changes(current_branch))
 
         # Leverage Cloud Build caching so that the changed services don't need to be re-computed every step.
         return self.gcloud.cache_in_cloud_build("changed_services.txt", callback).split(",")
 
-    def use_changed_services(self) -> None:
-        service_names = self.get_changed_services()
+    def use_changed_services(self, current_branch: str) -> None:
+        service_names = self.get_changed_services(current_branch)
         logger.info("Using only changed services: {}".format(service_names))
 
         self.services = filter_dict(self.services, service_names)  # type: Dict[str, Dict[str, Any]]
         self.services_with_code = filter_dict(self.services_with_code, service_names)  # type: Dict[str, Dict[str, Any]]
 
-    def is_changed_service(self, service: str) -> bool:
-        return service in self.get_changed_services()
+    def is_changed_service(self, service: str, current_branch: str) -> bool:
+        return service in self.get_changed_services(current_branch)
 
     def _search_for_file_dir(self, file_name: str) -> str:
         current_dir = os.getcwd()
@@ -264,7 +264,7 @@ class _ConfigStore(object):
         else:
             return None
 
-    def _get_service_names_with_changes(self) -> List[str]:
+    def _get_service_names_with_changes(self, current_branch: str) -> List[str]:
         services = self.services
         services_with_changes = []
 
@@ -283,7 +283,7 @@ class _ConfigStore(object):
                         # As such, just always include them.
                         (fixed_tag and tag == fixed_tag) or
                         # Otherwise, use our magic function for determining whether the service changed.
-                        self.git.folder_changed(os.path.join(SERVICES_FOLDER, folder), tag)
+                        self.git.folder_changed(os.path.join(SERVICES_FOLDER, folder), current_branch, tag)
                     ):
                         services_with_changes.append(service)
 

@@ -128,10 +128,11 @@ def generate(service_type: str, subdomain: str, title: str) -> None:
 
 @service.command()
 @click.argument("service")
+@click.option("--current-branch", default="master")
 @log_command_args
-def has_changed(service: str) -> None:
+def has_changed(current_branch: str, service: str) -> None:
     """Returns whether or not the given service has changed since the last build."""
-    if not config_store.is_changed_service(service):
+    if not config_store.is_changed_service(service, current_branch):
         sys.exit(1)
 
 

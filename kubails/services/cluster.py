@@ -89,7 +89,9 @@ class Cluster:
         result = result and self._cleanup_manifests()
         logger.info("Generating new manifests...")
 
-        services_dict = {s: self.config.services[s] for s in services} if services else self.config.services
+        services_dict = {
+            s: self.config.services[s] for s in services if s in self.config.services
+        } if services else self.config.services
 
         for service, config in services_dict.items():
             output_dir = os.path.join(self.manifest_manager.generated_manifest_location(""), service)
@@ -124,7 +126,9 @@ class Cluster:
         result = True
         namespace = sanitize_name(namespace)
 
-        services_dict = {s: self.config.services[s] for s in services} if services else self.config.services
+        services_dict = {
+            s: self.config.services[s] for s in services if s in self.config.services
+        } if services else self.config.services
 
         if namespace:
             self.kubectl.create_namespace(namespace, label="kube-git-syncer=\"true\"")
@@ -140,7 +144,7 @@ class Cluster:
         namespace = sanitize_name(namespace)
 
         services_dict = {
-            s: self.config.services_with_secrets[s] for s in services
+            s: self.config.services_with_secrets[s] for s in services if s in self.config.services
         } if services else self.config.services_with_secrets
 
         for service, config in services_dict.items():

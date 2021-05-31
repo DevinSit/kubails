@@ -4,6 +4,7 @@ import os
 import shutil
 from functools import reduce
 from typing import Callable, Dict, List
+from kubails.external_services import git
 from kubails.utils.service_helpers import (
     call_command, get_command_output, get_codebase_folder, get_resources_subfolder, STDERR_INTO_OUTPUT
 )
@@ -23,6 +24,8 @@ class GoogleCloud:
         self.project_zone = project_zone
 
         self.base_command = ["gcloud", "--project", self.project_id]
+
+        self.git = git.Git()
 
     def set_project(self) -> bool:
         logger.info("Switching to project {}...".format(self.project_id))
@@ -322,7 +325,16 @@ class GoogleCloud:
         result_json = json.loads(result)
 
         if len(result_json) and result_json[0].get("tags") and len(result_json[0]["tags"]):
-            return result_json[0]["tags"][0]
+            tags = result_json[0]["tags"]
+
+            # Note: Our original assumption that the first tag is the 'latest' was in fact wrong.
+            # As such, we need to check _all_ of the tags to find the latest one.
+            tags_with_timestamps = [
+                {"tag": tag, "timestamp": self.git.get_commit_timestamp(tag)} for tag in tags
+            ]
+
+            sorted_tags = sorted(tags_with_timestamps, key=lambda i: i["timestamp"], reverse=True)
+            return sorted_tags[0]["tag"]
 
         return ""
 

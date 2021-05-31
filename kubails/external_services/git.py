@@ -30,13 +30,26 @@ class Git:
 
         return sorted(filtered_branches)
 
-    def folder_changed(self, folder: str, since_commit: str) -> bool:
+    def folder_changed(self, folder: str, current_branch: str, since_commit: str) -> bool:
         # Need the full git history to diff commits.
         self.fetch("origin", prune=True)
         self.fetch("origin", prune=True, unshallow=True)
 
-        command = self.base_command + ["diff", "--quiet", "HEAD", since_commit, "--", folder]
+        # Need to checkout the current_branch, otherwise it doesn't exist for the diff command.
+        call_command(self.base_command + ["checkout", current_branch])
+
+        command = self.base_command + ["diff", "--quiet", current_branch, since_commit, "--", folder]
 
         # If the command is successful, then that means there _no_ changes.
         # But since we want to know if the folder _did_ change, we have to invert the result.
         return not call_command(command)
+
+    def get_commit_timestamp(self, commit_sha: str) -> int:
+        # Note: "--format=%ct" gets the timestamp as a Unix epoch timestamp.
+        # Makes it easier for sorting.
+        command = self.base_command + ["show", "--quiet", "-s", "--format=%ct", commit_sha]
+
+        output = get_command_output(command)
+
+        # If the commit_sha isn't a valid commit, then the output will be blank. Return 0 instead.
+        return int(output) if output else 0
