@@ -7,7 +7,6 @@ setup(
     include_package_data=True,
     install_requires=[
         "Click>=7.0",
-        "typing>=3.6.4",
         "cookiecutter>=1.6.0",
         "pyyaml>=4.2b4",
         "python-dotenv>=0.10.1",
