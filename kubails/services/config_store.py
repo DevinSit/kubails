@@ -273,7 +273,22 @@ class _ConfigStore(object):
                 folder = services[service].get("folder", None)
 
                 fixed_tag = services[service].get("fixed_tag", None)
-                tag = self.gcloud.get_last_built_tag_for_service(self.project_name, service)
+
+                # When checking for changes on the production branch, we actually need to compare
+                # the service against the previous on the production branch, rather than the latest
+                # tag on the image. Why? Because the latest (commit) tag on the image will have been
+                # removed from the (remote) repo as part of our "delete branch after merging PR" workflow.
+                #
+                # As such, whatever tag we pull will be invalid.
+                #
+                # Not to mention that, since we use squash merges with the production branch, it only
+                # makes sense to compare the latest squashed commit vs the last squashed commit.
+                #
+                # Obviously, this assumption breaks down for any git workflow that doesn't use squash merges.
+                if current_branch == self.production_namespace and not fixed_tag:
+                    tag = "{}~".format(self.production_namespace)
+                else:
+                    tag = self.gcloud.get_last_built_tag_for_service(self.project_name, service)
 
                 if folder and tag:
                     if (
